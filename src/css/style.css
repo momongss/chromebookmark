@@ -1,0 +1,169 @@
+body {
+  /* background-size: 100vw 110vh; */
+  background-size: 1200px 754px;
+}
+
+.app {
+  display: grid;
+  grid-template-columns: repeat(20, 74px);
+  grid-template-rows: repeat(8, 70px);
+}
+
+.options {
+  position: fixed;
+  background-color: white;
+  display: none;
+
+  z-index: 1;
+}
+
+.options * {
+  width: 100px;
+  height: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.options > *:hover {
+  background-color: rgb(94, 94, 94);
+  cursor: pointer;
+}
+
+.folder-manager-wrapper {
+  display: none;
+  position: fixed;
+
+  top: calc(100vh - 400px - 42px);
+}
+
+.folder-manager-wrapper.show {
+  display: block;
+}
+
+.folder-manager-wrapper.m1 {
+  left: 140px;
+}
+
+.folder-manager-wrapper.m2 {
+  left: 550px;
+}
+
+.folder-manager-wrapper.m3 {
+  left: 960px;
+}
+
+.folder-manager-header {
+  display: flex;
+
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.folder-manager-header .folder-title {
+  color: white;
+  padding-right: 10px;
+
+  font-size: 14px;
+}
+
+.folder-manager-header .folder-close {
+  border: none;
+  background-color: rgb(255, 255, 255, 0.1);
+  color: white;
+
+  width: 25px;
+  height: 25px;
+  font-size: 20px;
+}
+
+.folder-manager-header .folder-close:active {
+  outline: none;
+}
+
+.folder-manager .back-btn {
+  font-size: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  color: white;
+  cursor: pointer;
+}
+
+.folder-manager .back-btn:hover {
+  background-color: rgba(255, 255, 255, 0.3);
+}
+
+.folder-manager {
+  width: 400px;
+  height: 400px;
+
+  background-color: rgba(255, 255, 255, 0.1);
+
+  display: grid;
+  grid-template-columns: repeat(5, 74px);
+  grid-template-rows: repeat(8, 70px);
+  grid-gap: 2px;
+
+  overflow-y: scroll;
+}
+
+.folder-manager::-webkit-scrollbar {
+  width: 10px;
+}
+
+.folder-manager::-webkit-scrollbar-thumb {
+  margin-top: 100px;
+  background-color: rgb(51, 53, 55);
+  border-radius: 3px;
+}
+
+.node {
+  color: white;
+  width: 74px;
+  height: 70px;
+  z-index: 0;
+}
+
+.node:hover {
+  background-color: rgba(255, 255, 255, 0.3);
+  cursor: pointer;
+}
+
+.node > * {
+  z-index: -1;
+}
+
+.node div {
+  overflow: hidden;
+  width: 74px;
+  max-height: 33px;
+  text-align: center;
+  word-break: keep-all;
+}
+
+.file {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+
+  text-decoration: none;
+}
+
+.file img {
+  margin-top: 10px;
+  width: 16px;
+}
+
+.folder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+}
+
+.folder img {
+  height: 30px;
+}

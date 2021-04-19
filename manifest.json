@@ -1,0 +1,16 @@
+{
+  "name": "Bookmarker",
+  "version": "1.0.0",
+  "manifest_version": 2,
+  "description": "new tab bookmark app",
+  "background": {},
+  "chrome_url_overrides": {
+    "newtab": "index.html"
+  },
+  "permissions": [
+    "bookmarks",
+    "chrome://favicon/",
+    "storage",
+    "unlimitedStorage"
+  ]
+}
