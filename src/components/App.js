@@ -4,6 +4,7 @@ import Folder from "./Folder.js";
 
 import Storage from "../utils/storage.js";
 import { dropHandler } from "../utils/drop.js";
+import Bookmark from "../utils/bookmark.js";
 
 export default class App {
   constructor({ $app }) {
@@ -12,23 +13,33 @@ export default class App {
 
   async _constructor($app) {
     // https://wallpaperaccess.com/aesthetic-gif
-    document.body.style.backgroundImage = `url("chrome-extension://${chrome.runtime.id}/assets/super_good.gif")`;
+    document.body.style.backgroundImage = `url("chrome-extension://${chrome.runtime.id}/assets/sky_night.jpg")`;
     const rootTree = await this.getBookMarkList();
     const bookMarkTree = rootTree.children;
     this.rootId = rootTree.id;
 
     this.history = [];
 
-    const $options = document.createElement("div");
-    $options.className = "options";
-    $options.innerHTML = `
-      <div class="delBtn">삭제</div>
+    const $nodeOptions = document.createElement("div");
+    $nodeOptions.className = "options";
+    $nodeOptions.innerHTML = `
+      <div class="button delete">삭제</div>
     `;
-    $app.appendChild($options);
+
+    const $createOptions = document.createElement("div");
+    $createOptions.className = "options create";
+    $createOptions.innerHTML = `
+      <div class="button create-folder">새 폴더</div>
+      <div class="button create-bookmark">새 북마크</div>
+    `;
+
+    this.$nodeOptions = $nodeOptions;
+    this.$createOptions = $createOptions;
+
+    $app.appendChild($nodeOptions);
+    $app.appendChild($createOptions);
 
     this.$app = $app;
-
-    this.$options = $options;
 
     const folderManager1 = new FolderManager({ $app, order: "m1" });
     const folderManager2 = new FolderManager({ $app, order: "m2" });
@@ -44,17 +55,12 @@ export default class App {
     } else {
       this.renderRunned(bookMarkTree, $app);
     }
-    this.eventListeners($app);
+    this.eventListeners();
   }
 
-  async renderRunned(bookMarkList, $app) {
+  async renderRunned(bookMarkTree, $app) {
     const lenX = 20;
     const lenY = 8;
-
-    const fileInitX = 9;
-    const fileEndX = 14;
-    const folderInitX = 4;
-    const folderEndX = 8;
 
     const posUndefineds = [];
 
@@ -66,7 +72,7 @@ export default class App {
       }
     }
 
-    for (const bookMark of bookMarkList) {
+    for (const bookMark of bookMarkTree) {
       if (bookMark.children == null) {
         const file = new File({ $app });
         const filePos = await Storage.getPos(bookMark.id);
@@ -124,24 +130,23 @@ export default class App {
           $child.className.includes("node-wrapper") &&
           $child.childElementCount === 0
         ) {
-          console.log($child.className);
           return $child;
         }
       }
     }
   }
 
-  eventListeners($app) {
+  eventListeners() {
     let $dragged;
     let $del;
 
     document.addEventListener("click", async (e) => {
-      if (e.target.className === "delBtn") {
+      if (e.target.classList.contains("delete")) {
         const nodeId = $del.dataset.id;
         if ($del.classList.contains("file")) {
           chrome.bookmarks.remove(nodeId);
         } else {
-          let subTree = await getSubTree(nodeId);
+          let subTree = await Bookmark.getSubTree(nodeId);
           subTree = subTree[0];
           console.log(subTree.children.length);
           if (subTree.children.length === 0) {
@@ -151,7 +156,7 @@ export default class App {
               `정말 이 폴더를 지우시겠습니까? : ${subTree.title}`
             );
             if (!answer) {
-              this.$options.style.display = "none";
+              this.$nodeOptions.style.display = "none";
               return;
             }
             const removingTree = chrome.bookmarks.removeTree(nodeId);
@@ -159,24 +164,22 @@ export default class App {
         }
         $del.remove();
       }
-      this.$options.style.display = "none";
+      this.$nodeOptions.style.display = "none";
+      this.$createOptions.style.display = "none";
     });
-
-    function getSubTree(treeId) {
-      const getSubTree = new Promise((resolve) => {
-        chrome.bookmarks.getSubTree(treeId, resolve);
-      });
-
-      return getSubTree.then((subTree) => subTree);
-    }
 
     document.addEventListener("contextmenu", (e) => {
       e.preventDefault();
       if (e.target.classList.contains("node")) {
-        this.$options.style.top = `${e.clientY}px`;
-        this.$options.style.left = `${e.clientX}px`;
-        this.$options.style.display = "block";
+        this.$nodeOptions.style.top = `${e.clientY}px`;
+        this.$nodeOptions.style.left = `${e.clientX}px`;
+        this.$nodeOptions.style.display = "block";
         $del = e.target;
+      } else {
+        console.log(e.target);
+        this.$createOptions.style.top = `${e.clientY}px`;
+        this.$createOptions.style.left = `${e.clientX}px`;
+        this.$createOptions.style.display = "block";
       }
     });
 
@@ -209,10 +212,7 @@ export default class App {
 
     document.addEventListener("drop", async (e) => {
       e.preventDefault();
-
-      console.log($dragged, e.target);
       dropHandler($dragged, e.target, this.rootId);
-      console.log($dragged, e.target, "f");
     });
 
     let nodeSelected = false;
@@ -245,7 +245,7 @@ export default class App {
     });
   }
 
-  renderMainInit(bookMarkList, $app) {
+  renderMainInit(bookMarkTree, $app) {
     const lenX = 20;
     const lenY = 8;
 
@@ -265,7 +265,7 @@ export default class App {
     const filePos = { x: fileInitX, y: 1 };
     const folderPos = { x: folderInitX, y: 1 };
 
-    for (const bookMark of bookMarkList) {
+    for (const bookMark of bookMarkTree) {
       if (bookMark.children == null) {
         const file = new File({ $app });
         file.render(bookMark, filePos.x, filePos.y);

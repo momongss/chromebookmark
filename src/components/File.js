@@ -10,9 +10,13 @@ export default class File {
     this.$file.href = bookMark.url;
     this.$file.dataset.id = bookMark.id;
 
-    const faviconURL = `chrome://favicon/${bookMark.url}`;
+    // const faviconURL = `chrome://favicon/${bookMark.url}`;
+    let faviconURL = `chrome://favicon/size/256@1x/${bookMark.url}`;
+    if (bookMark.url.includes("youtube.com")) {
+      faviconURL = "../../assets/youtube_logo.svg";
+    }
     this.$file.innerHTML = `
-          <img src="${faviconURL} draggable=true"/>
+          <img src="${faviconURL}" draggable=true/>
           <div draggable=true>${bookMark.title}</div>
         `;
 

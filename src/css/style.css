@@ -1,6 +1,6 @@
 body {
-  /* background-size: 100vw 110vh; */
-  background-size: 1200px 754px;
+  background-size: 100vw 110vh;
+  /* background-size: 1200px 754px; */
 }
 
 .app {
@@ -124,6 +124,12 @@ body {
   width: 74px;
   height: 70px;
   z-index: 0;
+
+  font-size: 12.5px;
+
+  text-shadow: black 1px 0 1.8px;
+  /* -webkit-text-stroke-width: 0.5px;
+  -webkit-text-stroke-color: black; */
 }
 
 .node:hover {
@@ -154,7 +160,7 @@ body {
 
 .file img {
   margin-top: 10px;
-  width: 16px;
+  width: 24px;
 }
 
 .folder {

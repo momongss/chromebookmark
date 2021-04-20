@@ -104,7 +104,11 @@ export default class FolderManager {
       const $fileWrapper = document.createElement("div");
       $fileWrapper.className = "node-wrapper";
 
-      const faviconURL = `chrome://favicon/${bookMark.url}`;
+      // const faviconURL = `chrome://favicon/${bookMark.url}`;
+      let faviconURL = `chrome://favicon/size/256@1x/${bookMark.url}`;
+      if (bookMark.url.includes("youtube.com")) {
+        faviconURL = "../../assets/youtube_logo.svg";
+      }
       $fileWrapper.innerHTML = `
           <a href=${bookMark.url} class="node file" data-id=${bookMark.id} draggable=true>
             <img src="${faviconURL}"/>
