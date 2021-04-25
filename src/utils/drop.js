@@ -56,6 +56,7 @@ export async function dropHandler(dragged, target, rootId) {
     $nodeWrapper.appendChild(dragged);
     target.appendChild($nodeWrapper);
 
+    console.log(dragged.dataset.id, target);
     Bookmark.moveTree(dragged.dataset.id, target.dataset.id);
   }
 }

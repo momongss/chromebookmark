@@ -1,4 +1,3 @@
-import FolderManager from "./FolderManager.js";
 import File from "./File.js";
 import Folder from "./Folder.js";
 
@@ -13,7 +12,7 @@ export default class App {
 
   async _constructor($app) {
     // https://wallpaperaccess.com/aesthetic-gif
-    document.body.style.backgroundImage = `url("chrome-extension://${chrome.runtime.id}/assets/sky_night.jpg")`;
+    document.body.style.backgroundImage = `url("chrome-extension://${chrome.runtime.id}/assets/sky_good.jpg")`;
     const rootTree = await this.getBookMarkList();
     const bookMarkTree = rootTree.children;
     this.rootId = rootTree.id;
@@ -41,13 +40,6 @@ export default class App {
 
     this.$app = $app;
 
-    const folderManager1 = new FolderManager({ $app, order: "m1" });
-    const folderManager2 = new FolderManager({ $app, order: "m2" });
-    const folderManager3 = new FolderManager({ $app, order: "m3" });
-
-    this.folderMangerList = [folderManager1, folderManager2, folderManager3];
-    this.folderManageTurn = 0;
-
     const state = await Storage.getState();
 
     if (state == null) {
@@ -74,44 +66,48 @@ export default class App {
 
     for (const bookMark of bookMarkTree) {
       if (bookMark.children == null) {
-        const file = new File({ $app });
         const filePos = await Storage.getPos(bookMark.id);
         if (filePos == null) {
           posUndefineds.push(bookMark);
           continue;
         }
-        file.render(bookMark, filePos.x, filePos.y);
-      } else {
-        const folder = new Folder({
-          $app,
-          folderMangerList: this.folderMangerList,
-          folderManageTurn: this.folderManageTurn,
+        const file = new File({
+          $app: $app,
+          bookMark: bookMark,
+          pos: filePos,
         });
+      } else {
         const folderPos = await Storage.getPos(bookMark.id);
         if (folderPos == null) {
           posUndefineds.push(bookMark);
           continue;
         }
-        folder.render(bookMark, folderPos.x, folderPos.y);
+        const folder = new Folder({
+          $manager: $app,
+          mode: "main",
+          pos: folderPos,
+          bookMark: bookMark,
+        });
       }
     }
 
     for (const bookMark of posUndefineds) {
       if (bookMark.children == null) {
-        const file = new File({ $app });
         const $wrapper = findEmpty($app);
         const tmp = $wrapper.className.split("-");
         const pos = {
           x: tmp[2],
           y: tmp[3],
         };
+        const file = new File({
+          $app: $app,
+          bookMark: bookMark,
+          pos: pos,
+        });
         Storage.setPos(bookMark.id, pos);
-        file.render(bookMark, pos.x, pos.y);
       } else {
         const folder = new Folder({
-          $app,
-          folderMangerList: this.folderMangerList,
-          folderManageTurn: this.folderManageTurn,
+          $manager: $app,
         });
         const $wrapper = findEmpty($app);
         const tmp = $wrapper.className.split("-");
@@ -143,6 +139,7 @@ export default class App {
     document.addEventListener("click", async (e) => {
       if (e.target.classList.contains("delete")) {
         const nodeId = $del.dataset.id;
+        console.log($del.classList);
         if ($del.classList.contains("file")) {
           chrome.bookmarks.remove(nodeId);
         } else {
@@ -170,13 +167,22 @@ export default class App {
 
     document.addEventListener("contextmenu", (e) => {
       e.preventDefault();
-      if (e.target.classList.contains("node")) {
+      const $target = e.target.parentElement;
+      console.log($target);
+
+      this.$nodeOptions.style.display = "none";
+      this.$createOptions.style.display = "none";
+      if ($target.classList.contains("node")) {
         this.$nodeOptions.style.top = `${e.clientY}px`;
         this.$nodeOptions.style.left = `${e.clientX}px`;
         this.$nodeOptions.style.display = "block";
-        $del = e.target;
+        $del = $target;
+      } else if ($target.parentElement.classList.contains("node")) {
+        this.$nodeOptions.style.top = `${e.clientY}px`;
+        this.$nodeOptions.style.left = `${e.clientX}px`;
+        this.$nodeOptions.style.display = "block";
+        $del = $target.parentElement;
       } else {
-        console.log(e.target);
         this.$createOptions.style.top = `${e.clientY}px`;
         this.$createOptions.style.left = `${e.clientX}px`;
         this.$createOptions.style.display = "block";
@@ -187,7 +193,7 @@ export default class App {
 
     document.addEventListener("dragstart", (e) => {
       $dragged = e.target;
-      e.target.style.opacity = 0.5;
+      $dragged.style.opacity = 0.5;
     });
 
     document.addEventListener("dragend", (e) => {
@@ -213,23 +219,6 @@ export default class App {
     document.addEventListener("drop", async (e) => {
       e.preventDefault();
       dropHandler($dragged, e.target, this.rootId);
-    });
-
-    let nodeSelected = false;
-    document.addEventListener("mousedown", (e) => {
-      if (e.target.classList.contains("node")) {
-        nodeSelected = true;
-      }
-    });
-
-    document.addEventListener("mousemove", (e) => {
-      if (!nodeSelected) {
-        e.preventDefault();
-      }
-    });
-
-    document.addEventListener("mouseup", (e) => {
-      nodeSelected = false;
     });
 
     document.addEventListener("keydown", (e) => {
@@ -267,27 +256,30 @@ export default class App {
 
     for (const bookMark of bookMarkTree) {
       if (bookMark.children == null) {
-        const file = new File({ $app });
-        file.render(bookMark, filePos.x, filePos.y);
         Storage.setPos(bookMark.id, filePos);
         filePos.x++;
         if (filePos.x >= fileEndX) {
           filePos.x = fileInitX;
           filePos.y++;
         }
-      } else {
-        const folder = new Folder({
+        const file = new File({
           $app,
-          folderMangerList: this.folderMangerList,
-          folderManageTurn: this.folderManageTurn,
+          bookMark: bookMark,
+          pos: filePos,
         });
-        folder.render(bookMark, folderPos.x, folderPos.y);
+      } else {
         Storage.setPos(bookMark.id, folderPos);
         folderPos.x++;
         if (folderPos.x >= folderEndX) {
           folderPos.x = folderInitX;
           folderPos.y++;
         }
+        const folder = new Folder({
+          $manager: $app,
+          mode: "main",
+          pos: folderPos,
+          bookMark: bookMark,
+        });
       }
     }
 

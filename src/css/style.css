@@ -1,12 +1,20 @@
 body {
   background-size: 100vw 110vh;
-  /* background-size: 1200px 754px; */
+}
+
+button:active {
+  outline: none;
+}
+
+:root {
+  --grid-item-width: 74px;
+  --grid-item-height: 80px;
 }
 
 .app {
   display: grid;
-  grid-template-columns: repeat(20, 74px);
-  grid-template-rows: repeat(8, 70px);
+  grid-template-columns: repeat(20, var(--grid-item-width));
+  grid-template-rows: repeat(8, var(--grid-item-height));
 }
 
 .options {
@@ -34,6 +42,11 @@ body {
   display: none;
   position: fixed;
 
+  padding-top: 10px;
+  padding-bottom: 30px;
+  background-color: rgba(240, 242, 245, 1);
+  border-radius: 10px;
+
   top: calc(100vh - 400px - 42px);
 }
 
@@ -41,44 +54,36 @@ body {
   display: block;
 }
 
-.folder-manager-wrapper.m1 {
-  left: 140px;
-}
-
-.folder-manager-wrapper.m2 {
-  left: 550px;
-}
-
-.folder-manager-wrapper.m3 {
-  left: 960px;
-}
-
 .folder-manager-header {
   display: flex;
-
   justify-content: flex-end;
   align-items: center;
+  position: relative;
+  bottom: 3px;
+  right: 5px;
+  color: black;
 }
 
 .folder-manager-header .folder-title {
-  color: white;
-  padding-right: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 
-  font-size: 14px;
+  font-size: 15px;
 }
 
 .folder-manager-header .folder-close {
   border: none;
-  background-color: rgb(255, 255, 255, 0.1);
-  color: white;
+  background-color: inherit;
 
   width: 25px;
   height: 25px;
   font-size: 20px;
 }
 
-.folder-manager-header .folder-close:active {
-  outline: none;
+.folder-manager-header .folder-close:hover {
+  background-color: rgba(210, 216, 229, 1);
+  cursor: pointer;
 }
 
 .folder-manager .back-btn {
@@ -86,27 +91,26 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+}
 
-  color: white;
+.folder-manager .back-btn.backable:hover {
+  background-color: rgba(190, 196, 209, 1);
   cursor: pointer;
 }
 
-.folder-manager .back-btn:hover {
-  background-color: rgba(255, 255, 255, 0.3);
-}
-
 .folder-manager {
-  width: 400px;
   height: 400px;
 
-  background-color: rgba(255, 255, 255, 0.1);
-
   display: grid;
-  grid-template-columns: repeat(5, 74px);
-  grid-template-rows: repeat(8, 70px);
+  grid-template-columns: repeat(5, var(--grid-item-width));
+  grid-template-rows: repeat(8, var(--grid-item-height));
   grid-gap: 2px;
 
+  background-color: rgba(210, 216, 229, 1);
+
   overflow-y: scroll;
+
+  position: relative;
 }
 
 .folder-manager::-webkit-scrollbar {
@@ -120,33 +124,47 @@ body {
 }
 
 .node {
-  color: white;
-  width: 74px;
-  height: 70px;
-  z-index: 0;
+  width: var(--grid-item-width);
+  max-height: var(--grid-item-height);
+
+  position: relative;
 
   font-size: 12.5px;
-
-  text-shadow: black 1px 0 1.8px;
-  /* -webkit-text-stroke-width: 0.5px;
-  -webkit-text-stroke-color: black; */
-}
-
-.node:hover {
-  background-color: rgba(255, 255, 255, 0.3);
   cursor: pointer;
 }
 
-.node > * {
-  z-index: -1;
+.app .node {
+  color: white;
+  text-shadow: black 1px 0 2px;
 }
 
-.node div {
+.app .node:hover {
+  background-color: rgba(255, 255, 255, 0.3);
+}
+
+.folder-manager .node {
+  color: black;
+  text-shadow: none;
+}
+
+.folder-manager .node:hover {
+  background-color: rgba(190, 196, 209, 1);
+}
+
+.node .drag-area {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+}
+
+.node .text {
   overflow: hidden;
-  width: 74px;
-  max-height: 33px;
+  width: var(--grid-item-width);
+  max-height: 35px;
   text-align: center;
   word-break: keep-all;
+
+  margin-bottom: 8px;
 }
 
 .file {
@@ -158,8 +176,19 @@ body {
   text-decoration: none;
 }
 
+.file .file-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
 .file img {
   margin-top: 10px;
+  margin-bottom: 7px;
   width: 24px;
 }
 
@@ -167,9 +196,10 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: space-around;
 }
 
 .folder img {
-  height: 30px;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  width: 30px;
 }
