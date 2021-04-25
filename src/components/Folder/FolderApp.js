@@ -10,8 +10,8 @@ export default class FolderApp extends Folder {
     this.pos = pos;
     this.$manager = $manager;
 
-    this.$folder.addEventListener("click", (e) => {
-      const $rect = this.$folder.getBoundingClientRect();
+    this.$node.addEventListener("click", (e) => {
+      const $rect = this.$node.getBoundingClientRect();
       const folderManager = new FolderManager({
         $app: this.$manager,
         bookMarkList: bookMark.children,
@@ -25,6 +25,6 @@ export default class FolderApp extends Folder {
       `.node-wrapper-${this.pos.x}-${this.pos.y}`
     );
     $div.innerHTML = "";
-    $div.appendChild(this.$folder);
+    $div.appendChild(this.$node);
   }
 }

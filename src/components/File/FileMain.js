@@ -4,6 +4,6 @@ export default class FileMain extends File {
   constructor({ $manager, bookMark }) {
     super({ bookMark });
 
-    $manager.appendChild(this.$file);
+    $manager.appendChild(this.$node);
   }
 }

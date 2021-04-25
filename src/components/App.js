@@ -139,54 +139,61 @@ export default class App {
     let $dragged;
     let $editTarget;
 
-    document.addEventListener("click", async (e) => {
-      if (e.target.classList.contains("delete")) {
-        const nodeId = $editTarget.dataset.id;
-        if ($editTarget.classList.contains("file")) {
-          chrome.bookmarks.remove(nodeId);
-        } else {
-          let subTree = await Bookmark.getSubTree(nodeId);
-          subTree = subTree[0];
-          if (subTree.children.length === 0) {
+    document.addEventListener(
+      "click",
+      async (e) => {
+        if (e.target.classList.contains("delete")) {
+          e.stopPropagation();
+          e.preventDefault();
+          const nodeId = $editTarget.dataset.id;
+          if ($editTarget.classList.contains("file")) {
             chrome.bookmarks.remove(nodeId);
           } else {
-            const answer = confirm(
-              `정말 이 폴더를 지우시겠습니까? : ${subTree.title}`
-            );
-            if (!answer) {
-              this.$nodeOptions.style.display = "none";
-              return;
+            let subTree = await Bookmark.getSubTree(nodeId);
+            subTree = subTree[0];
+            if (subTree.children.length === 0) {
+              chrome.bookmarks.remove(nodeId);
+            } else {
+              const answer = confirm(
+                `정말 이 폴더를 지우시겠습니까? : ${subTree.title}`
+              );
+              if (!answer) {
+                this.$nodeOptions.style.display = "none";
+                return;
+              }
+              const removingTree = chrome.bookmarks.removeTree(nodeId);
             }
-            const removingTree = chrome.bookmarks.removeTree(nodeId);
           }
-        }
-        $editTarget.remove();
-      } else if (e.target.classList.contains("edit")) {
-        const $title = $editTarget.querySelector(".text");
-        selectAll($title);
-        $title.addEventListener("keydown", (e) => {
-          if (e.key === "Enter") {
-            $title.blur();
-          }
-        });
-
-        $title.addEventListener("blur", (e) => {
-          chrome.bookmarks.update($editTarget.dataset.id, {
-            title: $title.innerHTML,
+          $editTarget.remove();
+        } else if (e.target.classList.contains("edit")) {
+          e.stopPropagation();
+          e.preventDefault();
+          const $title = $editTarget.querySelector(".text");
+          selectAll($title);
+          $title.addEventListener("keydown", (e) => {
+            if (e.key === "Enter") {
+              $title.blur();
+            }
           });
-        });
-      } else if (e.target.classList.contains("create-folder")) {
-        console.log("create");
-      }
 
-      this.$nodeOptions.remove();
-      this.$createOptions.remove();
-    });
+          $title.addEventListener("blur", (e) => {
+            chrome.bookmarks.update($editTarget.dataset.id, {
+              title: $title.innerHTML,
+            });
+          });
+        } else if (e.target.classList.contains("create-folder")) {
+          console.log("create");
+        }
+
+        this.$nodeOptions.remove();
+        this.$createOptions.remove();
+      },
+      true
+    );
 
     document.addEventListener("contextmenu", (e) => {
       e.preventDefault();
       const $target = e.target.parentElement;
-      console.log(e.target);
 
       this.$nodeOptions.remove();
       this.$createOptions.remove();

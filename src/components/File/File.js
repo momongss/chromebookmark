@@ -1,21 +1,25 @@
-export default class File {
+import Node from "../Node.js";
+
+export default class File extends Node {
   constructor({ bookMark }) {
-    this.$file = document.createElement("a");
-    this.$file.className = "node file";
-    this.$file.draggable = true;
+    super();
+    this.$node = document.createElement("a");
+    this.$node.className = "node file";
+    this.$node.draggable = true;
+    // this.dragHandler();
 
     this.render(bookMark);
   }
 
   render(bookMark) {
-    this.$file.href = bookMark.url;
-    this.$file.dataset.id = bookMark.id;
+    this.$node.href = bookMark.url;
+    this.$node.dataset.id = bookMark.id;
 
     let faviconURL = `chrome://favicon/size/256@1x/${bookMark.url}`;
     if (bookMark.url.includes("youtube.com")) {
       faviconURL = "../../assets/youtube.svg";
     }
-    this.$file.innerHTML = `
+    this.$node.innerHTML = `
       <div class="file-wrapper">
         <img src="${faviconURL}" draggable=true/>
         <div class="text" draggable=true contenteditable=true>${bookMark.title}</div>
