@@ -1,7 +1,22 @@
+import FileMain from "./File/FileMain.js";
+import FolderMain from "./Folder/FolderMain.js";
+import { FolderManagerData } from "../utils/FolderManagerData.js";
+
 export default class FolderManager {
   constructor({ $app, bookMarkList: bookMarkTree, title, id, initPos }) {
     const $folderWrapper = document.createElement("div");
     $folderWrapper.className = `folder-manager-wrapper`;
+
+    FolderManagerData.zindex++;
+    $folderWrapper.style.zIndex = FolderManagerData.zindex;
+    FolderManagerData.$prevManager = $folderWrapper;
+
+    $folderWrapper.addEventListener("mousedown", (e) => {
+      if (FolderManagerData.$prevManager === $folderWrapper) return;
+      FolderManagerData.zindex++;
+      $folderWrapper.style.zIndex = FolderManagerData.zindex;
+      FolderManagerData.$prevManager = $folderWrapper;
+    });
 
     $app.appendChild($folderWrapper);
 
@@ -137,45 +152,25 @@ export default class FolderManager {
     });
 
     for (const bookMark of folderBookMark) {
-      const $folderWrapper = document.createElement("div");
-      $folderWrapper.className = "node-wrapper";
-      $folderWrapper.innerHTML = `
-          <div class="node folder" data-id=${bookMark.id} draggable=true>
-            <img id="logo-8f8894ba7a1f5c7a94a170b7dc841190" src="chrome-extension://${chrome.runtime.id}/assets/folder.svg" alt="문서"></img>
-            <div class="text">${bookMark.title}</div>
-            <div class="drag-area"></div>
-          </div>
-        `;
-      $folderWrapper.addEventListener("click", (e) => {
-        this.render({
-          bookMarkTree: bookMark.children,
-          title: bookMark.title,
-          id: bookMark.id,
-        });
+      new FolderMain({
+        $manager: $folderManager,
+        bookMark,
+        onClick: () => {
+          console.log("hit");
+          this.render({
+            bookMarkTree: bookMark.children,
+            title: bookMark.title,
+            id: bookMark.id,
+          });
+        },
       });
-
-      $folderManager.appendChild($folderWrapper);
     }
 
     for (const bookMark of fileBookMark) {
-      const $fileWrapper = document.createElement("div");
-      $fileWrapper.className = "node-wrapper";
-
-      let faviconURL = `chrome://favicon/size/256@1x/${bookMark.url}`;
-      if (bookMark.url.includes("youtube.com")) {
-        faviconURL = "../../assets/youtube.svg";
-      }
-      $fileWrapper.innerHTML = `
-          <a href=${bookMark.url} class="node file" data-id=${bookMark.id} draggable=true>
-            <div class="file-wrapper">
-              <img src="${faviconURL}"/>
-              <div class="text">${bookMark.title}</div>
-              <div class="drag-area"></div>
-            </div>
-          </a>
-        `;
-
-      $folderManager.appendChild($fileWrapper);
+      new FileMain({
+        $manager: $folderManager,
+        bookMark: bookMark,
+      });
     }
   }
 }

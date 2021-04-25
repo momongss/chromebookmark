@@ -119,7 +119,7 @@ button:active {
 
 .folder-manager::-webkit-scrollbar-thumb {
   margin-top: 100px;
-  background-color: rgb(51, 53, 55);
+  background-color: rgba(150, 156, 169, 1);
   border-radius: 3px;
 }
 

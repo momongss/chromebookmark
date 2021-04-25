@@ -1,8 +1,9 @@
-import File from "./File.js";
-import Folder from "./Folder.js";
+import FileApp from "./File/FileApp.js";
+import FolderApp from "./Folder/FolderApp.js";
 
 import Storage from "../utils/storage.js";
 import { dropHandler } from "../utils/drop.js";
+import { selectAll } from "../utils/caret.js";
 import Bookmark from "../utils/bookmark.js";
 
 export default class App {
@@ -22,14 +23,14 @@ export default class App {
     const $nodeOptions = document.createElement("div");
     $nodeOptions.className = "options";
     $nodeOptions.innerHTML = `
-      <div class="button delete">삭제</div>
+      <div class="button edit">수정</div>
+      <div class="button delete">삭제</div>      
     `;
 
     const $createOptions = document.createElement("div");
     $createOptions.className = "options create";
     $createOptions.innerHTML = `
       <div class="button create-folder">새 폴더</div>
-      <div class="button create-bookmark">새 북마크</div>
     `;
 
     this.$nodeOptions = $nodeOptions;
@@ -71,8 +72,8 @@ export default class App {
           posUndefineds.push(bookMark);
           continue;
         }
-        const file = new File({
-          $app: $app,
+        const file = new FileApp({
+          $manager: $app,
           bookMark: bookMark,
           pos: filePos,
         });
@@ -82,9 +83,9 @@ export default class App {
           posUndefineds.push(bookMark);
           continue;
         }
-        const folder = new Folder({
+
+        const folder = new FolderApp({
           $manager: $app,
-          mode: "main",
           pos: folderPos,
           bookMark: bookMark,
         });
@@ -99,15 +100,17 @@ export default class App {
           x: tmp[2],
           y: tmp[3],
         };
-        const file = new File({
-          $app: $app,
+        const file = new FileApp({
+          $manager: $app,
           bookMark: bookMark,
           pos: pos,
         });
         Storage.setPos(bookMark.id, pos);
       } else {
-        const folder = new Folder({
+        const folder = new FolderApp({
           $manager: $app,
+          pos: pos,
+          bookMark: bookMark,
         });
         const $wrapper = findEmpty($app);
         const tmp = $wrapper.className.split("-");
@@ -134,18 +137,16 @@ export default class App {
 
   eventListeners() {
     let $dragged;
-    let $del;
+    let $editTarget;
 
     document.addEventListener("click", async (e) => {
       if (e.target.classList.contains("delete")) {
-        const nodeId = $del.dataset.id;
-        console.log($del.classList);
-        if ($del.classList.contains("file")) {
+        const nodeId = $editTarget.dataset.id;
+        if ($editTarget.classList.contains("file")) {
           chrome.bookmarks.remove(nodeId);
         } else {
           let subTree = await Bookmark.getSubTree(nodeId);
           subTree = subTree[0];
-          console.log(subTree.children.length);
           if (subTree.children.length === 0) {
             chrome.bookmarks.remove(nodeId);
           } else {
@@ -159,29 +160,62 @@ export default class App {
             const removingTree = chrome.bookmarks.removeTree(nodeId);
           }
         }
-        $del.remove();
+        $editTarget.remove();
+      } else if (e.target.classList.contains("edit")) {
+        const $title = $editTarget.querySelector(".text");
+        selectAll($title);
+        $title.addEventListener("keydown", (e) => {
+          if (e.key === "Enter") {
+            $title.blur();
+          }
+        });
+
+        $title.addEventListener("blur", (e) => {
+          chrome.bookmarks.update($editTarget.dataset.id, {
+            title: $title.innerHTML,
+          });
+        });
+      } else if (e.target.classList.contains("create-folder")) {
+        console.log("create");
       }
-      this.$nodeOptions.style.display = "none";
-      this.$createOptions.style.display = "none";
+
+      this.$nodeOptions.remove();
+      this.$createOptions.remove();
     });
 
     document.addEventListener("contextmenu", (e) => {
       e.preventDefault();
       const $target = e.target.parentElement;
-      console.log($target);
+      console.log(e.target);
 
-      this.$nodeOptions.style.display = "none";
-      this.$createOptions.style.display = "none";
+      this.$nodeOptions.remove();
+      this.$createOptions.remove();
       if ($target.classList.contains("node")) {
+        const $nodeOptions = document.createElement("div");
+        $nodeOptions.className = "options";
+        $nodeOptions.innerHTML = `
+          <div class="button edit">수정</div>
+          <div class="button delete">삭제</div>      
+        `;
+        $target.appendChild($nodeOptions);
+        this.$nodeOptions = $nodeOptions;
         this.$nodeOptions.style.top = `${e.clientY}px`;
         this.$nodeOptions.style.left = `${e.clientX}px`;
         this.$nodeOptions.style.display = "block";
-        $del = $target;
+        $editTarget = $target;
       } else if ($target.parentElement.classList.contains("node")) {
+        const $nodeOptions = document.createElement("div");
+        $nodeOptions.className = "options";
+        $nodeOptions.innerHTML = `
+          <div class="button edit">수정</div>
+          <div class="button delete">삭제</div>      
+        `;
+        this.$nodeOptions = $nodeOptions;
+        $target.appendChild($nodeOptions);
         this.$nodeOptions.style.top = `${e.clientY}px`;
         this.$nodeOptions.style.left = `${e.clientX}px`;
         this.$nodeOptions.style.display = "block";
-        $del = $target.parentElement;
+        $editTarget = $target.parentElement;
       } else {
         this.$createOptions.style.top = `${e.clientY}px`;
         this.$createOptions.style.left = `${e.clientX}px`;
@@ -262,8 +296,8 @@ export default class App {
           filePos.x = fileInitX;
           filePos.y++;
         }
-        const file = new File({
-          $app,
+        const file = new FileApp({
+          $manager: $app,
           bookMark: bookMark,
           pos: filePos,
         });
@@ -274,9 +308,8 @@ export default class App {
           folderPos.x = folderInitX;
           folderPos.y++;
         }
-        const folder = new Folder({
+        const folder = new FolderApp({
           $manager: $app,
-          mode: "main",
           pos: folderPos,
           bookMark: bookMark,
         });
