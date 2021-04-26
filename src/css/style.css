@@ -22,6 +22,9 @@ button:active {
   background-color: white;
   display: none;
 
+  color: black;
+  text-shadow: none;
+
   z-index: 1;
 }
 

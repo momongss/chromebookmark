@@ -1,18 +1,18 @@
 import Node from "../Node.js";
+import OptionEdit from "../Options/OptionEdit.js";
 
 export default class Folder extends Node {
   constructor({ bookMark }) {
     super();
     this.$node = document.createElement("div");
     this.$node.className = "node folder";
-    // this.dragHandler();
+    this.eventListeners();
 
     this.render(bookMark);
   }
 
   render(bookMark) {
-    this.$node = document.createElement("div");
-    this.$node.className = "node folder";
+    this.bookMark = bookMark;
     this.$node.dataset.id = bookMark.id;
     this.$node.draggable = true;
     this.$node.innerHTML = `
@@ -20,5 +20,26 @@ export default class Folder extends Node {
           <div class="text" draggable=true contenteditable=true>${bookMark.title}</div>
           <div class="drag-area"></div>
         `;
+  }
+
+  eventListeners() {
+    document.addEventListener("click", (e) => {
+      if (this.$nodeOptions) this.$nodeOptions.remove();
+    });
+
+    document.addEventListener("contextmenu", (e) => {
+      e.preventDefault();
+      if (this.$nodeOptions) this.$nodeOptions.remove();
+      if (e.target.parentElement === this.$node) {
+        this.optionEdit = new OptionEdit({
+          $target: this.$node,
+          x: e.clientX,
+          y: e.clientY,
+        });
+        this.$nodeOptions = this.optionEdit.$nodeOptions;
+      }
+    });
+
+    this.$node.addEventListener("contextmenu", (e) => {});
   }
 }

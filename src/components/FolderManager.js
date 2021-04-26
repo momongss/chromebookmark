@@ -1,5 +1,11 @@
 import FileMain from "./File/FileMain.js";
 import FolderMain from "./Folder/FolderMain.js";
+
+import OptionEdit from "./Options/OptionEdit.js";
+import OptionCreate from "./Options/OptionCreate.js";
+
+import Bookmark from "../utils/bookmark.js";
+
 import { FolderManagerData } from "../utils/FolderManagerData.js";
 
 export default class FolderManager {
@@ -20,20 +26,79 @@ export default class FolderManager {
 
     $app.appendChild($folderWrapper);
 
+    this.$app = $app;
+
     this.$folderManagerWrapper = $folderWrapper;
 
     this.history = [];
     this.pos = initPos;
 
     this.render({
-      bookMarkTree: bookMarkTree,
-      title: title,
       id: id,
       pos: initPos,
     });
   }
 
-  dragEventHandler($header) {
+  rightClickHandler() {
+    this.$app.addEventListener("click", (e) => {
+      if (this.$nodeOptions) this.$nodeOptions.remove();
+      if (this.$createOptions) this.$createOptions.remove();
+    });
+
+    this.$app.addEventListener("contextmenu", (e) => {
+      if (this.$nodeOptions) this.$nodeOptions.remove();
+      if (this.$createOptions) this.$createOptions.remove();
+    });
+
+    const $folderManager = this.$folderManagerWrapper.querySelector(
+      ".folder-manager"
+    );
+
+    $folderManager.addEventListener("click", (e) => {
+      if (this.$nodeOptions) this.$nodeOptions.remove();
+      if (this.$createOptions) this.$createOptions.remove();
+      this.$app.querySelectorAll(".options").forEach(($el) => {
+        $el.remove();
+      });
+    });
+
+    $folderManager.addEventListener("contextmenu", (e) => {
+      e.preventDefault();
+      const $target = e.target.parentElement;
+
+      // del prev $options
+      if (this.$nodeOptions) this.$nodeOptions.remove();
+      if (this.$createOptions) this.$createOptions.remove();
+      this.$app.querySelectorAll(".options").forEach(($el) => {
+        $el.remove();
+      });
+
+      if (e.target.parentElement.parentElement.classList.contains("node")) {
+        // const optionEdit = new OptionEdit({
+        //   $target: $target,
+        //   x: e.clientX,
+        //   y: e.clientY,
+        // });
+        // this.$nodeOptions = optionEdit.$nodeOptions;
+      } else if (e.target.className === "folder-manager") {
+        const optionCreate = new OptionCreate({
+          $app: this.$app,
+          $target: e.target,
+          x: e.clientX,
+          y: e.clientY,
+          mode: "manager",
+          onClick: (bookMark) => {
+            this.render({
+              id: bookMark.id,
+            });
+          },
+        });
+        this.$createOptions = optionCreate.$createOptions;
+      }
+    });
+  }
+
+  dragHandler($header) {
     let dragged = false;
     let initX, initY;
     let folderX, folderY;
@@ -74,15 +139,15 @@ export default class FolderManager {
     });
   }
 
-  render({ bookMarkTree, title, id, mode }) {
+  async render({ id, mode }) {
+    const subTree = await Bookmark.getSubTree(id);
+    const title = subTree[0].title;
+    const bookMarkTree = subTree[0].children;
     if (mode !== "back") {
       this.history.push({
-        bookMarkList: bookMarkTree,
-        title: title,
         id: id,
       });
     }
-
     this.$folderManagerWrapper.innerHTML = "";
     this.$folderManagerWrapper.classList.add("show");
     this.$folderManagerWrapper.style.top = `${this.pos.top}px`;
@@ -97,7 +162,7 @@ export default class FolderManager {
       <button class="folder-close">x</button>
     `;
 
-    this.dragEventHandler($header);
+    this.dragHandler($header);
 
     const $closeBtn = $header.querySelector(".folder-close");
     $closeBtn.addEventListener("click", (e) => {
@@ -120,8 +185,6 @@ export default class FolderManager {
       this.history.pop();
       const preFolder = this.history[this.history.length - 1];
       this.render({
-        bookMarkTree: preFolder.bookMarkList,
-        title: preFolder.title,
         id: preFolder.id,
         mode: "back",
       });
@@ -156,10 +219,7 @@ export default class FolderManager {
         $manager: $folderManager,
         bookMark,
         onClick: () => {
-          console.log("hit");
           this.render({
-            bookMarkTree: bookMark.children,
-            title: bookMark.title,
             id: bookMark.id,
           });
         },
@@ -172,6 +232,8 @@ export default class FolderManager {
         bookMark: bookMark,
       });
     }
+
+    this.rightClickHandler();
   }
 }
 

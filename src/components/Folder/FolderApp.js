@@ -2,29 +2,30 @@ import Folder from "./Folder.js";
 import FolderManager from "../FolderManager.js";
 
 export default class FolderApp extends Folder {
-  constructor({ $manager, bookMark, pos }) {
+  constructor({ $app, bookMark: bookMark, pos, $target }) {
     super({
       bookMark: bookMark,
     });
+    this.bookMark = bookMark;
 
-    this.pos = pos;
-    this.$manager = $manager;
+    if ($target == null) {
+      const $div = $app.querySelector(`.node-wrapper-${pos.x}-${pos.y}`);
+      $div.innerHTML = "";
+      $div.appendChild(this.$node);
+    } else {
+      $target.appendChild(this.$node);
+    }
 
     this.$node.addEventListener("click", (e) => {
       const $rect = this.$node.getBoundingClientRect();
+      console.log(this.bookMark);
       const folderManager = new FolderManager({
-        $app: this.$manager,
-        bookMarkList: bookMark.children,
-        title: bookMark.title,
-        id: bookMark.id,
+        $app: $app,
+        bookMarkList: this.bookMark.children,
+        title: this.bookMark.title,
+        id: this.bookMark.id,
         initPos: { top: $rect.top, left: $rect.x },
       });
     });
-
-    const $div = this.$manager.querySelector(
-      `.node-wrapper-${this.pos.x}-${this.pos.y}`
-    );
-    $div.innerHTML = "";
-    $div.appendChild(this.$node);
   }
 }

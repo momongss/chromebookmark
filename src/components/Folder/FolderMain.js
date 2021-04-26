@@ -6,6 +6,8 @@ export default class FolderMain extends Folder {
       bookMark: bookMark,
     });
 
+    this.bookMark = bookMark;
+
     this.$node.addEventListener("click", onClick.bind(this));
     $manager.appendChild(this.$node);
   }

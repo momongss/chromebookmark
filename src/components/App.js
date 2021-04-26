@@ -1,10 +1,15 @@
 import FileApp from "./File/FileApp.js";
 import FolderApp from "./Folder/FolderApp.js";
 
+import OptionEdit from "./Options/OptionEdit.js";
+import OptionCreate from "./Options/OptionCreate.js";
+
 import Storage from "../utils/storage.js";
+import Bookmark from "../utils/bookmark.js";
+
 import { dropHandler } from "../utils/drop.js";
 import { selectAll } from "../utils/caret.js";
-import Bookmark from "../utils/bookmark.js";
+import { constDatas } from "../utils/const.js";
 
 export default class App {
   constructor({ $app }) {
@@ -17,6 +22,7 @@ export default class App {
     const rootTree = await this.getBookMarkList();
     const bookMarkTree = rootTree.children;
     this.rootId = rootTree.id;
+    constDatas.rootId = this.rootId;
 
     this.history = [];
 
@@ -27,17 +33,9 @@ export default class App {
       <div class="button delete">삭제</div>      
     `;
 
-    const $createOptions = document.createElement("div");
-    $createOptions.className = "options create";
-    $createOptions.innerHTML = `
-      <div class="button create-folder">새 폴더</div>
-    `;
-
     this.$nodeOptions = $nodeOptions;
-    this.$createOptions = $createOptions;
 
     $app.appendChild($nodeOptions);
-    $app.appendChild($createOptions);
 
     this.$app = $app;
 
@@ -85,7 +83,7 @@ export default class App {
         }
 
         const folder = new FolderApp({
-          $manager: $app,
+          $app: $app,
           pos: folderPos,
           bookMark: bookMark,
         });
@@ -93,6 +91,7 @@ export default class App {
     }
 
     for (const bookMark of posUndefineds) {
+      console.log(bookMark);
       if (bookMark.children == null) {
         const $wrapper = findEmpty($app);
         const tmp = $wrapper.className.split("-");
@@ -107,17 +106,17 @@ export default class App {
         });
         Storage.setPos(bookMark.id, pos);
       } else {
-        const folder = new FolderApp({
-          $manager: $app,
-          pos: pos,
-          bookMark: bookMark,
-        });
         const $wrapper = findEmpty($app);
         const tmp = $wrapper.className.split("-");
         const pos = {
           x: tmp[2],
           y: tmp[3],
         };
+        const folder = new FolderApp({
+          $app: $app,
+          pos: pos,
+          bookMark: bookMark,
+        });
         Storage.setPos(bookMark.id, pos);
         folder.render(bookMark, pos.x, pos.y);
       }
@@ -143,28 +142,28 @@ export default class App {
       "click",
       async (e) => {
         if (e.target.classList.contains("delete")) {
-          e.stopPropagation();
-          e.preventDefault();
-          const nodeId = $editTarget.dataset.id;
-          if ($editTarget.classList.contains("file")) {
-            chrome.bookmarks.remove(nodeId);
-          } else {
-            let subTree = await Bookmark.getSubTree(nodeId);
-            subTree = subTree[0];
-            if (subTree.children.length === 0) {
-              chrome.bookmarks.remove(nodeId);
-            } else {
-              const answer = confirm(
-                `정말 이 폴더를 지우시겠습니까? : ${subTree.title}`
-              );
-              if (!answer) {
-                this.$nodeOptions.style.display = "none";
-                return;
-              }
-              const removingTree = chrome.bookmarks.removeTree(nodeId);
-            }
-          }
-          $editTarget.remove();
+          // e.stopPropagation();
+          // e.preventDefault();
+          // const nodeId = $editTarget.dataset.id;
+          // if ($editTarget.classList.contains("file")) {
+          //   chrome.bookmarks.remove(nodeId);
+          // } else {
+          //   let subTree = await Bookmark.getSubTree(nodeId);
+          //   subTree = subTree[0];
+          //   if (subTree.children.length === 0) {
+          //     chrome.bookmarks.remove(nodeId);
+          //   } else {
+          //     const answer = confirm(
+          //       `정말 이 폴더를 지우시겠습니까? : ${subTree.title}`
+          //     );
+          //     if (!answer) {
+          //       this.$nodeOptions.style.display = "none";
+          //       return;
+          //     }
+          //     const removingTree = chrome.bookmarks.removeTree(nodeId);
+          //   }
+          // }
+          // $editTarget.remove();
         } else if (e.target.classList.contains("edit")) {
           e.stopPropagation();
           e.preventDefault();
@@ -181,52 +180,42 @@ export default class App {
               title: $title.innerHTML,
             });
           });
-        } else if (e.target.classList.contains("create-folder")) {
-          console.log("create");
         }
 
-        this.$nodeOptions.remove();
-        this.$createOptions.remove();
+        if (this.$nodeOptions) this.$nodeOptions.remove();
+        if (this.$createOptions) this.$createOptions.remove();
       },
       true
     );
 
-    document.addEventListener("contextmenu", (e) => {
+    this.$app.addEventListener("contextmenu", (e) => {
       e.preventDefault();
       const $target = e.target.parentElement;
 
-      this.$nodeOptions.remove();
-      this.$createOptions.remove();
+      if (this.$nodeOptions) this.$nodeOptions.remove();
+      if (this.$createOptions) this.$createOptions.remove();
+
       if ($target.classList.contains("node")) {
-        const $nodeOptions = document.createElement("div");
-        $nodeOptions.className = "options";
-        $nodeOptions.innerHTML = `
-          <div class="button edit">수정</div>
-          <div class="button delete">삭제</div>      
-        `;
-        $target.appendChild($nodeOptions);
-        this.$nodeOptions = $nodeOptions;
-        this.$nodeOptions.style.top = `${e.clientY}px`;
-        this.$nodeOptions.style.left = `${e.clientX}px`;
-        this.$nodeOptions.style.display = "block";
-        $editTarget = $target;
+        // const optionEdit = new OptionEdit({
+        //   $target: $target,
+        //   x: e.clientX,
+        //   y: e.clientY,
+        // });
+        // this.$nodeOptions = optionEdit.$nodeOptions;
+        // $editTarget = $target;
       } else if ($target.parentElement.classList.contains("node")) {
-        const $nodeOptions = document.createElement("div");
-        $nodeOptions.className = "options";
-        $nodeOptions.innerHTML = `
-          <div class="button edit">수정</div>
-          <div class="button delete">삭제</div>      
-        `;
-        this.$nodeOptions = $nodeOptions;
-        $target.appendChild($nodeOptions);
-        this.$nodeOptions.style.top = `${e.clientY}px`;
-        this.$nodeOptions.style.left = `${e.clientX}px`;
-        this.$nodeOptions.style.display = "block";
-        $editTarget = $target.parentElement;
-      } else {
-        this.$createOptions.style.top = `${e.clientY}px`;
-        this.$createOptions.style.left = `${e.clientX}px`;
-        this.$createOptions.style.display = "block";
+        // new OptionEdit({ $target: $target, x: e.clientX, y: e.clientY });
+        // $editTarget = $target.parentElement;
+      } else if (e.target.className.includes("node-wrapper")) {
+        console.log("here");
+        const optionCreate = new OptionCreate({
+          $app: this.$app,
+          $target: e.target,
+          x: e.clientX,
+          y: e.clientY,
+          mode: "app",
+        });
+        this.$createOptions = optionCreate.$createOptions;
       }
     });
 
@@ -316,7 +305,7 @@ export default class App {
           folderPos.y++;
         }
         const folder = new FolderApp({
-          $manager: $app,
+          $app: $app,
           pos: folderPos,
           bookMark: bookMark,
         });
