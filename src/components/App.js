@@ -51,7 +51,7 @@ export default class App {
 
   async renderRunned(bookMarkTree, $app) {
     const lenX = 20;
-    const lenY = 8;
+    const lenY = 9;
 
     const posUndefineds = [];
 
@@ -66,11 +66,14 @@ export default class App {
     for (const bookMark of bookMarkTree) {
       if (bookMark.children == null) {
         const filePos = await Storage.getPos(bookMark.id);
-        if (filePos == null) {
+        if (
+          filePos == null ||
+          (filePos.constructor === Object && Object.keys(filePos).length === 0)
+        ) {
           posUndefineds.push(bookMark);
           continue;
         }
-        const file = new FileApp({
+        new FileApp({
           $manager: $app,
           bookMark: bookMark,
           pos: filePos,
@@ -82,7 +85,7 @@ export default class App {
           continue;
         }
 
-        const folder = new FolderApp({
+        new FolderApp({
           $app: $app,
           pos: folderPos,
           bookMark: bookMark,
@@ -91,7 +94,6 @@ export default class App {
     }
 
     for (const bookMark of posUndefineds) {
-      console.log(bookMark);
       if (bookMark.children == null) {
         const $wrapper = findEmpty($app);
         const tmp = $wrapper.className.split("-");
@@ -99,7 +101,7 @@ export default class App {
           x: tmp[2],
           y: tmp[3],
         };
-        const file = new FileApp({
+        new FileApp({
           $manager: $app,
           bookMark: bookMark,
           pos: pos,
@@ -118,96 +120,31 @@ export default class App {
           bookMark: bookMark,
         });
         Storage.setPos(bookMark.id, pos);
-        folder.render(bookMark, pos.x, pos.y);
-      }
-    }
-
-    function findEmpty($app) {
-      for (const $child of $app.childNodes) {
-        if (
-          $child.className.includes("node-wrapper") &&
-          $child.childElementCount === 0
-        ) {
-          return $child;
-        }
+        // folder.render(bookMark, pos.x, pos.y);
       }
     }
   }
 
   eventListeners() {
     let $dragged;
-    let $editTarget;
 
-    document.addEventListener(
-      "click",
-      async (e) => {
-        if (e.target.classList.contains("delete")) {
-          // e.stopPropagation();
-          // e.preventDefault();
-          // const nodeId = $editTarget.dataset.id;
-          // if ($editTarget.classList.contains("file")) {
-          //   chrome.bookmarks.remove(nodeId);
-          // } else {
-          //   let subTree = await Bookmark.getSubTree(nodeId);
-          //   subTree = subTree[0];
-          //   if (subTree.children.length === 0) {
-          //     chrome.bookmarks.remove(nodeId);
-          //   } else {
-          //     const answer = confirm(
-          //       `정말 이 폴더를 지우시겠습니까? : ${subTree.title}`
-          //     );
-          //     if (!answer) {
-          //       this.$nodeOptions.style.display = "none";
-          //       return;
-          //     }
-          //     const removingTree = chrome.bookmarks.removeTree(nodeId);
-          //   }
-          // }
-          // $editTarget.remove();
-        } else if (e.target.classList.contains("edit")) {
-          e.stopPropagation();
-          e.preventDefault();
-          const $title = $editTarget.querySelector(".text");
-          selectAll($title);
-          $title.addEventListener("keydown", (e) => {
-            if (e.key === "Enter") {
-              $title.blur();
-            }
-          });
-
-          $title.addEventListener("blur", (e) => {
-            chrome.bookmarks.update($editTarget.dataset.id, {
-              title: $title.innerHTML,
-            });
-          });
-        }
-
-        if (this.$nodeOptions) this.$nodeOptions.remove();
-        if (this.$createOptions) this.$createOptions.remove();
-      },
-      true
-    );
+    document.addEventListener("click", async (e) => {
+      document.querySelectorAll(".options").forEach(($el) => {
+        $el.remove();
+      });
+    });
 
     this.$app.addEventListener("contextmenu", (e) => {
       e.preventDefault();
-      const $target = e.target.parentElement;
 
       if (this.$nodeOptions) this.$nodeOptions.remove();
       if (this.$createOptions) this.$createOptions.remove();
 
-      if ($target.classList.contains("node")) {
-        // const optionEdit = new OptionEdit({
-        //   $target: $target,
-        //   x: e.clientX,
-        //   y: e.clientY,
-        // });
-        // this.$nodeOptions = optionEdit.$nodeOptions;
-        // $editTarget = $target;
-      } else if ($target.parentElement.classList.contains("node")) {
-        // new OptionEdit({ $target: $target, x: e.clientX, y: e.clientY });
-        // $editTarget = $target.parentElement;
-      } else if (e.target.className.includes("node-wrapper")) {
-        console.log("here");
+      document.querySelectorAll(".options").forEach(($el) => {
+        $el.remove();
+      });
+
+      if (e.target.className.includes("node-wrapper")) {
         const optionCreate = new OptionCreate({
           $app: this.$app,
           $target: e.target,
@@ -266,7 +203,7 @@ export default class App {
 
   renderMainInit(bookMarkTree, $app) {
     const lenX = 20;
-    const lenY = 8;
+    const lenY = 9;
 
     for (let y = 0; y < lenY; y++) {
       for (let x = 0; x < lenX; x++) {
@@ -277,38 +214,58 @@ export default class App {
     }
 
     const fileInitX = 9;
-    const fileEndX = 14;
+    const fileEndX = 15;
     const folderInitX = 4;
     const folderEndX = 8;
 
     const filePos = { x: fileInitX, y: 1 };
     const folderPos = { x: folderInitX, y: 1 };
 
+    let fileCnt = 0;
+    let folderCnt = 0;
+    for (const bookMark of bookMarkTree) {
+      if (bookMark.children == null) fileCnt++;
+      else folderCnt++;
+    }
+
     for (const bookMark of bookMarkTree) {
       if (bookMark.children == null) {
+        if (filePos.y >= lenY) {
+          const $wrapper = findEmpty($app);
+          const tmp = $wrapper.className.split("-");
+          filePos.x = parseInt(tmp[2]);
+          filePos.y = parseInt(tmp[3]);
+        }
         Storage.setPos(bookMark.id, filePos);
+        new FileApp({
+          $manager: $app,
+          bookMark: bookMark,
+          pos: filePos,
+        });
         filePos.x++;
         if (filePos.x >= fileEndX) {
           filePos.x = fileInitX;
           filePos.y++;
         }
-        const file = new FileApp({
-          $manager: $app,
-          bookMark: bookMark,
-          pos: filePos,
-        });
       } else {
+        if (folderPos.y >= lenY) {
+          const $wrapper = findEmpty($app);
+          const tmp = $wrapper.className.split("-");
+          folderPos.x = parseInt(tmp[2]);
+          folderPos.y = parseInt(tmp[3]);
+        }
         Storage.setPos(bookMark.id, folderPos);
+        console.log(folderPos);
+        new FolderApp({
+          $app: $app,
+          pos: folderPos,
+          bookMark: bookMark,
+        });
         folderPos.x++;
         if (folderPos.x >= folderEndX) {
           folderPos.x = folderInitX;
           folderPos.y++;
         }
-        const folder = new FolderApp({
-          $app: $app,
-          pos: folderPos,
-          bookMark: bookMark,
-        });
       }
     }
 
@@ -323,5 +280,16 @@ export default class App {
     return bookMark.then((itemTree) => {
       return itemTree[0].children[0];
     });
+  }
+}
+
+function findEmpty($app) {
+  for (const $child of $app.childNodes) {
+    if (
+      $child.className.includes("node-wrapper") &&
+      $child.childElementCount === 0
+    ) {
+      return $child;
+    }
   }
 }

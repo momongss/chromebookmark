@@ -1,4 +1,5 @@
 import Node from "../Node.js";
+import OptionEdit from "../Options/OptionEdit.js";
 
 export default class File extends Node {
   constructor({ bookMark }) {
@@ -6,7 +7,7 @@ export default class File extends Node {
     this.$node = document.createElement("a");
     this.$node.className = "node file";
     this.$node.draggable = true;
-    // this.dragHandler();
+    this.eventListeners();
 
     this.render(bookMark);
   }
@@ -26,5 +27,30 @@ export default class File extends Node {
         <div class="drag-area"></div>
       </div>
     `;
+  }
+
+  eventListeners() {
+    document.addEventListener("click", (e) => {
+      if (this.$nodeOptions) this.$nodeOptions.remove();
+    });
+
+    this.$node.addEventListener("contextmenu", (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+
+      document.querySelectorAll(".options").forEach(($el) => {
+        $el.remove();
+      });
+
+      this.optionEdit = new OptionEdit({
+        $target: this.$node,
+        x: e.clientX,
+        y: e.clientY,
+      });
+      this.$nodeOptions = this.optionEdit.$nodeOptions;
+      console.log(this.$nodeOptions);
+      if (e.target.parentElement === this.$node) {
+      }
+    });
   }
 }

@@ -12,7 +12,7 @@ export async function dropHandler(dragged, target, rootId) {
         y: tmp[3],
       };
       Storage.setPos(dragged.dataset.id, pos);
-    } else if (dragged.parentNode.parentNode.className === "folder-manager") {
+    } else if (dragged.parentNode.className === "folder-manager") {
       const rootTree = await Bookmark.getSubTree(rootId);
       const node = await Bookmark.getNode(dragged.dataset.id);
       for (const child of rootTree[0].children) {

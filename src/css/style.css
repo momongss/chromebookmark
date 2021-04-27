@@ -1,5 +1,8 @@
 body {
   background-size: 100vw 110vh;
+
+  padding: 0;
+  margin: 0;
 }
 
 button:active {
@@ -14,7 +17,7 @@ button:active {
 .app {
   display: grid;
   grid-template-columns: repeat(20, var(--grid-item-width));
-  grid-template-rows: repeat(8, var(--grid-item-height));
+  grid-template-rows: repeat(9, var(--grid-item-height));
 }
 
 .options {

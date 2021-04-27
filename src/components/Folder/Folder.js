@@ -27,19 +27,21 @@ export default class Folder extends Node {
       if (this.$nodeOptions) this.$nodeOptions.remove();
     });
 
-    document.addEventListener("contextmenu", (e) => {
+    this.$node.addEventListener("contextmenu", (e) => {
       e.preventDefault();
-      if (this.$nodeOptions) this.$nodeOptions.remove();
+      e.stopPropagation();
+      document.querySelectorAll(".options").forEach(($el) => {
+        $el.remove();
+      });
+      this.optionEdit = new OptionEdit({
+        $target: this.$node,
+        x: e.clientX,
+        y: e.clientY,
+      });
+      this.$nodeOptions = this.optionEdit.$nodeOptions;
+      console.log(this.$nodeOptions);
       if (e.target.parentElement === this.$node) {
-        this.optionEdit = new OptionEdit({
-          $target: this.$node,
-          x: e.clientX,
-          y: e.clientY,
-        });
-        this.$nodeOptions = this.optionEdit.$nodeOptions;
       }
     });
-
-    this.$node.addEventListener("contextmenu", (e) => {});
   }
 }

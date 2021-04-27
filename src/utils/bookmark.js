@@ -1,5 +1,9 @@
-export default class Bookmark {
-  static getSubTree(treeId) {
+class bookmark {
+  constructor() {
+    this.history = [];
+  }
+
+  getSubTree(treeId) {
     const subTree = new Promise((resolve) => {
       chrome.bookmarks.getSubTree(treeId, resolve);
     });
@@ -7,19 +11,38 @@ export default class Bookmark {
     return subTree.then((subTree) => subTree);
   }
 
-  static moveTree(id, destId) {
+  async remove(id) {
+    const node = await this.getNode(id);
+    this.history.push({
+      type: "remove",
+      nodeInfo: {
+        parentId: node.parentId,
+        title: node.title,
+        url: node.url,
+      },
+    });
+    chrome.bookmarks.remove(id, () => {});
+  }
+
+  async removeTree(treeId) {
+    const tree = await this.getSubTree(treeId);
+    this.history.push({ type: "remove", nodeInfo: tree[0] });
+    chrome.bookmarks.removeTree(treeId, () => {});
+  }
+
+  moveTree(id, destId) {
     chrome.bookmarks.move(id, {
       parentId: destId,
     });
   }
 
-  static updateBookmarktitle(id, title) {
+  updateBookmarktitle(id, title) {
     chrome.bookmarks.update(id, {
       title: title,
     });
   }
 
-  static getNode(id) {
+  getNode(id) {
     const subTree = new Promise((resolve) => {
       chrome.bookmarks.get(id, resolve);
     });
@@ -27,12 +50,12 @@ export default class Bookmark {
     return subTree.then((node) => node[0]);
   }
 
-  static async searchTree(treeId, id) {
+  async searchTree(treeId, id) {
     const subTree = await this.getSubTree(treeId);
     return this.searchSubTree(subTree, id);
   }
 
-  static searchSubTree(tree, id) {
+  searchSubTree(tree, id) {
     for (const subTree of tree) {
       if (subTree.id === id) {
         return true;
@@ -45,3 +68,6 @@ export default class Bookmark {
     return false;
   }
 }
+
+const Bookmark = new bookmark();
+export default Bookmark;

@@ -13,8 +13,6 @@ export default class OptionCreate {
           <div class="button create-folder">새 폴더</div>
         `;
 
-    console.log($target);
-
     this.$createOptions = $createOptions;
     this.$createOptions.style.display = "block";
     this.$createOptions.style.top = `${y}px`;

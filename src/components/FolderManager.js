@@ -40,47 +40,32 @@ export default class FolderManager {
   }
 
   rightClickHandler() {
-    this.$app.addEventListener("click", (e) => {
-      if (this.$nodeOptions) this.$nodeOptions.remove();
-      if (this.$createOptions) this.$createOptions.remove();
-    });
-
-    this.$app.addEventListener("contextmenu", (e) => {
-      if (this.$nodeOptions) this.$nodeOptions.remove();
-      if (this.$createOptions) this.$createOptions.remove();
-    });
-
     const $folderManager = this.$folderManagerWrapper.querySelector(
       ".folder-manager"
     );
 
+    document.addEventListener("click", (e) => {
+      if (this.$nodeOptions) this.$nodeOptions.remove();
+      if (this.$createOptions) this.$createOptions.remove();
+    });
+
     $folderManager.addEventListener("click", (e) => {
       if (this.$nodeOptions) this.$nodeOptions.remove();
       if (this.$createOptions) this.$createOptions.remove();
-      this.$app.querySelectorAll(".options").forEach(($el) => {
+      document.querySelectorAll(".options").forEach(($el) => {
         $el.remove();
       });
     });
 
     $folderManager.addEventListener("contextmenu", (e) => {
       e.preventDefault();
-      const $target = e.target.parentElement;
+      e.stopPropagation();
 
-      // del prev $options
-      if (this.$nodeOptions) this.$nodeOptions.remove();
-      if (this.$createOptions) this.$createOptions.remove();
-      this.$app.querySelectorAll(".options").forEach(($el) => {
+      document.querySelectorAll(".options").forEach(($el) => {
         $el.remove();
       });
 
-      if (e.target.parentElement.parentElement.classList.contains("node")) {
-        // const optionEdit = new OptionEdit({
-        //   $target: $target,
-        //   x: e.clientX,
-        //   y: e.clientY,
-        // });
-        // this.$nodeOptions = optionEdit.$nodeOptions;
-      } else if (e.target.className === "folder-manager") {
+      if (e.target.className === "folder-manager") {
         const optionCreate = new OptionCreate({
           $app: this.$app,
           $target: e.target,

@@ -7,4 +7,14 @@ export default class Options {
   }
 
   render(bookMark, x, y) {}
+
+  findMyNode($el) {
+    while ($el !== document.body) {
+      if ($el.classList.contains("node")) {
+        return $el;
+      }
+      $el = $el.parentElement;
+    }
+    return null;
+  }
 }

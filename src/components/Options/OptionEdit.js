@@ -1,3 +1,6 @@
+import Bookmark from "../../utils/bookmark.js";
+import { selectAll } from "../../utils/caret.js";
+
 export default class OptionEdit {
   constructor({ $target, x, y }) {
     const $nodeOptions = document.createElement("div");
@@ -11,8 +14,8 @@ export default class OptionEdit {
     this.$nodeOptions.style.left = `${x}px`;
     this.$nodeOptions.style.display = "block";
 
-    this.$delete = $nodeOptions.querySelector(".delete");
     this.$edit = $nodeOptions.querySelector(".edit");
+    this.$delete = $nodeOptions.querySelector(".delete");
 
     $target.appendChild($nodeOptions);
 
@@ -20,8 +23,55 @@ export default class OptionEdit {
   }
 
   eventListers() {
-    this.$delete.addEventListener("click", (e) => {
-      console.log("del");
+    this.$edit.addEventListener("click", async (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      const $editTarget = this.findMyNode(e.target);
+
+      const $title = $editTarget.querySelector(".text");
+      selectAll($title);
+      $title.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") {
+          $title.blur();
+        }
+      });
+
+      $title.addEventListener("blur", (e) => {
+        chrome.bookmarks.update($editTarget.dataset.id, {
+          title: $title.innerHTML,
+        });
+      });
+      this.$nodeOptions.remove();
     });
+
+    this.$delete.addEventListener("click", async (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      const $folder = this.$nodeOptions.parentElement;
+      if ($folder && $folder.classList.contains("node")) {
+        const subTree = await Bookmark.getSubTree($folder.dataset.id);
+        if (subTree[0].children != null && subTree[0].children.length > 0) {
+          const answer = confirm("폴더를 지우시겠습니까?", subTree[0].title);
+          if (answer) {
+            Bookmark.removeTree($folder.dataset.id);
+            $folder.remove();
+          }
+        } else {
+          Bookmark.remove($folder.dataset.id);
+          $folder.remove();
+        }
+      }
+      this.$nodeOptions.remove();
+    });
+  }
+
+  findMyNode($el) {
+    while ($el !== document.body) {
+      if ($el.classList.contains("node")) {
+        return $el;
+      }
+      $el = $el.parentElement;
+    }
+    return null;
   }
 }
