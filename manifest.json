@@ -1,6 +1,6 @@
 {
   "name": "new tab & bookmark manager",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "manifest_version": 2,
   "description": "use new tab like desktop first screen",
   "chrome_url_overrides": {

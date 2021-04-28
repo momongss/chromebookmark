@@ -29,7 +29,12 @@ export default class FolderManager {
     this.$folderManagerWrapper = $folderWrapper;
 
     this.history = [];
-    this.pos = initPos;
+
+    this.pos = {
+      left: initPos.left < 393 ? 0 : initPos.left - 393,
+      top: initPos.top,
+    };
+
     this.onDestroy = onDestroy;
 
     this.render({
@@ -101,23 +106,29 @@ export default class FolderManager {
       );
     });
 
+    let left;
+    let top;
+
     document.addEventListener("mousemove", (e) => {
       if (dragged) {
-        this.$folderManagerWrapper.style.top = `${
-          folderY + e.clientY - initY
-        }px`;
-        this.$folderManagerWrapper.style.left = `${
-          folderX + e.clientX - initX
-        }px`;
+        left = folderX + e.clientX - initX;
+        top = folderY + e.clientY - initY;
+
+        this.$folderManagerWrapper.style.left = `${left}px`;
+        this.$folderManagerWrapper.style.top = `${top}px`;
       }
     });
 
     $header.addEventListener("mouseup", (e) => {
       dragged = false;
+
+      this.pos.left = left;
+      this.pos.top = top;
     });
   }
 
   async render({ id, mode }) {
+    console.log(this.pos);
     const subTree = await Bookmark.getSubTree(id);
     const title = subTree[0].title;
     const bookMarkTree = subTree[0].children;
@@ -129,9 +140,7 @@ export default class FolderManager {
     this.$folderManagerWrapper.innerHTML = "";
     this.$folderManagerWrapper.classList.add("show");
     this.$folderManagerWrapper.style.top = `${this.pos.top}px`;
-    this.$folderManagerWrapper.style.left = `${
-      this.pos.left < 393 ? 0 : this.pos.left - 393
-    }px`;
+    this.$folderManagerWrapper.style.left = `${this.pos.left}px`;
 
     const $header = document.createElement("div");
     $header.className = "folder-manager-header";
