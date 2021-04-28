@@ -18,7 +18,8 @@ export default class App {
 
   async _constructor($app) {
     // https://wallpaperaccess.com/aesthetic-gif
-    document.body.style.backgroundImage = `url("chrome-extension://${chrome.runtime.id}/assets/sky_good.jpg")`;
+    document.body.style.backgroundSize = `${window.screen.availWidth}px ${window.screen.availHeight}px`;
+    document.body.style.backgroundImage = `url("chrome-extension://${chrome.runtime.id}/assets/house.png")`;
     const rootTree = await this.getBookMarkList();
     const bookMarkTree = rootTree.children;
     this.rootId = rootTree.id;
@@ -172,7 +173,16 @@ export default class App {
     });
 
     document.addEventListener("dragenter", (e) => {
+      // 이미 북마크가 존재하는 곳으로 옮겨짐 방지.
+      if (e.target.className === "drag-area") {
+        e.preventDefault();
+        return;
+      }
       if (e.target.className.includes("node-wrapper")) {
+        if (e.target.childElementCount > 0) {
+          e.preventDefault();
+          return;
+        }
         e.target.style.background = "rgba(0, 0, 0, 0.4)";
       }
     });
@@ -185,6 +195,7 @@ export default class App {
 
     document.addEventListener("drop", async (e) => {
       e.preventDefault();
+
       dropHandler($dragged, e.target, this.rootId);
     });
 

@@ -7,8 +7,8 @@ export default class FolderApp extends Folder {
       bookMark: bookMark,
     });
     this.bookMark = bookMark;
+    this.managerCnt = 0;
 
-    console.log(`.node-wrapper-${pos.x}-${pos.y}`);
     if ($target == null) {
       const $div = $app.querySelector(`.node-wrapper-${pos.x}-${pos.y}`);
       $div.innerHTML = "";
@@ -19,12 +19,20 @@ export default class FolderApp extends Folder {
 
     this.$node.addEventListener("click", (e) => {
       const $rect = this.$node.getBoundingClientRect();
+      const initPos = {
+        top: $rect.top + this.managerCnt * 35,
+        left: $rect.x + this.managerCnt * 35,
+      };
+      this.managerCnt++;
       new FolderManager({
         $app: $app,
         bookMarkList: this.bookMark.children,
         title: this.bookMark.title,
         id: this.bookMark.id,
-        initPos: { top: $rect.top, left: $rect.x },
+        initPos: initPos,
+        onDestroy: () => {
+          this.managerCnt--;
+        },
       });
     });
   }

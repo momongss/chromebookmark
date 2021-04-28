@@ -9,7 +9,14 @@ import Bookmark from "../utils/bookmark.js";
 import { FolderManagerData } from "../utils/FolderManagerData.js";
 
 export default class FolderManager {
-  constructor({ $app, bookMarkList: bookMarkTree, title, id, initPos }) {
+  constructor({
+    $app,
+    bookMarkList: bookMarkTree,
+    title,
+    id,
+    initPos,
+    onDestroy,
+  }) {
     const $folderWrapper = document.createElement("div");
     $folderWrapper.className = `folder-manager-wrapper`;
 
@@ -32,6 +39,7 @@ export default class FolderManager {
 
     this.history = [];
     this.pos = initPos;
+    this.onDestroy = onDestroy;
 
     this.render({
       id: id,
@@ -144,7 +152,7 @@ export default class FolderManager {
     $header.className = "folder-manager-header";
     $header.innerHTML = `
       <div class="folder-title">${title}</div>
-      <button class="folder-close">x</button>
+      <div class="folder-close">x</div>
     `;
 
     this.dragHandler($header);
@@ -153,6 +161,7 @@ export default class FolderManager {
     $closeBtn.addEventListener("click", (e) => {
       this.$folderManagerWrapper.remove();
       this.history = [];
+      this.onDestroy();
     });
 
     const $folderManager = document.createElement("div");

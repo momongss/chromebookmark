@@ -1,8 +1,23 @@
-body {
-  background-size: 100vw 110vh;
-
+* {
   padding: 0;
   margin: 0;
+}
+
+html {
+  width: 100%;
+  height: 100%;
+}
+
+body {
+  background-size: 100vw 110vh;
+  width: 100%;
+  height: 100%;
+}
+
+canvas {
+  width: 100%;
+  height: 100%;
+  position: fixed;
 }
 
 button:active {
@@ -10,8 +25,10 @@ button:active {
 }
 
 :root {
-  --grid-item-width: 74px;
+  --grid-item-width: 75px;
   --grid-item-height: 80px;
+
+  --color-hover: rgba(190, 196, 209, 1);
 }
 
 .app {
@@ -29,6 +46,10 @@ button:active {
   text-shadow: none;
 
   z-index: 1;
+
+  border-radius: 5px;
+  padding-top: 3px;
+  padding-bottom: 3px;
 }
 
 .options * {
@@ -37,10 +58,12 @@ button:active {
   display: flex;
   justify-content: center;
   align-items: center;
+
+  /* border-radius: 10px; */
 }
 
 .options > *:hover {
-  background-color: rgb(94, 94, 94);
+  background-color: var(--color-hover);
   cursor: pointer;
 }
 
@@ -48,7 +71,7 @@ button:active {
   display: none;
   position: fixed;
 
-  padding-top: 10px;
+  padding-top: 5px;
   padding-bottom: 30px;
   background-color: rgba(240, 242, 245, 1);
   border-radius: 10px;
@@ -65,8 +88,8 @@ button:active {
   justify-content: flex-end;
   align-items: center;
   position: relative;
-  bottom: 3px;
-  right: 5px;
+  bottom: 2px;
+  right: 3.5px;
   color: black;
 }
 
@@ -76,15 +99,19 @@ button:active {
   align-items: center;
 
   font-size: 15px;
+  margin-right: 5px;
 }
 
 .folder-manager-header .folder-close {
-  border: none;
-  background-color: inherit;
+  position: relative;
 
-  width: 25px;
-  height: 25px;
+  width: 30px;
+  height: 30px;
   font-size: 20px;
+
+  text-align: center;
+  line-height: 24.8px;
+  border-radius: 7px;
 }
 
 .folder-manager-header .folder-close:hover {
@@ -93,14 +120,15 @@ button:active {
 }
 
 .folder-manager .back-btn {
-  font-size: 30px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  font-size: 36px;
+  text-align: center;
+  line-height: 72px;
+
+  /* font-weight: bold; */
 }
 
 .folder-manager .back-btn.backable:hover {
-  background-color: rgba(190, 196, 209, 1);
+  background-color: var(--color-hover);
   cursor: pointer;
 }
 
@@ -154,7 +182,7 @@ button:active {
 }
 
 .folder-manager .node:hover {
-  background-color: rgba(190, 196, 209, 1);
+  background-color: var(--color-hover);
 }
 
 .node .drag-area {
@@ -170,7 +198,7 @@ button:active {
   text-align: center;
   word-break: keep-all;
 
-  margin-bottom: 8px;
+  margin-bottom: 4px;
 }
 
 .file {

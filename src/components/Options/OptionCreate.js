@@ -56,7 +56,7 @@ export default class OptionCreate {
         const parentId = $target.dataset.id
           ? $target.dataset.id
           : constDatas.rootId;
-        console.log($text.innerHTML, parentId);
+
         chrome.bookmarks.create(
           {
             title: $text.innerHTML,
@@ -65,9 +65,7 @@ export default class OptionCreate {
           (created) => {
             Storage.setPos(created.id, pos);
 
-            console.log(newFolder.$node);
             newFolder.render({ id: created.id, title: $text.innerHTML });
-            console.log(newFolder.$node);
           }
         );
       });

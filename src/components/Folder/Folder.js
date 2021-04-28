@@ -39,7 +39,6 @@ export default class Folder extends Node {
         y: e.clientY,
       });
       this.$nodeOptions = this.optionEdit.$nodeOptions;
-      console.log(this.$nodeOptions);
       if (e.target.parentElement === this.$node) {
       }
     });
