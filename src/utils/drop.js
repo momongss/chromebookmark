@@ -53,8 +53,6 @@ export async function dropHandler(dragged, $target, rootId) {
       Storage.setPos(dragged.dataset.id, pos);
     }
 
-    console.log($target.parentNode);
-
     if (nodeType === "file") {
       new FileApp({
         $manager: $target.parentNode,
@@ -92,7 +90,6 @@ export async function dropHandler(dragged, $target, rootId) {
         bookMark: bookMark,
       });
     } else {
-      console.log($target.parentNode);
       new FolderMain({
         $manager: $target,
         bookMark: bookMark,
@@ -100,18 +97,11 @@ export async function dropHandler(dragged, $target, rootId) {
     }
 
     removeDragged(dragged);
-    // const $nodeWrapper = document.createElement("div");
-    // $nodeWrapper.className = "node-wrapper";
-    // $nodeWrapper.appendChild(dragged);
-    // $target.appendChild($nodeWrapper);
-
-    // console.log(dragged.dataset.id, $target);
     Bookmark.moveTree(dragged.dataset.id, $target.dataset.id);
   }
 }
 
 function removeDragged(dragged) {
-  console.log(dragged, dragged.parentNode.className);
   if (dragged.parentNode.parentNode.className === "app") {
     dragged.remove();
   } else if (dragged.parentNode.className === "folder-manager") {

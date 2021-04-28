@@ -36,7 +36,6 @@ export default class OptionCreate {
               $manager: $target,
               bookMark: bookMark,
             });
-      console.log(newFolder.$node);
 
       const $text = newFolder.$node.querySelector(".text");
       selectAll($text);

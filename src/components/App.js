@@ -143,8 +143,6 @@ export default class App {
       }
     });
 
-    document.addEventListener("drag", (e) => {});
-
     document.addEventListener("dragstart", (e) => {
       $dragged = e.target;
       $dragged.style.opacity = 0.5;
@@ -183,18 +181,6 @@ export default class App {
       e.preventDefault();
 
       dropHandler($dragged, e.target, this.rootId);
-    });
-
-    document.addEventListener("keydown", (e) => {
-      if (e.key === "=") {
-        console.log("데이터 초기화");
-        chrome.storage.local.clear(function () {
-          var error = chrome.runtime.lastError;
-          if (error) {
-            console.error(error);
-          }
-        });
-      }
     });
   }
 
@@ -252,7 +238,6 @@ export default class App {
           folderPos.y = parseInt(tmp[3]);
         }
         Storage.setPos(bookMark.id, folderPos);
-        console.log(folderPos);
         new FolderApp({
           $app: $app,
           pos: folderPos,

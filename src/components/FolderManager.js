@@ -7,14 +7,7 @@ import Bookmark from "../utils/bookmark.js";
 import { FolderManagerData } from "../utils/FolderManagerData.js";
 
 export default class FolderManager {
-  constructor({
-    $app,
-    bookMarkList: bookMarkTree,
-    title,
-    id,
-    initPos,
-    onDestroy,
-  }) {
+  constructor({ $app, id, initPos, onDestroy }) {
     const $folderWrapper = document.createElement("div");
     $folderWrapper.className = `folder-manager-wrapper`;
 
@@ -41,7 +34,6 @@ export default class FolderManager {
 
     this.render({
       id: id,
-      pos: initPos,
     });
   }
 
@@ -126,7 +118,6 @@ export default class FolderManager {
   }
 
   async render({ id, mode }) {
-    console.log(id);
     const subTree = await Bookmark.getSubTree(id);
     const title = subTree[0].title;
     const bookMarkTree = subTree[0].children;
@@ -139,7 +130,7 @@ export default class FolderManager {
     this.$folderManagerWrapper.classList.add("show");
     this.$folderManagerWrapper.style.top = `${this.pos.top}px`;
     this.$folderManagerWrapper.style.left = `${
-      this.pos.left < 400 ? 0 : this.pos.left - 400
+      this.pos.left < 393 ? 0 : this.pos.left - 393
     }px`;
 
     const $header = document.createElement("div");

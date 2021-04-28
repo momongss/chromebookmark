@@ -26,8 +26,6 @@ export default class FolderApp extends Folder {
       this.managerCnt++;
       new FolderManager({
         $app: $app,
-        bookMarkList: this.bookMark.children,
-        title: this.bookMark.title,
         id: this.bookMark.id,
         initPos: initPos,
         onDestroy: () => {
