@@ -6,8 +6,8 @@ export default class OptionEdit {
     const $nodeOptions = document.createElement("div");
     $nodeOptions.className = "options";
     $nodeOptions.innerHTML = `
-          <div class="button edit">수정</div>
-          <div class="button delete">삭제</div>      
+          <div class="button edit"><img src="chrome-extension://${chrome.runtime.id}/assets/edit2.svg" /></div>
+          <div class="button delete"><img src="chrome-extension://${chrome.runtime.id}/assets/delete.svg"></div>      
         `;
     this.$nodeOptions = $nodeOptions;
     this.$nodeOptions.style.top = `${y}px`;
@@ -51,7 +51,7 @@ export default class OptionEdit {
       if ($folder && $folder.classList.contains("node")) {
         const subTree = await Bookmark.getSubTree($folder.dataset.id);
         if (subTree[0].children != null && subTree[0].children.length > 0) {
-          const answer = confirm("폴더를 지우시겠습니까?", subTree[0].title);
+          const answer = confirm("really delete folder?");
           if (answer) {
             Bookmark.removeTree($folder.dataset.id);
             $folder.remove();

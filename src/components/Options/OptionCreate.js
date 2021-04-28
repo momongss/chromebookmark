@@ -6,11 +6,11 @@ import { constDatas } from "../../utils/const.js";
 import Storage from "../../utils/storage.js";
 
 export default class OptionCreate {
-  constructor({ $app, $target, x, y, mode, onClick }) {
+  constructor({ $app, $target, x, y, mode }) {
     const $createOptions = document.createElement("div");
     $createOptions.className = "options create";
     $createOptions.innerHTML = `
-          <div class="button create-folder">새 폴더</div>
+          <div class="button create-folder"><img src="chrome-extension://${chrome.runtime.id}/assets/add.svg" /></div>
         `;
 
     this.$createOptions = $createOptions;
@@ -35,9 +35,6 @@ export default class OptionCreate {
           : new FolderMain({
               $manager: $target,
               bookMark: bookMark,
-              onClick: () => {
-                onClick(bookMark);
-              },
             });
       console.log(newFolder.$node);
 

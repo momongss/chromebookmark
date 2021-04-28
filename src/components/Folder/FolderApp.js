@@ -2,7 +2,7 @@ import Folder from "./Folder.js";
 import FolderManager from "../FolderManager.js";
 
 export default class FolderApp extends Folder {
-  constructor({ $app, bookMark: bookMark, pos, $target }) {
+  constructor({ $app, bookMark, pos, $target }) {
     super({
       bookMark: bookMark,
     });

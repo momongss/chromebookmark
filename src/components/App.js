@@ -1,14 +1,11 @@
 import FileApp from "./File/FileApp.js";
 import FolderApp from "./Folder/FolderApp.js";
 
-import OptionEdit from "./Options/OptionEdit.js";
 import OptionCreate from "./Options/OptionCreate.js";
 
 import Storage from "../utils/storage.js";
-import Bookmark from "../utils/bookmark.js";
 
 import { dropHandler } from "../utils/drop.js";
-import { selectAll } from "../utils/caret.js";
 import { constDatas } from "../utils/const.js";
 
 export default class App {
@@ -26,17 +23,6 @@ export default class App {
     constDatas.rootId = this.rootId;
 
     this.history = [];
-
-    const $nodeOptions = document.createElement("div");
-    $nodeOptions.className = "options";
-    $nodeOptions.innerHTML = `
-      <div class="button edit">수정</div>
-      <div class="button delete">삭제</div>      
-    `;
-
-    this.$nodeOptions = $nodeOptions;
-
-    $app.appendChild($nodeOptions);
 
     this.$app = $app;
 

@@ -1,9 +1,8 @@
 {
-  "name": "Bookmarker",
+  "name": "new tab & bookmark manager",
   "version": "1.0.0",
   "manifest_version": 2,
-  "description": "new tab bookmark app",
-  "background": {},
+  "description": "use new tab like desktop first screen",
   "chrome_url_overrides": {
     "newtab": "index.html"
   },

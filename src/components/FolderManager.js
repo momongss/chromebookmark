@@ -1,7 +1,5 @@
 import FileMain from "./File/FileMain.js";
 import FolderMain from "./Folder/FolderMain.js";
-
-import OptionEdit from "./Options/OptionEdit.js";
 import OptionCreate from "./Options/OptionCreate.js";
 
 import Bookmark from "../utils/bookmark.js";
@@ -80,11 +78,6 @@ export default class FolderManager {
           x: e.clientX,
           y: e.clientY,
           mode: "manager",
-          onClick: (bookMark) => {
-            this.render({
-              id: bookMark.id,
-            });
-          },
         });
         this.$createOptions = optionCreate.$createOptions;
       }
@@ -133,6 +126,7 @@ export default class FolderManager {
   }
 
   async render({ id, mode }) {
+    console.log(id);
     const subTree = await Bookmark.getSubTree(id);
     const title = subTree[0].title;
     const bookMarkTree = subTree[0].children;
@@ -167,6 +161,13 @@ export default class FolderManager {
     const $folderManager = document.createElement("div");
     $folderManager.className = `folder-manager`;
     $folderManager.dataset.id = id;
+
+    $folderManager.addEventListener("click", (e) => {
+      const $node = e.target.parentElement;
+      if ($node.classList.contains("folder")) {
+        this.render({ id: $node.dataset.id });
+      }
+    });
 
     const $backBtn = document.createElement("div");
     $backBtn.className = "back-btn";
@@ -212,11 +213,6 @@ export default class FolderManager {
       new FolderMain({
         $manager: $folderManager,
         bookMark,
-        onClick: () => {
-          this.render({
-            id: bookMark.id,
-          });
-        },
       });
     }
 
