@@ -81,7 +81,7 @@ export default class FolderManager {
     });
   }
 
-  dragHandler($header) {
+  dragListener($header) {
     let dragged = false;
     let initX, initY;
     let folderX, folderY;
@@ -149,7 +149,7 @@ export default class FolderManager {
       <div class="folder-close">x</div>
     `;
 
-    this.dragHandler($header);
+    this.dragListener($header);
 
     const $closeBtn = $header.querySelector(".folder-close");
     $closeBtn.addEventListener("click", (e) => {

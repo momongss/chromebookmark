@@ -7,6 +7,7 @@ import FolderApp from "../components/Folder/FolderApp.js";
 import FolderMain from "../components/Folder/FolderMain.js";
 
 export async function dropHandler(dragged, $target, rootId) {
+  console.log(dragged, $target);
   if (!dragged.classList.contains("node")) return;
 
   let nodeType, nodeId;
@@ -68,9 +69,6 @@ export async function dropHandler(dragged, $target, rootId) {
     }
 
     removeDragged(dragged);
-    $target.style.background = "";
-
-    // target.appendChild(dragged);
   } else if ($target.className === "folder-manager") {
     if (dragged.parentNode.parentNode.dataset.id === $target.dataset.id) return;
 
@@ -98,6 +96,10 @@ export async function dropHandler(dragged, $target, rootId) {
 
     removeDragged(dragged);
     Bookmark.moveTree(dragged.dataset.id, $target.dataset.id);
+  } else if ($target.parentElement.classList.contains("node")) {
+    $target = $target.parentElement;
+    Bookmark.moveTree(dragged.dataset.id, $target.dataset.id);
+    dragged.remove();
   }
 }
 

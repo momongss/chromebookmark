@@ -160,27 +160,27 @@ export default class App {
       // 이미 북마크가 존재하는 곳으로 옮겨짐 방지.
       if (e.target.className === "drag-area") {
         e.preventDefault();
-        return;
+        console.log(e.target.parentElement);
+        // return;
       }
       if (e.target.className.includes("node-wrapper")) {
         if (e.target.childElementCount > 0) {
           e.preventDefault();
           return;
         }
-        e.target.style.background = "rgba(0, 0, 0, 0.4)";
       }
+      e.target.style.background = "rgba(0, 0, 0, 0.4)";
     });
 
     document.addEventListener("dragleave", (e) => {
-      if (e.target.className.includes("node-wrapper")) {
-        e.target.style.background = "";
-      }
+      e.target.style.background = "";
     });
 
     document.addEventListener("drop", async (e) => {
       e.preventDefault();
 
       dropHandler($dragged, e.target, this.rootId);
+      e.target.style.background = "";
     });
   }
 
