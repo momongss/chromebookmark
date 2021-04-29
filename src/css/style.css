@@ -72,6 +72,11 @@ button:active {
   cursor: pointer;
 }
 
+.options .edit img {
+  position: relative;
+  left: 1px;
+}
+
 .folder-manager-wrapper {
   display: none;
   position: fixed;

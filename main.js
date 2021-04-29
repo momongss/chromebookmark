@@ -1,4 +1,3 @@
-import Canvas from "./src/components/Sky.js";
 import App from "./src/components/App.js";
 
 window.onload = () => {

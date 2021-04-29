@@ -7,8 +7,8 @@ import FolderApp from "../components/Folder/FolderApp.js";
 import FolderMain from "../components/Folder/FolderMain.js";
 
 export async function dropHandler(dragged, $target, rootId) {
-  console.log(dragged, $target);
-  if (!dragged.classList.contains("node")) return;
+  if (!dragged.classList.contains("node") || dragged === $target.parentElement)
+    return;
 
   let nodeType, nodeId;
 
@@ -96,7 +96,7 @@ export async function dropHandler(dragged, $target, rootId) {
 
     removeDragged(dragged);
     Bookmark.moveTree(dragged.dataset.id, $target.dataset.id);
-  } else if ($target.parentElement.classList.contains("node")) {
+  } else if ($target.parentElement.classList.contains("folder")) {
     $target = $target.parentElement;
     Bookmark.moveTree(dragged.dataset.id, $target.dataset.id);
     dragged.remove();

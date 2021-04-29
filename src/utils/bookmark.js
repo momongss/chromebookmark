@@ -21,7 +21,7 @@ class bookmark {
         url: node.url,
       },
     });
-    chrome.bookmarks.remove(id, () => {});
+    chrome.bookmarks.remove(id, () => null);
   }
 
   async removeTree(treeId) {

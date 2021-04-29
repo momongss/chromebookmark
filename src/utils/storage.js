@@ -2,6 +2,10 @@ const storage = chrome.storage.local;
 const mainKey = "e352cadab3cc08";
 
 export default class Storage {
+  static async removeInfo(id) {
+    this.setPos(id, null);
+  }
+
   static async getPos(id) {
     return await this.getItem(`mainPos${id}`);
   }
