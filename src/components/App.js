@@ -27,13 +27,34 @@ export default class App {
     this.$app = $app;
 
     const state = await Storage.getState();
+    this.renderMenu();
 
-    if (state == null) {
-      this.renderMainInit(bookMarkTree, $app);
-    } else {
-      this.renderRunned(bookMarkTree, $app);
-    }
+    state
+      ? this.renderRunned(bookMarkTree, $app)
+      : this.renderMainInit(bookMarkTree, $app);
+
     this.eventListeners();
+  }
+
+  renderMenu() {
+    const $menuBtn = document.createElement("div");
+    $menuBtn.className = "menu-btn";
+    $menuBtn.innerHTML = "WALLPAPER";
+
+    const $menu = document.createElement("div");
+    $menu.className = "menu";
+    $menu.innerHTML = `
+      <div class="input-wrapper">
+        <input type="file">
+      </div>
+    `;
+
+    $menuBtn.addEventListener("click", async (e) => {
+      $menu.classList.toggle("show");
+    });
+
+    document.body.appendChild($menuBtn);
+    document.body.appendChild($menu);
   }
 
   async renderRunned(bookMarkTree, $app) {
@@ -107,7 +128,6 @@ export default class App {
           bookMark: bookMark,
         });
         Storage.setPos(bookMark.id, pos);
-        // folder.render(bookMark, pos.x, pos.y);
       }
     }
   }
@@ -157,11 +177,11 @@ export default class App {
     });
 
     document.addEventListener("dragenter", (e) => {
+      console.log(e.target);
       // 이미 북마크가 존재하는 곳으로 옮겨짐 방지.
       if (e.target.className === "drag-area") {
         e.preventDefault();
-        console.log(e.target.parentElement);
-        // return;
+        return;
       }
       if (e.target.className.includes("node-wrapper")) {
         if (e.target.childElementCount > 0) {
@@ -169,18 +189,18 @@ export default class App {
           return;
         }
       }
-      e.target.style.background = "rgba(0, 0, 0, 0.4)";
+      e.target.style.backgroundColor = "rgba(0, 0, 0, 0.4)";
     });
 
     document.addEventListener("dragleave", (e) => {
-      e.target.style.background = "";
+      e.target.style.backgroundColor = "";
     });
 
     document.addEventListener("drop", async (e) => {
       e.preventDefault();
 
       dropHandler($dragged, e.target, this.rootId);
-      e.target.style.background = "";
+      e.target.style.backgroundColor = "";
     });
   }
 

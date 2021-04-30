@@ -1,0 +1,56 @@
+:root {
+  --menu-width: 200px;
+  --menu-height: 50px;
+}
+
+.menu {
+  display: flex;
+  flex-direction: column;
+
+  position: fixed;
+  visibility: hidden;
+
+  align-content: center;
+  justify-content: center;
+
+  top: calc(50% - (var(--menu-height) / 2) - 50px);
+  left: calc(50% - (var(--menu-width) / 2));
+
+  width: var(--menu-width);
+  height: var(--menu-height);
+
+  background-color: white;
+
+  border-radius: 10px;
+}
+
+.menu.show {
+  visibility: visible;
+}
+
+.menu .input-wrapper {
+  height: 25px;
+  padding: 10px;
+}
+
+.menu-btn {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+
+  padding: 10px;
+  font-size: 15px;
+  font-weight: 500;
+
+  cursor: pointer;
+
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.menu-btn:hover {
+  background-color: rgba(255, 255, 255, 0.3);
+  border-radius: 5px;
+}

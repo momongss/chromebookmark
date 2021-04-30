@@ -10,12 +10,7 @@
   "icons": {
     "128": "assets/bookmark.png"
   },
-  "permissions": [
-    "bookmarks",
-    "chrome://favicon/",
-    "storage",
-    "unlimitedStorage"
-  ],
+  "permissions": ["bookmarks", "chrome://favicon/", "storage", "fileSystem"],
   "browser_action": {
     "default_popup": "./credit/credit.html"
   }

@@ -128,7 +128,6 @@ export default class FolderManager {
   }
 
   async render({ id, mode }) {
-    console.log(this.pos);
     const subTree = await Bookmark.getSubTree(id);
     const title = subTree[0].title;
     const bookMarkTree = subTree[0].children;
