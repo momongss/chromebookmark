@@ -1,6 +1,18 @@
 :root {
   --menu-width: 200px;
   --menu-height: 50px;
+
+  --menu-btn-bottom: 10px;
+  --menu-btn-left: 10px;
+  --menu-btn-width: 110px;
+}
+
+.background-img {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
 }
 
 .menu {
@@ -13,13 +25,16 @@
   align-content: center;
   justify-content: center;
 
-  top: calc(50% - (var(--menu-height) / 2) - 50px);
-  left: calc(50% - (var(--menu-width) / 2));
+  /* top: calc(50% - (var(--menu-height) / 2) - 50px);
+  left: calc(50% - (var(--menu-width) / 2)); */
+
+  bottom: var(--menu-btn-bottom);
+  left: calc(var(--menu-btn-left) + var(--menu-btn-width));
 
   width: var(--menu-width);
   height: var(--menu-height);
 
-  background-color: white;
+  background-color: rgba(255, 255, 255, 0.8);
 
   border-radius: 10px;
 }
@@ -35,8 +50,8 @@
 
 .menu-btn {
   position: absolute;
-  bottom: 10px;
-  left: 10px;
+  bottom: var(--menu-btn-bottom);
+  left: var(--menu-btn-left);
 
   padding: 10px;
   font-size: 15px;

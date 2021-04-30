@@ -6,6 +6,14 @@ export default class Storage {
     this.setPos(id, null);
   }
 
+  static async setBackgroundImage(src) {
+    this.setItem("background-image", src);
+  }
+
+  static async getBackgroundImage() {
+    return await this.getItem("background-image");
+  }
+
   static async getPos(id) {
     return await this.getItem(`mainPos${id}`);
   }

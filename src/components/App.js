@@ -15,8 +15,7 @@ export default class App {
 
   async _constructor($app) {
     // https://wallpaperaccess.com/aesthetic-gif
-    document.body.style.backgroundSize = `${window.screen.availWidth}px ${window.screen.availHeight}px`;
-    document.body.style.backgroundImage = `url("chrome-extension://${chrome.runtime.id}/assets/house.png")`;
+
     const rootTree = await this.getBookMarkList();
     const bookMarkTree = rootTree.children;
     this.rootId = rootTree.id;
@@ -27,7 +26,7 @@ export default class App {
     this.$app = $app;
 
     const state = await Storage.getState();
-    this.renderMenu();
+    this.renderBackground();
 
     state
       ? this.renderRunned(bookMarkTree, $app)
@@ -36,7 +35,16 @@ export default class App {
     this.eventListeners();
   }
 
-  renderMenu() {
+  async renderBackground() {
+    const $background = document.createElement("img");
+    $background.className = "background-img";
+    const backgroundImgSrc = await Storage.getBackgroundImage();
+    console.log(backgroundImgSrc);
+
+    $background.src = backgroundImgSrc
+      ? backgroundImgSrc
+      : `chrome-extension://${chrome.runtime.id}/assets/house.png`;
+
     const $menuBtn = document.createElement("div");
     $menuBtn.className = "menu-btn";
     $menuBtn.innerHTML = "WALLPAPER";
@@ -45,14 +53,34 @@ export default class App {
     $menu.className = "menu";
     $menu.innerHTML = `
       <div class="input-wrapper">
-        <input type="file">
+        <input type="file" accept="image/*">
       </div>
     `;
+
+    const $input = $menu.querySelector("input");
+
+    $input.addEventListener("change", (e) => {
+      const file = $input.files[0];
+      const reader = new FileReader();
+      $menu.classList.remove("show");
+
+      reader.onloadend = function () {
+        Storage.setBackgroundImage(reader.result);
+        $background.src = reader.result;
+      };
+
+      if (file) {
+        reader.readAsDataURL(file);
+      } else {
+        $background.src = "";
+      }
+    });
 
     $menuBtn.addEventListener("click", async (e) => {
       $menu.classList.toggle("show");
     });
 
+    document.body.prepend($background);
     document.body.appendChild($menuBtn);
     document.body.appendChild($menu);
   }
