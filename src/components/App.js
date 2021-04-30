@@ -39,7 +39,6 @@ export default class App {
     const $background = document.createElement("img");
     $background.className = "background-img";
     const backgroundImgSrc = await Storage.getBackgroundImage();
-    console.log(backgroundImgSrc);
 
     $background.src = backgroundImgSrc
       ? backgroundImgSrc
@@ -205,9 +204,8 @@ export default class App {
     });
 
     document.addEventListener("dragenter", (e) => {
-      console.log(e.target);
       // 이미 북마크가 존재하는 곳으로 옮겨짐 방지.
-      if (e.target.className === "drag-area") {
+      if (e.target.parentElement.className === "file-wrapper") {
         e.preventDefault();
         return;
       }
