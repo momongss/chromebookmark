@@ -131,7 +131,10 @@ button:active {
 
 .folder-manager-header .folder-close:hover {
   background-color: rgba(210, 216, 229, 1);
-  cursor: pointer;
+}
+
+.folder-manager-header .folder-close:active {
+  background-color: rgb(182, 192, 212);
 }
 
 .folder-manager .back-btn {

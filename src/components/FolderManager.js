@@ -86,7 +86,7 @@ export default class FolderManager {
     let folderX, folderY;
 
     $header.addEventListener("mousedown", (e) => {
-      if (e.target !== $header) return;
+      if (e.target.className === "folder-close") return;
       dragged = true;
       initX = e.clientX;
       initY = e.clientY;
@@ -111,7 +111,6 @@ export default class FolderManager {
 
     document.addEventListener("mousemove", (e) => {
       if (dragged) {
-        console.log(e.target);
         left = folderX + e.clientX - initX;
         top = folderY + e.clientY - initY;
 
