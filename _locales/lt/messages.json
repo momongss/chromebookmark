@@ -1,0 +1,15 @@
+{
+  "appName": {
+    "message": "Žymių fonas",
+    "description": ""
+  },
+
+  "appDesc": {
+    "message": "Naudokite naują skirtuką kaip darbalaukio foną.",
+    "description": ""
+  },
+  "remove": {
+    "message": "Ar tikrai norite ištrinti šį aplanką?",
+    "description": "_"
+  }
+}

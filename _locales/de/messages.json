@@ -1,0 +1,15 @@
+{
+  "appName": {
+    "message": "Lesezeichen Tapete",
+    "description": ""
+  },
+
+  "appDesc": {
+    "message": "Verwenden Sie die neue Registerkarte als Desktop-Hintergrund.",
+    "description": ""
+  },
+  "remove": {
+    "message": "Möchten Sie diesen Ordner wirklich löschen?",
+    "description": "_"
+  }
+}

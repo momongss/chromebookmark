@@ -1,0 +1,15 @@
+{
+  "appName": {
+    "message": "označi pozadinu",
+    "description": ""
+  },
+
+  "appDesc": {
+    "message": "Upotrijebite novu karticu kao pozadinu radne površine.",
+    "description": ""
+  },
+  "remove": {
+    "message": "Jeste li sigurni da želite izbrisati ovu mapu?",
+    "description": "_"
+  }
+}

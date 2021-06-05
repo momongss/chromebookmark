@@ -1,0 +1,15 @@
+{
+  "appName": {
+    "message": "tandai wallpaper",
+    "description": ""
+  },
+
+  "appDesc": {
+    "message": "Gunakan tab baru sebagai wallpaper desktop Anda.",
+    "description": ""
+  },
+  "remove": {
+    "message": "Anda yakin ingin menghapus folder ini?",
+    "description": "_"
+  }
+}

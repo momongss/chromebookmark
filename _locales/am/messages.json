@@ -1,0 +1,16 @@
+{
+  "appName": {
+    "message": "المرجعية خلفية",
+    "description": ""
+  },
+
+  "appDesc": {
+    "message": "استخدم علامة التبويب الجديدة كخلفية لسطح المكتب.",
+    "description": ""
+  },
+
+  "remove": {
+    "message": "እርግጠኛ ነዎት ይህን አቃፊ መሰረዝ ይፈልጋሉ?",
+    "description": "_"
+  }
+}

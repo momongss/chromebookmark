@@ -1,0 +1,15 @@
+{
+  "appName": {
+    "message": "záložka tapety",
+    "description": ""
+  },
+
+  "appDesc": {
+    "message": "Použijte novou kartu jako tapetu plochy.",
+    "description": ""
+  },
+  "remove": {
+    "message": "Er du sikker på, at du vil slette denne mappe?",
+    "description": "_"
+  }
+}

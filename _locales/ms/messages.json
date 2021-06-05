@@ -1,0 +1,15 @@
+{
+  "appName": {
+    "message": "Kertas dinding penanda buku",
+    "description": ""
+  },
+
+  "appDesc": {
+    "message": "Gunakan tab baru sebagai kertas dinding desktop anda.",
+    "description": ""
+  },
+  "remove": {
+    "message": "Adakah anda pasti mahu memadamkan folder ini?",
+    "description": "_"
+  }
+}

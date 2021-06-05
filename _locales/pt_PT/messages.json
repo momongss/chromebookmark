@@ -1,0 +1,15 @@
+{
+  "appName": {
+    "message": "Papel de parede favorito",
+    "description": ""
+  },
+
+  "appDesc": {
+    "message": "Use a nova guia como papel de parede da área de trabalho.",
+    "description": ""
+  },
+  "remove": {
+    "message": "Tem certeza de que deseja excluir esta pasta?",
+    "description": "_"
+  }
+}

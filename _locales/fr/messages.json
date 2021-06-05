@@ -1,0 +1,15 @@
+{
+  "appName": {
+    "message": "marque-page fond d'écran",
+    "description": ""
+  },
+
+  "appDesc": {
+    "message": "Utilisez le nouvel onglet comme fond d'écran.",
+    "description": ""
+  },
+  "remove": {
+    "message": "Êtes-vous sûr de vouloir supprimer ce dossier ?",
+    "description": "_"
+  }
+}

@@ -52,7 +52,10 @@ export default class OptionEdit {
       if ($folder && $folder.classList.contains("node")) {
         const subTree = await Bookmark.getSubTree($folder.dataset.id);
         if (subTree[0].children != null && subTree[0].children.length > 0) {
-          const answer = confirm("really delete folder?");
+          const msg = chrome.i18n.getMessage("remove");
+          console.log(msg, "msg");
+          const answer = confirm(msg ? msg : "really delete folder?");
+
           if (answer) {
             Bookmark.removeTree($folder.dataset.id);
             $folder.remove();

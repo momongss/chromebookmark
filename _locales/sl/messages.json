@@ -1,0 +1,15 @@
+{
+  "appName": {
+    "message": "Ozadje za zaznamke",
+    "description": ""
+  },
+
+  "appDesc": {
+    "message": "Nov zavihek uporabite kot ozadje namizja.",
+    "description": ""
+  },
+  "remove": {
+    "message": "Ali ste prepričani, da želite izbrisati to mapo?",
+    "description": "_"
+  }
+}

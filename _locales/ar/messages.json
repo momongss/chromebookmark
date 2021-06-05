@@ -1,0 +1,15 @@
+{
+  "appName": {
+    "message": "ዕልባት ልጣፍ",
+    "description": ""
+  },
+
+  "appDesc": {
+    "message": "አዲሱን ትር እንደ ዴስክቶፕ ልጣፍዎ ይጠቀሙበት ፡፡",
+    "description": ""
+  },
+  "remove": {
+    "message": "هل أنت متأكد أنك تريد حذف هذا المجلد؟",
+    "description": "_"
+  }
+}

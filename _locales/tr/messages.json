@@ -1,0 +1,15 @@
+{
+  "appName": {
+    "message": "Duvar Kağıdı",
+    "description": ""
+  },
+
+  "appDesc": {
+    "message": "Yeni sekmeyi masaüstü duvar kağıdınız olarak kullanın.",
+    "description": ""
+  },
+  "remove": {
+    "message": "Bu klasörü silmek istediğinizden emin misiniz?",
+    "description": "_"
+  }
+}

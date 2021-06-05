@@ -1,0 +1,15 @@
+{
+  "appName": {
+    "message": "bookmark wallpaper",
+    "description": ""
+  },
+
+  "appDesc": {
+    "message": "Use the new tab as your desktop wallpaper.",
+    "description": ""
+  },
+  "remove": {
+    "message": "Are you sure you want to delete this folder?",
+    "description": "_"
+  }
+}

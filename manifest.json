@@ -1,6 +1,6 @@
 {
-  "name": "new tab & bookmark manager",
-  "version": "0.0.4",
+  "name": "bookmark wallpaper",
+  "version": "1.0.0",
   "manifest_version": 2,
   "description": "use new tab like desktop first screen",
   "author": "taehyung",
@@ -18,5 +18,6 @@
   ],
   "browser_action": {
     "default_popup": "./credit/credit.html"
-  }
+  },
+  "default_locale": "en"
 }

@@ -1,0 +1,15 @@
+{
+  "appName": {
+    "message": "bogmærke tapet",
+    "description": ""
+  },
+
+  "appDesc": {
+    "message": "Brug den nye fane som skrivebordsbaggrund.",
+    "description": ""
+  },
+  "remove": {
+    "message": "Er du sikker på, at du vil slette denne mappe?",
+    "description": "_"
+  }
+}

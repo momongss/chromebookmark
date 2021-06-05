@@ -1,0 +1,15 @@
+{
+  "appName": {
+    "message": "segnalibro sfondo",
+    "description": ""
+  },
+
+  "appDesc": {
+    "message": "Usa la nuova scheda come sfondo del desktop.",
+    "description": ""
+  },
+  "remove": {
+    "message": "Sei sicuro di voler eliminare questa cartella?",
+    "description": "_"
+  }
+}

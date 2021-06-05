@@ -1,0 +1,15 @@
+{
+  "appName": {
+    "message": "Merk bakgrunnsbilde",
+    "description": ""
+  },
+
+  "appDesc": {
+    "message": "Bruk den nye fanen som skrivebordsbakgrunn.",
+    "description": ""
+  },
+  "remove": {
+    "message": "Er du sikker på at du vil slette denne mappen?",
+    "description": "_"
+  }
+}

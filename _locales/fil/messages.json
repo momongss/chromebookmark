@@ -1,0 +1,15 @@
+{
+  "appName": {
+    "message": "bookmark wallpaper",
+    "description": ""
+  },
+
+  "appDesc": {
+    "message": "Gamitin ang bagong tab bilang iyong desktop wallpaper.",
+    "description": ""
+  },
+  "remove": {
+    "message": "Sigurado ka bang nais mong tanggalin ang folder na ito?",
+    "description": "_"
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "appName": {
+    "message": "Marcare tapet",
+    "description": ""
+  },
+
+  "appDesc": {
+    "message": "Folosiți noua filă ca fundal pentru desktop.",
+    "description": ""
+  },
+  "remove": {
+    "message": "Sigur doriți să ștergeți acest folder?",
+    "description": "_"
+  }
+}

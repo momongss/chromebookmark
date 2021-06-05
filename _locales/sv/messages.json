@@ -1,0 +1,15 @@
+{
+  "appName": {
+    "message": "Bokmärke Bakgrund",
+    "description": ""
+  },
+
+  "appDesc": {
+    "message": "Använd den nya fliken som skrivbordsunderlägg.",
+    "description": ""
+  },
+  "remove": {
+    "message": "Är du säker på att du vill ta bort den här mappen?",
+    "description": "_"
+  }
+}

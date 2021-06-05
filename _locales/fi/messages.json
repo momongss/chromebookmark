@@ -1,0 +1,15 @@
+{
+  "appName": {
+    "message": "kirjanmerkkien taustakuva",
+    "description": ""
+  },
+
+  "appDesc": {
+    "message": "Käytä uutta välilehteä työpöydän taustakuvana.",
+    "description": ""
+  },
+  "remove": {
+    "message": "Haluatko varmasti poistaa tämän kansion?",
+    "description": "_"
+  }
+}

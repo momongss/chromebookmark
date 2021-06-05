@@ -1,0 +1,15 @@
+{
+  "appName": {
+    "message": "Dấu trang hình nền",
+    "description": ""
+  },
+
+  "appDesc": {
+    "message": "Sử dụng tab mới làm hình nền máy tính của bạn.",
+    "description": ""
+  },
+  "remove": {
+    "message": "Bạn có chắc chắn muốn xóa thư mục này không?",
+    "description": "_"
+  }
+}

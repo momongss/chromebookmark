@@ -1,0 +1,15 @@
+{
+  "appName": {
+    "message": "könyvjelző háttérkép",
+    "description": ""
+  },
+
+  "appDesc": {
+    "message": "Használja az új lapot asztali háttérképként.",
+    "description": ""
+  },
+  "remove": {
+    "message": "Biztosan törli ezt a mappát?",
+    "description": "_"
+  }
+}

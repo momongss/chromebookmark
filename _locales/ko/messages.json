@@ -1,0 +1,15 @@
+{
+  "appName": {
+    "message": "북마크 바탕 화면",
+    "description": ""
+  },
+
+  "appDesc": {
+    "message": "새 탭을 데스크탑 바탕화면처럼 사용하세요.",
+    "description": ""
+  },
+  "remove": {
+    "message": "정말 이 폴더를 지울 건가요??",
+    "description": "삭제"
+  }
+}

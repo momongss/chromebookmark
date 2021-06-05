@@ -1,0 +1,15 @@
+{
+  "appName": {
+    "message": "Tapeta záložiek",
+    "description": ""
+  },
+
+  "appDesc": {
+    "message": "Použite novú kartu ako tapetu na plochu.",
+    "description": ""
+  },
+  "remove": {
+    "message": "Naozaj chcete odstrániť tento priečinok?",
+    "description": "_"
+  }
+}

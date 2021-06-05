@@ -1,0 +1,15 @@
+{
+  "appName": {
+    "message": "Grāmatzīmes tapetes",
+    "description": ""
+  },
+
+  "appDesc": {
+    "message": "Izmantojiet jauno cilni kā darbvirsmas fonu.",
+    "description": ""
+  },
+  "remove": {
+    "message": "Vai tiešām vēlaties dzēst šo mapi?",
+    "description": "_"
+  }
+}

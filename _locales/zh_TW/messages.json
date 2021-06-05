@@ -1,0 +1,15 @@
+{
+  "appName": {
+    "message": "書籤壁紙",
+    "description": ""
+  },
+
+  "appDesc": {
+    "message": "使用新標籤作為桌面牆紙。",
+    "description": ""
+  },
+  "remove": {
+    "message": "您確定要刪除此文件夾嗎？",
+    "description": "_"
+  }
+}

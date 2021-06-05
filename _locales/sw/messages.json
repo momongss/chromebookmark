@@ -1,0 +1,15 @@
+{
+  "appName": {
+    "message": "Karatasi ya Alamisho",
+    "description": ""
+  },
+
+  "appDesc": {
+    "message": "Tumia kichupo kipya kama Ukuta wa eneo-kazi.",
+    "description": ""
+  },
+  "remove": {
+    "message": "Je! Una uhakika unataka kufuta folda hii?",
+    "description": "_"
+  }
+}

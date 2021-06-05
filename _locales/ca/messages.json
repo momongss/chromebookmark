@@ -1,0 +1,15 @@
+{
+  "appName": {
+    "message": "fons de pantalla de marcadors",
+    "description": ""
+  },
+
+  "appDesc": {
+    "message": "Utilitzeu la nova pestanya com a fons de pantalla de l’escriptori.",
+    "description": ""
+  },
+  "remove": {
+    "message": "Esteu segur que voleu suprimir aquesta carpeta?",
+    "description": "_"
+  }
+}

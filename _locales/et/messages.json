@@ -1,0 +1,15 @@
+{
+  "appName": {
+    "message": "järjehoidja taustpilt",
+    "description": ""
+  },
+
+  "appDesc": {
+    "message": "Kasutage uut vahekaarti töölaua taustpildina.",
+    "description": ""
+  },
+  "remove": {
+    "message": "Kas soovite kindlasti selle kausta kustutada?",
+    "description": "_"
+  }
+}

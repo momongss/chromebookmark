@@ -1,0 +1,15 @@
+{
+  "appName": {
+    "message": "Bladwijzer Achtergrond",
+    "description": ""
+  },
+
+  "appDesc": {
+    "message": "Gebruik het nieuwe tabblad als bureaubladachtergrond.",
+    "description": ""
+  },
+  "remove": {
+    "message": "Weet u zeker dat u deze map wilt verwijderen?",
+    "description": "_"
+  }
+}

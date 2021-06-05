@@ -1,0 +1,15 @@
+{
+  "appName": {
+    "message": "fondo de pantalla de marcador",
+    "description": ""
+  },
+
+  "appDesc": {
+    "message": "Utilice la nueva pestaña como fondo de escritorio.",
+    "description": ""
+  },
+  "remove": {
+    "message": "¿Está seguro de que desea eliminar esta carpeta?",
+    "description": "_"
+  }
+}

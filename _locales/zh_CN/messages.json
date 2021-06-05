@@ -1,0 +1,15 @@
+{
+  "appName": {
+    "message": "书签壁纸",
+    "description": ""
+  },
+
+  "appDesc": {
+    "message": "使用新标签作为桌面墙纸。",
+    "description": ""
+  },
+  "remove": {
+    "message": "您确定要删除此文件夹吗？",
+    "description": "_"
+  }
+}

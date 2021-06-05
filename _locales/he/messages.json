@@ -1,0 +1,15 @@
+{
+  "appName": {
+    "message": "טפט סימניות",
+    "description": ""
+  },
+
+  "appDesc": {
+    "message": "השתמש בכרטיסייה החדשה כטפט שולחן העבודה שלך.",
+    "description": ""
+  },
+  "remove": {
+    "message": "האם אתה בטוח שברצונך למחוק תיקיה זו?",
+    "description": "_"
+  }
+}
