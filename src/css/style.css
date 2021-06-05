@@ -1,6 +1,13 @@
 * {
   padding: 0;
   margin: 0;
+
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+a:link {
+  cursor: auto;
 }
 
 html {
@@ -27,8 +34,6 @@ button:active {
 :root {
   --grid-item-width: 75px;
   --grid-item-height: 80px;
-
-  --color-hover: rgba(190, 196, 209, 1);
 }
 
 .app {
@@ -174,7 +179,6 @@ button:active {
   position: relative;
 
   font-size: 12.5px;
-  cursor: pointer;
 }
 
 .app .node {
@@ -186,13 +190,21 @@ button:active {
   background-color: rgba(255, 255, 255, 0.3);
 }
 
+.app .node:active {
+  background-color: rgba(131, 131, 131, 0.3);
+}
+
 .folder-manager .node {
   color: black;
   text-shadow: none;
 }
 
 .folder-manager .node:hover {
-  background-color: var(--color-hover);
+  background-color: rgba(190, 196, 209, 1);
+}
+
+.folder-manager .node:active {
+  background-color: rgb(164, 176, 202);
 }
 
 .node .drag-area {

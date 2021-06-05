@@ -1,5 +1,6 @@
 import FileApp from "./File/FileApp.js";
 import FolderApp from "./Folder/FolderApp.js";
+import Wallpaper from "./Wallpaper/Wallpaper.js";
 
 import OptionCreate from "./Options/OptionCreate.js";
 
@@ -24,64 +25,15 @@ export default class App {
     this.history = [];
 
     this.$app = $app;
+    this.$wallpaper = new Wallpaper();
 
     const state = await Storage.getState();
-    this.renderBackground();
 
     state
       ? this.renderRunned(bookMarkTree, $app)
       : this.renderMainInit(bookMarkTree, $app);
 
     this.eventListeners();
-  }
-
-  async renderBackground() {
-    const $background = document.createElement("img");
-    $background.className = "background-img";
-    const backgroundImgSrc = await Storage.getBackgroundImage();
-
-    $background.src = backgroundImgSrc
-      ? backgroundImgSrc
-      : `chrome-extension://${chrome.runtime.id}/assets/house.png`;
-
-    const $menuBtn = document.createElement("div");
-    $menuBtn.className = "menu-btn";
-    $menuBtn.innerHTML = "WALLPAPER";
-
-    const $menu = document.createElement("div");
-    $menu.className = "menu";
-    $menu.innerHTML = `
-      <div class="input-wrapper">
-        <input type="file" accept="image/*">
-      </div>
-    `;
-
-    const $input = $menu.querySelector("input");
-
-    $input.addEventListener("change", (e) => {
-      const file = $input.files[0];
-      const reader = new FileReader();
-      $menu.classList.remove("show");
-
-      reader.onloadend = function () {
-        Storage.setBackgroundImage(reader.result);
-        $background.src = reader.result;
-      };
-
-      if (file) {
-        reader.readAsDataURL(file);
-      } else {
-        $background.src = "";
-      }
-    });
-
-    $menuBtn.addEventListener("click", async (e) => {
-      $menu.classList.toggle("show");
-    });
-
-    document.body.prepend($background);
-    document.body.appendChild($menuBtn);
-    document.body.appendChild($menu);
   }
 
   async renderRunned(bookMarkTree, $app) {

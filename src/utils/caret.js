@@ -6,4 +6,12 @@ function selectAll($el) {
   sel.addRange(range);
 }
 
-export { selectAll };
+function clearSelection() {
+  if (window.getSelection) {
+    window.getSelection().removeAllRanges();
+  } else if (document.selection) {
+    document.selection.empty();
+  }
+}
+
+export { selectAll, clearSelection };

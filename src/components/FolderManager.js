@@ -43,9 +43,8 @@ export default class FolderManager {
   }
 
   rightClickHandler() {
-    const $folderManager = this.$folderManagerWrapper.querySelector(
-      ".folder-manager"
-    );
+    const $folderManager =
+      this.$folderManagerWrapper.querySelector(".folder-manager");
 
     document.addEventListener("click", (e) => {
       if (this.$nodeOptions) this.$nodeOptions.remove();
@@ -87,6 +86,7 @@ export default class FolderManager {
     let folderX, folderY;
 
     $header.addEventListener("mousedown", (e) => {
+      if (e.target !== $header) return;
       dragged = true;
       initX = e.clientX;
       initY = e.clientY;
@@ -111,6 +111,7 @@ export default class FolderManager {
 
     document.addEventListener("mousemove", (e) => {
       if (dragged) {
+        console.log(e.target);
         left = folderX + e.clientX - initX;
         top = folderY + e.clientY - initY;
 

@@ -1,5 +1,5 @@
 import Bookmark from "../../utils/bookmark.js";
-import { selectAll } from "../../utils/caret.js";
+import { selectAll, clearSelection } from "../../utils/caret.js";
 
 export default class OptionEdit {
   constructor({ $target, x, y }) {
@@ -37,6 +37,7 @@ export default class OptionEdit {
       });
 
       $title.addEventListener("blur", (e) => {
+        clearSelection();
         chrome.bookmarks.update($editTarget.dataset.id, {
           title: $title.innerHTML,
         });
