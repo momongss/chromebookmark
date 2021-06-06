@@ -73,7 +73,7 @@ button:active {
 }
 
 .options > *:hover {
-  background-color: var(--color-hover);
+  background-color: rgba(190, 196, 209, 1);
   cursor: pointer;
 }
 
@@ -146,7 +146,7 @@ button:active {
 }
 
 .folder-manager .back-btn.backable:hover {
-  background-color: var(--color-hover);
+  background-color: rgba(190, 196, 209, 1);
   cursor: pointer;
 }
 
@@ -194,7 +194,7 @@ button:active {
 }
 
 .app .node:active {
-  background-color: rgba(131, 131, 131, 0.3);
+  background-color: rgba(255, 255, 255, 0.08);
 }
 
 .folder-manager .node {
