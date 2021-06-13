@@ -8,8 +8,7 @@
 
 - **개발 일지 |** [https://www.notion.so/64a8e53756f446b99227ad69cf90fb14](https://www.notion.so/64a8e53756f446b99227ad69cf90fb14)
 - **웹스토어 링크** | [Webstore link](https://chrome.google.com/webstore/detail/new-tab-bookmark-manager/hlggoabjcpdkphbmlgoblempopodkaif?hl=ko)
-- **사용영상 |** [Youtube link](https://www.youtube.com/watch?v=hIW1l2k-tZw)
-- **Github |** [Github link](https://github.com/momongss/chromebookmark)
+- **사용영상 |** [Youtube link](https://www.youtube.com/watch?v=HhKZuQ-ZudQ)
 
 - **개요 |**
 
@@ -45,6 +44,12 @@
      ```
 
 - **제작 일정**
+
   1. 2021-04-21 ~ 2021-04-29 : 개발
   2. 2021-04-29 : 배포
   3. 2021-04-30 : 사용자 요구사항 반영 업데이트
+
+- **성과**
+  1. 현재 사용자 수 : 54명 (2021-06-12일 기준)
+  2. 한국항공대학교 에브리타임 핫게시판 (좋아요 45개)
+  3. 디시인사이드 프로그래밍 갤러리 개념글 (추천 22개)
