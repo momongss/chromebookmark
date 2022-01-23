@@ -115,6 +115,7 @@ button:active {
   letter-spacing: 0.1rem;
   font-weight: 550;
   margin-right: 0.313rem;
+  margin-bottom: 1.5px;
 }
 
 .folder-manager-header .folder-close {
