@@ -86,7 +86,7 @@ button:active {
 
   padding-top: 0.313rem;
   padding-bottom: 1.875rem;
-  background-color: rgba(240, 242, 245, 1);
+  background-color: rgba(214, 231, 255, 0.95);
   border-radius: 0.625rem;
 
   top: calc(100vh - 25rem - 2.625rem);
@@ -111,7 +111,9 @@ button:active {
   justify-content: center;
   align-items: center;
 
-  font-size: 0.938rem;
+  font-size: 0.85rem;
+  letter-spacing: 0.1rem;
+  font-weight: 550;
   margin-right: 0.313rem;
 }
 
@@ -128,7 +130,7 @@ button:active {
 }
 
 .folder-manager-header .folder-close:hover {
-  background-color: rgba(210, 216, 229, 1);
+  background-color: rgba(178, 194, 230, 1);
 }
 
 .folder-manager-header .folder-close:active {
@@ -154,7 +156,7 @@ button:active {
   grid-template-rows: repeat(8, var(--grid-item-height));
   grid-gap: 0.125rem;
 
-  background-color: rgba(210, 216, 229, 1);
+  background-color: rgba(234, 246, 255, 0.81);
 
   overflow-y: scroll;
 
