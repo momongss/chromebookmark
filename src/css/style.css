@@ -32,8 +32,8 @@ button:active {
 }
 
 :root {
-  --grid-item-width: 75px;
-  --grid-item-height: 80px;
+  --grid-item-width: 4.688rem;
+  --grid-item-height: 5rem;
 }
 
 .app {
@@ -52,24 +52,22 @@ button:active {
 
   z-index: 1;
 
-  border-radius: 5px;
-  padding-top: 3px;
-  padding-bottom: 3px;
+  border-radius: 0.313rem;
+  padding-top: 0.188rem;
+  padding-bottom: 0.188rem;
 }
 
 .options * {
-  width: 100px;
-  height: 30px;
+  width: 6.25rem;
+  height: 1.875rem;
   display: flex;
   justify-content: center;
   align-items: center;
-
-  /* border-radius: 10px; */
 }
 
 .options img {
-  width: 20px;
-  height: 20px;
+  width: 1.25rem;
+  height: 1.25rem;
 }
 
 .options > *:hover {
@@ -79,19 +77,19 @@ button:active {
 
 .options .edit img {
   position: relative;
-  left: 1px;
+  left: 0.063rem;
 }
 
 .folder-manager-wrapper {
   display: none;
   position: fixed;
 
-  padding-top: 5px;
-  padding-bottom: 30px;
+  padding-top: 0.313rem;
+  padding-bottom: 1.875rem;
   background-color: rgba(240, 242, 245, 1);
-  border-radius: 10px;
+  border-radius: 0.625rem;
 
-  top: calc(100vh - 400px - 42px);
+  top: calc(100vh - 25rem - 2.625rem);
 }
 
 .folder-manager-wrapper.show {
@@ -103,8 +101,8 @@ button:active {
   justify-content: flex-end;
   align-items: center;
   position: relative;
-  bottom: 2px;
-  right: 3.5px;
+  bottom: 0.125rem;
+  right: 0.219rem;
   color: black;
 }
 
@@ -113,20 +111,20 @@ button:active {
   justify-content: center;
   align-items: center;
 
-  font-size: 15px;
-  margin-right: 5px;
+  font-size: 0.938rem;
+  margin-right: 0.313rem;
 }
 
 .folder-manager-header .folder-close {
   position: relative;
 
-  width: 30px;
-  height: 30px;
-  font-size: 20px;
+  width: 1.875rem;
+  height: 1.875rem;
+  font-size: 1.25rem;
 
   text-align: center;
-  line-height: 24.8px;
-  border-radius: 7px;
+  line-height: 1.55rem;
+  border-radius: 0.438rem;
 }
 
 .folder-manager-header .folder-close:hover {
@@ -138,11 +136,9 @@ button:active {
 }
 
 .folder-manager .back-btn {
-  font-size: 36px;
+  font-size: 2.25rem;
   text-align: center;
-  line-height: 72px;
-
-  /* font-weight: bold; */
+  line-height: 4.5rem;
 }
 
 .folder-manager .back-btn.backable:hover {
@@ -151,12 +147,12 @@ button:active {
 }
 
 .folder-manager {
-  height: 400px;
+  height: 25rem;
 
   display: grid;
   grid-template-columns: repeat(5, var(--grid-item-width));
   grid-template-rows: repeat(8, var(--grid-item-height));
-  grid-gap: 2px;
+  grid-gap: 0.125rem;
 
   background-color: rgba(210, 216, 229, 1);
 
@@ -166,13 +162,13 @@ button:active {
 }
 
 .folder-manager::-webkit-scrollbar {
-  width: 10px;
+  width: 0.625rem;
 }
 
 .folder-manager::-webkit-scrollbar-thumb {
-  margin-top: 100px;
+  margin-top: 6.25rem;
   background-color: rgba(150, 156, 169, 1);
-  border-radius: 3px;
+  border-radius: 0.188rem;
 }
 
 .node {
@@ -181,12 +177,12 @@ button:active {
 
   position: relative;
 
-  font-size: 12.5px;
+  font-size: 0.781rem;
 }
 
 .app .node {
   color: white;
-  text-shadow: black 1px 0 2px;
+  text-shadow: black 0.063rem 0 0.125rem;
 }
 
 .app .node:hover {
@@ -219,11 +215,11 @@ button:active {
 .node .text {
   overflow: hidden;
   width: var(--grid-item-width);
-  max-height: 35px;
+  max-height: 2.188rem;
   text-align: center;
   word-break: keep-all;
 
-  margin-bottom: 4px;
+  margin-bottom: 0.25rem;
 }
 
 .file {
@@ -246,9 +242,9 @@ button:active {
 }
 
 .file img {
-  margin-top: 10px;
-  margin-bottom: 7px;
-  width: 24px;
+  margin-top: 0.625rem;
+  margin-bottom: 0.438rem;
+  width: 1.5rem;
 }
 
 .folder {
@@ -258,7 +254,7 @@ button:active {
 }
 
 .folder img {
-  margin-top: 5px;
-  margin-bottom: 5px;
-  width: 30px;
+  margin-top: 0.313rem;
+  margin-bottom: 0.313rem;
+  width: 1.875rem;
 }
