@@ -4,6 +4,9 @@ export default class FileMain extends File {
   constructor({ $manager, bookMark }) {
     super({ bookMark });
 
-    $manager.appendChild(this.$node);
+    const $div = document.createElement("div");
+    $div.className = "node-wrapper";
+    $div.appendChild(this.$node);
+    $manager.appendChild($div);
   }
 }

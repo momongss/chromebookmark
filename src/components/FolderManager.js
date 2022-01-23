@@ -22,7 +22,7 @@ export default class FolderManager {
       FolderManagerData.$prevManager = $folderWrapper;
     });
 
-    $app.appendChild($folderWrapper);
+    document.body.appendChild($folderWrapper);
 
     this.$app = $app;
 
@@ -43,8 +43,7 @@ export default class FolderManager {
   }
 
   rightClickHandler() {
-    const $folderManager =
-      this.$folderManagerWrapper.querySelector(".folder-manager");
+    const $folderManager = this.$folderManagerWrapper.querySelector(".folder-manager");
 
     document.addEventListener("click", (e) => {
       if (this.$nodeOptions) this.$nodeOptions.remove();
@@ -91,19 +90,9 @@ export default class FolderManager {
       initX = e.clientX;
       initY = e.clientY;
 
-      folderX = parseInt(
-        this.$folderManagerWrapper.style.left.slice(
-          0,
-          this.$folderManagerWrapper.style.left.length - 2
-        )
-      );
+      folderX = parseInt(this.$folderManagerWrapper.style.left.slice(0, this.$folderManagerWrapper.style.left.length - 2));
 
-      folderY = parseInt(
-        this.$folderManagerWrapper.style.top.slice(
-          0,
-          this.$folderManagerWrapper.style.top.length - 2
-        )
-      );
+      folderY = parseInt(this.$folderManagerWrapper.style.top.slice(0, this.$folderManagerWrapper.style.top.length - 2));
     });
 
     let left;

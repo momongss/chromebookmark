@@ -7,6 +7,10 @@ export default class FolderMain extends Folder {
     });
 
     this.bookMark = bookMark;
-    $manager.appendChild(this.$node);
+
+    const $div = document.createElement("div");
+    $div.className = "node-wrapper";
+    $div.appendChild(this.$node);
+    $manager.appendChild($div);
   }
 }
