@@ -1,8 +1,8 @@
 {
-  "name": "bookmark wallpaper",
-  "version": "1.0.0",
+  "name": "__MSG_appName__",
+  "version": "1.0.3",
   "manifest_version": 2,
-  "description": "use new tab like desktop first screen",
+  "description": "__MSG_appDesc__",
   "author": "taehyung",
   "chrome_url_overrides": {
     "newtab": "index.html"
@@ -10,12 +10,7 @@
   "icons": {
     "128": "assets/bookmark.png"
   },
-  "permissions": [
-    "bookmarks",
-    "chrome://favicon/",
-    "storage",
-    "unlimitedStorage"
-  ],
+  "permissions": ["bookmarks", "chrome://favicon/", "storage", "unlimitedStorage"],
   "browser_action": {
     "default_popup": "./credit/credit.html"
   },
