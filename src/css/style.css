@@ -194,7 +194,6 @@ button:active {
 .node {
   width: var(--grid-item-width);
   position: relative;
-  font-size: 0.781rem;
 }
 
 .app .node {
@@ -232,15 +231,16 @@ button:active {
 .node .text {
   overflow: hidden;
   width: var(--grid-item-width);
-  max-height: 2.188rem;
+  max-height: 2rem;
   text-align: center;
   word-break: keep-all;
 
   margin-bottom: 0.25rem;
+  font-size: 0.781rem;
 }
 
 .node:hover .text {
-  max-height: 3.282rem;
+  max-height: 3rem;
 }
 
 .file {
