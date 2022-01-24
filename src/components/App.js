@@ -29,9 +29,7 @@ export default class App {
 
     const state = await Storage.getState();
 
-    state
-      ? this.renderRunned(bookMarkTree, $app)
-      : this.renderMainInit(bookMarkTree, $app);
+    state ? this.renderRunned(bookMarkTree, $app) : this.renderMainInit(bookMarkTree, $app);
 
     this.eventListeners();
   }
@@ -53,10 +51,7 @@ export default class App {
     for (const bookMark of bookMarkTree) {
       if (bookMark.children == null) {
         const filePos = await Storage.getPos(bookMark.id);
-        if (
-          filePos == null ||
-          (filePos.constructor === Object && Object.keys(filePos).length === 0)
-        ) {
+        if (filePos == null || (filePos.constructor === Object && Object.keys(filePos).length === 0)) {
           posUndefineds.push(bookMark);
           continue;
         }
@@ -210,7 +205,9 @@ export default class App {
     }
 
     for (const bookMark of bookMarkTree) {
+      // children 이 null 이면 파일(북마크).
       if (bookMark.children == null) {
+        // 정리된 형태로 들어갈 자리가 없으면 빈자리 아무데나 들어간다.
         if (filePos.y >= lenY) {
           const $wrapper = findEmpty($app);
           const tmp = $wrapper.className.split("-");
@@ -228,7 +225,10 @@ export default class App {
           filePos.x = fileInitX;
           filePos.y++;
         }
-      } else {
+      }
+
+      // children 이 있으면 폴더.
+      else {
         if (folderPos.y >= lenY) {
           const $wrapper = findEmpty($app);
           const tmp = $wrapper.className.split("-");
@@ -265,10 +265,7 @@ export default class App {
 
 function findEmpty($app) {
   for (const $child of $app.childNodes) {
-    if (
-      $child.className.includes("node-wrapper") &&
-      $child.childElementCount === 0
-    ) {
+    if ($child.className.includes("node-wrapper") && $child.childElementCount === 0) {
       return $child;
     }
   }

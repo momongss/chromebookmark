@@ -40,7 +40,7 @@ export async function dropHandler(dragged, $target, rootId) {
       for (const child of rootTree[0].children) {
         if (child.title === node.title) {
           const $div = dragged.querySelector("div");
-          $div.innerHTML = node.title + "+";
+          $div.innerHTML = node.title;
           Bookmark.updateBookmarktitle(dragged.dataset.id, $div.innerHTML);
           break;
         }
