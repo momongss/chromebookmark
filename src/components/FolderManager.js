@@ -189,6 +189,12 @@ export default class FolderManager {
       }
     }
 
+    const HEIGHT = 5;
+    let ROW = Math.max(parseInt(bookMarkTree.length / HEIGHT) + 2, 5);
+
+    $folderManager.style.gridTemplateRows = `5rem `.repeat(ROW).trim();
+    console.log($folderManager.style.gridTemplateRows);
+
     folderBookMark.sort((a, b) => {
       return b.dateGroupModified - a.dateGroupModified;
     });

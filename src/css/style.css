@@ -231,7 +231,7 @@ button:active {
 .node .text {
   overflow: hidden;
   width: var(--grid-item-width);
-  max-height: 2.188rem;
+  max-height: 2.063rem;
   text-align: center;
   word-break: keep-all;
 
