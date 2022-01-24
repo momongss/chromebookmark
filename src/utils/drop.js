@@ -23,6 +23,7 @@ export async function dropHandler(dragged, $target, rootId) {
   bookMark = bookMark[0];
 
   if ($target.parentNode.className === "app") {
+    if ($target.childNodes.length > 0) return;
     let pos;
 
     if (dragged.parentNode.parentNode.className === "app") {
