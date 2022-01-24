@@ -10,9 +10,7 @@ export default class Wallpaper {
     $background.className = "background-img";
     const backgroundImgSrc = await Storage.getBackgroundImage();
 
-    $background.src = backgroundImgSrc
-      ? backgroundImgSrc
-      : `chrome-extension://${chrome.runtime.id}/assets/wallpaper/sky6.png`;
+    $background.src = backgroundImgSrc ? backgroundImgSrc : `chrome-extension://${chrome.runtime.id}/assets/wallpaper/sky6.png`;
 
     const $menuBtn = document.createElement("div");
     $menuBtn.className = "menu-btn";
@@ -69,6 +67,9 @@ export default class Wallpaper {
     document.body.prepend($background);
     document.body.appendChild($menuBtn);
     document.body.appendChild($menu);
+
+    $menu.style.zIndex = 3000;
+    $menuBtn.style.zIndex = 3000;
 
     this.eventListeners();
     this.render();

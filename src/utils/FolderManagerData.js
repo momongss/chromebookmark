@@ -1,5 +1,5 @@
 const FolderManagerData = {
-  zindex: 0,
+  zindex: 1001,
   $prevManager: null,
 };
 

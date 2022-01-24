@@ -7,5 +7,7 @@ export default class FileApp extends File {
     const $div = $manager.querySelector(`.node-wrapper-${pos.x}-${pos.y}`);
     $div.innerHTML = "";
     $div.appendChild(this.$node);
+
+    this.$ = $div;
   }
 }

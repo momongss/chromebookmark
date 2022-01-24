@@ -13,6 +13,7 @@ export default class FolderApp extends Folder {
       const $div = $app.querySelector(`.node-wrapper-${pos.x}-${pos.y}`);
       $div.innerHTML = "";
       $div.appendChild(this.$node);
+      this.$ = $div;
     } else {
       $target.appendChild(this.$node);
     }

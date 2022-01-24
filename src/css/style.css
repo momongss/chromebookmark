@@ -161,11 +161,6 @@ button:active {
   background-color: rgb(182, 192, 212);
 }
 
-.folder-manager .back-btn.backable:hover {
-  background-color: rgba(190, 196, 209, 1);
-  cursor: pointer;
-}
-
 .folder-manager {
   height: 25rem;
 
@@ -215,7 +210,7 @@ button:active {
 }
 
 .folder-manager .node:hover {
-  background-color: rgba(190, 196, 209, 1);
+  background-color: rgba(178, 194, 230, 0.5);
 }
 
 .folder-manager .node:active {
@@ -237,6 +232,10 @@ button:active {
 
   margin-bottom: 0.25rem;
   font-size: 0.781rem;
+}
+
+.node .text.edit {
+  max-height: 100%;
 }
 
 .node:hover .text {

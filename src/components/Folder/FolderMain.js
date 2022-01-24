@@ -12,5 +12,7 @@ export default class FolderMain extends Folder {
     $div.className = "node-wrapper";
     $div.appendChild(this.$node);
     $manager.appendChild($div);
+
+    this.$ = $div;
   }
 }

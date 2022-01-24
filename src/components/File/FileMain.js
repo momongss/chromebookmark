@@ -8,5 +8,7 @@ export default class FileMain extends File {
     $div.className = "node-wrapper";
     $div.appendChild(this.$node);
     $manager.appendChild($div);
+
+    this.$ = $div;
   }
 }

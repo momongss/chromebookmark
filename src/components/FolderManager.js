@@ -27,8 +27,8 @@ export default class FolderManager {
     this.$app = $app;
 
     this.$folderManagerWrapper = $folderWrapper;
-
     this.history = [];
+    this.nodeCount = 0;
 
     this.pos = {
       left: initPos.left < 393 ? 0 : initPos.left - 393,
@@ -193,7 +193,6 @@ export default class FolderManager {
     let ROW = Math.max(parseInt(bookMarkTree.length / HEIGHT) + 2, 5);
 
     $folderManager.style.gridTemplateRows = `5rem `.repeat(ROW).trim();
-    console.log($folderManager.style.gridTemplateRows);
 
     folderBookMark.sort((a, b) => {
       return b.dateGroupModified - a.dateGroupModified;
@@ -204,22 +203,34 @@ export default class FolderManager {
     });
 
     for (const bookMark of folderBookMark) {
-      new FolderMain({
-        $manager: $folderManager,
-        bookMark,
-      });
+      this.addFolder($folderManager, bookMark);
     }
 
     for (const bookMark of fileBookMark) {
-      new FileMain({
-        $manager: $folderManager,
-        bookMark: bookMark,
-      });
+      this.addFile($folderManager, bookMark);
     }
 
     this.rightClickHandler();
   }
-}
 
-// 컴포넌트의 장점
-// 다른 요소들을 신경쓸 필요없이 딱 하나의 컴포넌트에 집중하게 되어 생산성이 올라간다.
+  addFolder($folderManager, bookMark) {
+    const folder = new FolderMain({
+      $manager: $folderManager,
+      bookMark,
+    });
+
+    this.nodeCount++;
+    folder.$.style.zIndex = -this.nodeCount + FolderManagerData.zindex;
+  }
+
+  addFile($folderManager, bookMark) {
+    const file = new FileMain({
+      $manager: $folderManager,
+      bookMark: bookMark,
+    });
+
+    this.nodeCount++;
+    file.$.style.zIndex = -this.nodeCount + FolderManagerData.zindex;
+    console.log(file.$, this.nodeCount);
+  }
+}

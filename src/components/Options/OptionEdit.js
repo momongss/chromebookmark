@@ -29,6 +29,9 @@ export default class OptionEdit {
       const $editTarget = this.findMyNode(e.target);
 
       const $title = $editTarget.querySelector(".text");
+      console.log($title);
+      $title.classList.add("edit");
+      console.log($title);
       selectAll($title);
       $title.addEventListener("keydown", (e) => {
         if (e.key === "Enter") {
@@ -37,6 +40,7 @@ export default class OptionEdit {
       });
 
       $title.addEventListener("blur", (e) => {
+        $title.classList.remove("edit");
         clearSelection();
         chrome.bookmarks.update($editTarget.dataset.id, {
           title: $title.innerHTML,
