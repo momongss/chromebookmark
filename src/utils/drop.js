@@ -7,8 +7,7 @@ import FolderApp from "../components/Folder/FolderApp.js";
 import FolderMain from "../components/Folder/FolderMain.js";
 
 export async function dropHandler(dragged, $target, rootId) {
-  if (!dragged.classList.contains("node") || dragged === $target.parentElement)
-    return;
+  if (!dragged.classList.contains("node") || dragged === $target.parentElement) return;
 
   let nodeType, nodeId;
 
@@ -25,6 +24,7 @@ export async function dropHandler(dragged, $target, rootId) {
 
   if ($target.parentNode.className === "app") {
     let pos;
+
     if (dragged.parentNode.parentNode.className === "app") {
       const tmp = $target.className.split("-");
       pos = {
@@ -33,7 +33,7 @@ export async function dropHandler(dragged, $target, rootId) {
       };
 
       Storage.setPos(dragged.dataset.id, pos);
-    } else if (dragged.parentNode.className === "folder-manager") {
+    } else if (dragged.parentNode.parentNode.className === "folder-manager") {
       const rootTree = await Bookmark.getSubTree(rootId);
       const node = await Bookmark.getNode(dragged.dataset.id);
       for (const child of rootTree[0].children) {
@@ -73,10 +73,7 @@ export async function dropHandler(dragged, $target, rootId) {
     if (dragged.parentNode.parentNode.dataset.id === $target.dataset.id) return;
 
     if (dragged.classList.contains("folder")) {
-      const isContained = await Bookmark.searchTree(
-        dragged.dataset.id,
-        $target.dataset.id
-      );
+      const isContained = await Bookmark.searchTree(dragged.dataset.id, $target.dataset.id);
       if (isContained) {
         return;
       }
@@ -106,7 +103,7 @@ export async function dropHandler(dragged, $target, rootId) {
 function removeDragged(dragged) {
   if (dragged.parentNode.parentNode.className === "app") {
     dragged.remove();
-  } else if (dragged.parentNode.className === "folder-manager") {
+  } else if (dragged.parentNode.parentNode.className === "folder-manager") {
     dragged.remove();
   }
 }

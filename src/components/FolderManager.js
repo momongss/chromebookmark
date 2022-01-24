@@ -130,12 +130,30 @@ export default class FolderManager {
     this.$folderManagerWrapper.style.top = `${this.pos.top}px`;
     this.$folderManagerWrapper.style.left = `${this.pos.left}px`;
 
+    const $backBtn = document.createElement("div");
+    $backBtn.className = "back-btn";
+    $backBtn.innerHTML = `<img src="../../assets/back-arrow.svg"/>`;
+    if (this.history.length > 1) {
+      $backBtn.classList.add("backable");
+    }
+    $backBtn.addEventListener("click", (e) => {
+      if (this.history.length === 1) return;
+      this.history.pop();
+      const preFolder = this.history[this.history.length - 1];
+      this.render({
+        id: preFolder.id,
+        mode: "back",
+      });
+    });
+
     const $header = document.createElement("div");
     $header.className = "folder-manager-header";
     $header.innerHTML = `
       <div class="folder-title">${title}</div>
       <div class="folder-close">x</div>
     `;
+
+    $header.prepend($backBtn);
 
     this.dragListener($header);
 
@@ -156,24 +174,6 @@ export default class FolderManager {
         this.render({ id: $node.dataset.id });
       }
     });
-
-    const $backBtn = document.createElement("div");
-    $backBtn.className = "back-btn";
-    if (this.history.length > 1) {
-      $backBtn.innerHTML = "<";
-      $backBtn.classList.add("backable");
-    }
-    $backBtn.addEventListener("click", (e) => {
-      if (this.history.length === 1) return;
-      this.history.pop();
-      const preFolder = this.history[this.history.length - 1];
-      this.render({
-        id: preFolder.id,
-        mode: "back",
-      });
-    });
-
-    $folderManager.appendChild($backBtn);
 
     this.$folderManagerWrapper.appendChild($header);
     this.$folderManagerWrapper.appendChild($folderManager);

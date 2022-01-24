@@ -84,7 +84,6 @@ button:active {
   display: none;
   position: fixed;
 
-  padding-top: 0.313rem;
   padding-bottom: 1.875rem;
   background-color: rgba(214, 231, 255, 0.95);
   border-radius: 0.625rem;
@@ -98,12 +97,35 @@ button:active {
 
 .folder-manager-header {
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
   align-items: center;
   position: relative;
   bottom: 0.125rem;
-  right: 0.219rem;
   color: black;
+
+  margin: 0.3rem 0.2rem 0.08rem 0.2rem;
+}
+
+.folder-manager-header .back-btn {
+  width: 1.875rem;
+  height: 1.875rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 0.438rem;
+}
+
+.folder-manager-header .back-btn img {
+  display: none;
+  width: 1rem;
+}
+
+.folder-manager-header .back-btn.backable img {
+  display: block;
+}
+
+.folder-manager-header .back-btn.backable:hover {
+  background-color: rgba(178, 194, 230, 1);
 }
 
 .folder-manager-header .folder-title {
@@ -114,8 +136,9 @@ button:active {
   font-size: 0.85rem;
   letter-spacing: 0.1rem;
   font-weight: 550;
-  margin-right: 0.313rem;
-  margin-bottom: 1.5px;
+  text-align: center;
+  margin-left: 0.25rem;
+  margin-bottom: 1px;
 }
 
 .folder-manager-header .folder-close {
@@ -136,12 +159,6 @@ button:active {
 
 .folder-manager-header .folder-close:active {
   background-color: rgb(182, 192, 212);
-}
-
-.folder-manager .back-btn {
-  font-size: 2.25rem;
-  text-align: center;
-  line-height: 4.5rem;
 }
 
 .folder-manager .back-btn.backable:hover {
