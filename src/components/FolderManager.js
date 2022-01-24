@@ -231,6 +231,5 @@ export default class FolderManager {
 
     this.nodeCount++;
     file.$.style.zIndex = -this.nodeCount + FolderManagerData.zindex;
-    console.log(file.$, this.nodeCount);
   }
 }

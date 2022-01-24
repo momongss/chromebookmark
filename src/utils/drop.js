@@ -105,6 +105,6 @@ function removeDragged(dragged) {
   if (dragged.parentNode.parentNode.className === "app") {
     dragged.remove();
   } else if (dragged.parentNode.parentNode.className === "folder-manager") {
-    dragged.remove();
+    dragged.parentNode.remove();
   }
 }
