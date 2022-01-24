@@ -89,6 +89,8 @@ button:active {
   border-radius: 0.625rem;
 
   top: calc(100vh - 25rem - 2.625rem);
+
+  box-shadow: 0px 0px 6px #3f3f3f;
 }
 
 .folder-manager-wrapper.show {
