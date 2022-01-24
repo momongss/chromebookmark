@@ -231,7 +231,7 @@ button:active {
 .node .text {
   overflow: hidden;
   width: var(--grid-item-width);
-  max-height: 2rem;
+  max-height: 2.188rem;
   text-align: center;
   word-break: keep-all;
 
@@ -240,7 +240,7 @@ button:active {
 }
 
 .node:hover .text {
-  max-height: 3rem;
+  max-height: 3.2rem;
 }
 
 .file {
