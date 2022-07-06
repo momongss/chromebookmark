@@ -198,6 +198,10 @@ button:active {
   text-shadow: black 0.063rem 0 0.125rem;
 }
 
+.app .node.selected {
+  background-color: rgba(182, 182, 182, 0.3);
+}
+
 .app .node:hover {
   background-color: rgba(255, 255, 255, 0.3);
 }
@@ -277,4 +281,12 @@ button:active {
   margin-top: 0.313rem;
   margin-bottom: 0.313rem;
   width: 1.875rem;
+}
+
+.drag-select-box {
+  outline: rgb(196, 153, 153) solid 1px;
+  background-color: rgba(227, 175, 175, 0.4);
+  position: absolute;
+
+  z-index: 2147483647;
 }

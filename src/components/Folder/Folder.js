@@ -3,7 +3,7 @@ import OptionEdit from "../Options/OptionEdit.js";
 
 export default class Folder extends Node {
   constructor({ bookMark }) {
-    super();
+    super({ bookMark });
     this.$node = document.createElement("div");
     this.$node.className = "node folder";
     this.eventListeners();

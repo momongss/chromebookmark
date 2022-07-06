@@ -3,7 +3,8 @@ import OptionEdit from "../Options/OptionEdit.js";
 
 export default class File extends Node {
   constructor({ bookMark }) {
-    super();
+    super({ bookMark });
+
     this.$node = document.createElement("a");
     this.$node.className = "node file";
     this.$node.draggable = true;

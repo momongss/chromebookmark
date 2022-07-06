@@ -5,6 +5,7 @@ import Wallpaper from "./Wallpaper/Wallpaper.js";
 import OptionCreate from "./Options/OptionCreate.js";
 
 import Storage from "../utils/storage.js";
+import DragSelect from "../utils/dragSelect.js";
 
 import { dropHandler } from "../utils/drop.js";
 import { constDatas } from "../utils/const.js";
@@ -32,6 +33,8 @@ export default class App {
     state ? this.renderRunned(bookMarkTree, $app) : this.renderMainInit(bookMarkTree, $app);
 
     this.eventListeners();
+
+    this.dragSelect = new DragSelect();
   }
 
   async renderRunned(bookMarkTree, $app) {
@@ -58,7 +61,7 @@ export default class App {
           posUndefineds.push(bookMark);
           continue;
         }
-        new FileApp({
+        const node = new FileApp({
           $manager: $app,
           bookMark: bookMark,
           pos: filePos,
@@ -70,7 +73,7 @@ export default class App {
           continue;
         }
 
-        new FolderApp({
+        const node = new FolderApp({
           $app: $app,
           pos: folderPos,
           bookMark: bookMark,
@@ -86,11 +89,12 @@ export default class App {
           x: tmp[2],
           y: tmp[3],
         };
-        new FileApp({
+        const node = new FileApp({
           $manager: $app,
           bookMark: bookMark,
           pos: pos,
         });
+
         Storage.setPos(bookMark.id, pos);
       } else {
         const $wrapper = findEmpty($app);
@@ -99,7 +103,7 @@ export default class App {
           x: tmp[2],
           y: tmp[3],
         };
-        const folder = new FolderApp({
+        const node = new FolderApp({
           $app: $app,
           pos: pos,
           bookMark: bookMark,
@@ -221,11 +225,12 @@ export default class App {
           filePos.y = parseInt(tmp[3]);
         }
         Storage.setPos(bookMark.id, filePos);
-        new FileApp({
+        const node = new FileApp({
           $manager: $app,
           bookMark: bookMark,
           pos: filePos,
         });
+
         filePos.x++;
         if (filePos.x >= fileEndX) {
           filePos.x = fileInitX;
@@ -242,11 +247,12 @@ export default class App {
           folderPos.y = parseInt(tmp[3]);
         }
         Storage.setPos(bookMark.id, folderPos);
-        new FolderApp({
+        const node = new FolderApp({
           $app: $app,
           pos: folderPos,
           bookMark: bookMark,
         });
+
         folderPos.x++;
         if (folderPos.x >= folderEndX) {
           folderPos.x = folderInitX;
