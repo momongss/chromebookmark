@@ -8,6 +8,16 @@ import { FolderManagerData } from "../utils/FolderManagerData.js";
 
 export default class FolderManager {
   constructor({ $app, id, initPos, onDestroy }) {
+    this.selectedObjs = [];
+    this.initX = 0;
+    this.initY = 0;
+
+    this.isDragging = false;
+
+    this.$div = document.createElement("div");
+    this.$div.className = "drag-select-box";
+    document.body.appendChild(this.$div);
+
     const $folderWrapper = document.createElement("div");
     $folderWrapper.className = `folder-manager-wrapper`;
 
@@ -43,7 +53,8 @@ export default class FolderManager {
   }
 
   rightClickHandler() {
-    const $folderManager = this.$folderManagerWrapper.querySelector(".folder-manager");
+    const $folderManager =
+      this.$folderManagerWrapper.querySelector(".folder-manager");
 
     document.addEventListener("click", (e) => {
       if (this.$nodeOptions) this.$nodeOptions.remove();
@@ -77,6 +88,117 @@ export default class FolderManager {
         this.$createOptions = optionCreate.$createOptions;
       }
     });
+
+    $folderManager.addEventListener("mousedown", (e) => {
+      if (
+        e.target.className.includes("node-wrapper") ||
+        e.target.className == "folder-manager"
+      ) {
+        this.startDragSelect(e.clientX, e.clientY);
+      }
+    });
+
+    document.addEventListener("mouseup", (e) => {
+      this.endDrag();
+    });
+
+    document.addEventListener("mousemove", (e) => {
+      if (this.isDragging) {
+        const rect = $folderManager.getBoundingClientRect();
+
+        let x = e.clientX;
+        let y = e.clientY;
+
+        if (y < rect.top) {
+          y = rect.top;
+        } else if (y > rect.bottom + 18) y = rect.bottom + 18;
+        if (x < rect.left) x = rect.left;
+        else if (x > rect.right) x = rect.right;
+
+        this.dragging(x, y);
+      }
+    });
+  }
+
+  startDragSelect(x, y) {
+    this.$div.style.visibility = "visible";
+    this.initX = x;
+    this.initY = y;
+    this.isDragging = true;
+
+    for (let i = 0; i < this.selectedObjs.length; i++) {
+      const node = this.selectedObjs[i];
+
+      node.deselect();
+    }
+
+    this.selectedObjs = [];
+  }
+
+  endDrag() {
+    this.isDragging = false;
+    this.$div.style.visibility = "hidden";
+    this.$div.style.left = `${window.innerWidth}px`;
+    this.$div.style.right = `0px`;
+    this.$div.style.top = `${window.innerHeight}px`;
+    this.$div.style.bottom = `0px`;
+
+    for (let i = 0; i < this.nodeList.length; i++) {
+      const node = this.nodeList[i];
+
+      if (node.isSelected) {
+        this.selectedObjs.push(node);
+      }
+    }
+  }
+
+  search(sx, sy, bx, by) {
+    for (let i = 0; i < this.nodeList.length; i++) {
+      const node = this.nodeList[i];
+
+      const rect = node.$node.getBoundingClientRect();
+      const y = (rect.top + rect.bottom) / 2;
+      const x = (rect.right + rect.left) / 2;
+
+      if (sx <= x && x <= bx && sy <= y && y <= by) {
+        node.select();
+      } else {
+        node.deselect();
+      }
+    }
+  }
+
+  dragging(x, y) {
+    let sx, sy, bx, by;
+
+    if (x > this.initX) {
+      this.$div.style.left = `${this.initX}px`;
+      this.$div.style.right = `${window.innerWidth - x}px`;
+
+      sx = this.initX;
+      bx = x;
+    } else {
+      this.$div.style.left = `${x}px`;
+      this.$div.style.right = `${window.innerWidth - this.initX}px`;
+      sx = x;
+      bx = this.initX;
+    }
+
+    if (y > this.initY) {
+      this.$div.style.top = `${this.initY}px`;
+      this.$div.style.bottom = `${window.innerHeight - y}px`;
+
+      sy = this.initY;
+      by = y;
+    } else {
+      this.$div.style.top = `${y}px`;
+      this.$div.style.bottom = `${window.innerHeight - this.initY}px`;
+
+      sy = y;
+      by = this.initY;
+    }
+
+    this.search(sx, sy, bx, by);
   }
 
   dragListener($header) {
@@ -90,9 +212,19 @@ export default class FolderManager {
       initX = e.clientX;
       initY = e.clientY;
 
-      folderX = parseInt(this.$folderManagerWrapper.style.left.slice(0, this.$folderManagerWrapper.style.left.length - 2));
+      folderX = parseInt(
+        this.$folderManagerWrapper.style.left.slice(
+          0,
+          this.$folderManagerWrapper.style.left.length - 2
+        )
+      );
 
-      folderY = parseInt(this.$folderManagerWrapper.style.top.slice(0, this.$folderManagerWrapper.style.top.length - 2));
+      folderY = parseInt(
+        this.$folderManagerWrapper.style.top.slice(
+          0,
+          this.$folderManagerWrapper.style.top.length - 2
+        )
+      );
     });
 
     let left;
@@ -202,12 +334,16 @@ export default class FolderManager {
       return b.dateAdded - a.dateAdded;
     });
 
+    this.nodeList = [];
+
     for (const bookMark of folderBookMark) {
-      this.addFolder($folderManager, bookMark);
+      const folder = this.addFolder($folderManager, bookMark);
+      this.nodeList.push(folder);
     }
 
     for (const bookMark of fileBookMark) {
-      this.addFile($folderManager, bookMark);
+      const file = this.addFile($folderManager, bookMark);
+      this.nodeList.push(file);
     }
 
     this.rightClickHandler();
@@ -221,6 +357,8 @@ export default class FolderManager {
 
     this.nodeCount++;
     folder.$.style.zIndex = -this.nodeCount + FolderManagerData.zindex;
+
+    return folder;
   }
 
   addFile($folderManager, bookMark) {
@@ -231,5 +369,7 @@ export default class FolderManager {
 
     this.nodeCount++;
     file.$.style.zIndex = -this.nodeCount + FolderManagerData.zindex;
+
+    return file;
   }
 }

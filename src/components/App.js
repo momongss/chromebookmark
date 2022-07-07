@@ -18,6 +18,16 @@ export default class App {
   async _constructor($app) {
     // https://wallpaperaccess.com/aesthetic-gif
 
+    this.selectedObjs = [];
+    this.initX = 0;
+    this.initY = 0;
+
+    this.isDragging = false;
+
+    this.$div = document.createElement("div");
+    this.$div.className = "drag-select-box";
+    document.body.appendChild(this.$div);
+
     const rootTree = await this.getBookMarkList();
     const bookMarkTree = rootTree.children;
     this.rootId = rootTree.id;
@@ -30,11 +40,13 @@ export default class App {
 
     const state = await Storage.getState();
 
-    state ? this.renderRunned(bookMarkTree, $app) : this.renderMainInit(bookMarkTree, $app);
+    state
+      ? this.renderRunned(bookMarkTree, $app)
+      : this.renderMainInit(bookMarkTree, $app);
 
     this.eventListeners();
 
-    this.dragSelect = new DragSelect();
+    // this.dragSelect = new DragSelect();
   }
 
   async renderRunned(bookMarkTree, $app) {
@@ -54,10 +66,15 @@ export default class App {
       }
     }
 
+    this.nodeList = [];
+
     for (const bookMark of bookMarkTree) {
       if (bookMark.children == null) {
         const filePos = await Storage.getPos(bookMark.id);
-        if (filePos == null || (filePos.constructor === Object && Object.keys(filePos).length === 0)) {
+        if (
+          filePos == null ||
+          (filePos.constructor === Object && Object.keys(filePos).length === 0)
+        ) {
           posUndefineds.push(bookMark);
           continue;
         }
@@ -66,6 +83,8 @@ export default class App {
           bookMark: bookMark,
           pos: filePos,
         });
+
+        this.nodeList.push(node);
       } else {
         const folderPos = await Storage.getPos(bookMark.id);
         if (folderPos == null) {
@@ -78,6 +97,8 @@ export default class App {
           pos: folderPos,
           bookMark: bookMark,
         });
+
+        this.nodeList.push(node);
       }
     }
 
@@ -182,6 +203,106 @@ export default class App {
       dropHandler($dragged, e.target, this.rootId);
       e.target.style.backgroundColor = "";
     });
+
+    this.$app.addEventListener("mousedown", (e) => {
+      if (
+        e.target.className.includes("node-wrapper") ||
+        e.target.className == "folder-manager"
+      ) {
+        this.startDragSelect(e.clientX, e.clientY);
+      }
+    });
+
+    document.addEventListener("mouseup", (e) => {
+      this.endDrag();
+    });
+
+    document.addEventListener("mousemove", (e) => {
+      if (this.isDragging) {
+        this.dragging(e.clientX, e.clientY);
+      }
+    });
+  }
+
+  startDragSelect(x, y) {
+    this.$div.style.visibility = "visible";
+    this.initX = x;
+    this.initY = y;
+    this.isDragging = true;
+
+    for (let i = 0; i < this.selectedObjs.length; i++) {
+      const node = this.selectedObjs[i];
+
+      node.deselect();
+    }
+
+    this.selectedObjs = [];
+  }
+
+  endDrag() {
+    this.isDragging = false;
+    this.$div.style.visibility = "hidden";
+    this.$div.style.left = `${window.innerWidth}px`;
+    this.$div.style.right = `0px`;
+    this.$div.style.top = `${window.innerHeight}px`;
+    this.$div.style.bottom = `0px`;
+
+    for (let i = 0; i < this.nodeList.length; i++) {
+      const node = this.nodeList[i];
+
+      if (node.isSelected) {
+        this.selectedObjs.push(node);
+      }
+    }
+  }
+
+  search(sx, sy, bx, by) {
+    for (let i = 0; i < this.nodeList.length; i++) {
+      const node = this.nodeList[i];
+
+      const rect = node.$node.getBoundingClientRect();
+      const y = (rect.top + rect.bottom) / 2;
+      const x = (rect.right + rect.left) / 2;
+
+      if (sx <= x && x <= bx && sy <= y && y <= by) {
+        node.select();
+      } else {
+        node.deselect();
+      }
+    }
+  }
+
+  dragging(x, y) {
+    let sx, sy, bx, by;
+
+    if (x > this.initX) {
+      this.$div.style.left = `${this.initX}px`;
+      this.$div.style.right = `${window.innerWidth - x}px`;
+
+      sx = this.initX;
+      bx = x;
+    } else {
+      this.$div.style.left = `${x}px`;
+      this.$div.style.right = `${window.innerWidth - this.initX}px`;
+      sx = x;
+      bx = this.initX;
+    }
+
+    if (y > this.initY) {
+      this.$div.style.top = `${this.initY}px`;
+      this.$div.style.bottom = `${window.innerHeight - y}px`;
+
+      sy = this.initY;
+      by = y;
+    } else {
+      this.$div.style.top = `${y}px`;
+      this.$div.style.bottom = `${window.innerHeight - this.initY}px`;
+
+      sy = y;
+      by = this.initY;
+    }
+
+    this.search(sx, sy, bx, by);
   }
 
   renderMainInit(bookMarkTree, $app) {
@@ -214,6 +335,8 @@ export default class App {
       else folderCnt++;
     }
 
+    this.nodeList = [];
+
     for (const bookMark of bookMarkTree) {
       // children 이 null 이면 파일(북마크).
       if (bookMark.children == null) {
@@ -230,6 +353,8 @@ export default class App {
           bookMark: bookMark,
           pos: filePos,
         });
+
+        this.nodeList.push(node);
 
         filePos.x++;
         if (filePos.x >= fileEndX) {
@@ -252,6 +377,8 @@ export default class App {
           pos: folderPos,
           bookMark: bookMark,
         });
+
+        this.nodeList.push(node);
 
         folderPos.x++;
         if (folderPos.x >= folderEndX) {
@@ -277,7 +404,10 @@ export default class App {
 
 function findEmpty($app) {
   for (const $child of $app.childNodes) {
-    if ($child.className.includes("node-wrapper") && $child.childElementCount === 0) {
+    if (
+      $child.className.includes("node-wrapper") &&
+      $child.childElementCount === 0
+    ) {
       return $child;
     }
   }

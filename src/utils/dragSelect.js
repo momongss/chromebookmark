@@ -1,6 +1,6 @@
 import { nodeList } from "../components/NodeList.js";
 
-export default class DragSelect {
+export default class DragSelectManager {
     constructor() {
         this.selectedObjs = [];
         this.initX = 0;

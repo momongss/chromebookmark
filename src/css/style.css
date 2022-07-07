@@ -198,7 +198,7 @@ button:active {
   text-shadow: black 0.063rem 0 0.125rem;
 }
 
-.app .node.selected {
+.node.selected {
   background-color: rgba(182, 182, 182, 0.3);
 }
 
