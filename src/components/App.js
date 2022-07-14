@@ -5,7 +5,6 @@ import Wallpaper from "./Wallpaper/Wallpaper.js";
 import OptionCreate from "./Options/OptionCreate.js";
 
 import Storage from "../utils/storage.js";
-import DragSelect from "../utils/dragSelect.js";
 
 import { dropHandler } from "../utils/drop.js";
 import { constDatas } from "../utils/const.js";
@@ -23,6 +22,8 @@ export default class App {
     this.initY = 0;
 
     this.isDragging = false;
+    this.isDraggingMulti = false;
+    this.draggedNode = null;
 
     this.$div = document.createElement("div");
     this.$div.className = "drag-select-box";
@@ -30,6 +31,8 @@ export default class App {
 
     const rootTree = await this.getBookMarkList();
     const bookMarkTree = rootTree.children;
+    this.bookMarkTree = bookMarkTree;
+
     this.rootId = rootTree.id;
     constDatas.rootId = this.rootId;
 
@@ -47,6 +50,10 @@ export default class App {
     this.eventListeners();
 
     // this.dragSelect = new DragSelect();
+  }
+
+  async render() {
+    await this.renderRunned(this.bookMarkTree, this.$app);
   }
 
   async renderRunned(bookMarkTree, $app) {
@@ -205,6 +212,19 @@ export default class App {
     });
 
     this.$app.addEventListener("mousedown", (e) => {
+      for (const node of this.selectedObjs) {
+        if (
+          e.target.parentElement == node.$node ||
+          e.target.parentElement.parentElement == node.$node
+        ) {
+          if (this.selectedObjs.length > 0) {
+            this.draggedNode = node;
+            this.isDraggingMulti = true;
+          }
+          return;
+        }
+      }
+
       if (
         e.target.className.includes("node-wrapper") ||
         e.target.className == "folder-manager"
@@ -213,13 +233,47 @@ export default class App {
       }
     });
 
-    document.addEventListener("mouseup", (e) => {
-      this.endDrag();
+    document.addEventListener("mouseup", async (e) => {
+      this.endDrag(e);
+
+      if (this.isDraggingMulti) {
+        const className = e.target.className;
+
+        if (className.includes("node-wrapper")) {
+          const tmp = className.split("-");
+          const x = parseInt(tmp[2]);
+          const y = parseInt(tmp[3]);
+
+          console.log(x, y, this.draggedNode);
+
+          const pos = await Storage.getPos(this.draggedNode.id);
+          const ix = parseInt(pos.x);
+          const iy = parseInt(pos.y);
+
+          console.log(ix, iy);
+
+          const dx = ix - x;
+          const dy = iy - y;
+
+          for (const node of this.selectedObjs) {
+            node.changePos(node.pos.x - dx, node.pos.y - dy);
+          }
+        }
+
+        for (const node of this.selectedObjs) {
+          node.$node.remove();
+        }
+
+        this.isDraggingMulti = false;
+        this.render();
+      }
     });
 
     document.addEventListener("mousemove", (e) => {
       if (this.isDragging) {
         this.dragging(e.clientX, e.clientY);
+      } else if (this.isDraggingMulti) {
+        this.moveSelectedNodes(e);
       }
     });
   }
@@ -239,7 +293,7 @@ export default class App {
     this.selectedObjs = [];
   }
 
-  endDrag() {
+  endDrag(e) {
     this.isDragging = false;
     this.$div.style.visibility = "hidden";
     this.$div.style.left = `${window.innerWidth}px`;
@@ -253,6 +307,14 @@ export default class App {
       if (node.isSelected) {
         this.selectedObjs.push(node);
       }
+    }
+
+    // if (this.selectedObjs.length > 0) this.isDraggingMulti = true;
+  }
+
+  moveSelectedNodes(e) {
+    for (const node of this.selectedObjs) {
+      node.move(e.clientX, e.clientY);
     }
   }
 

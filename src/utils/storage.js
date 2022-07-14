@@ -15,10 +15,15 @@ export default class Storage {
   }
 
   static async getPos(id) {
-    return await this.getItem(`mainPos${id}`);
+    const pos = await this.getItem(`mainPos${id}`);
+    pos.x = parseInt(pos.x);
+    pos.y = parseInt(pos.y);
+    return pos;
   }
 
   static async setPos(id, mainPos) {
+    if (mainPos == null) return;
+
     return await this.setItem(`mainPos${id}`, mainPos);
   }
 
