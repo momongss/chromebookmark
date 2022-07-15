@@ -1,5 +1,4 @@
 import { nodeList } from "./NodeList.js";
-import { bfs } from "../utils/bfs.js";
 import Storage from "../utils/storage.js";
 
 const posDic = {};
@@ -18,6 +17,7 @@ export default class Node {
   async init() {
     const pos = await this.loadPos();
 
+    if (pos == null) return;
     this.pos = {
       x: parseInt(pos.x),
       y: parseInt(pos.y),
@@ -47,11 +47,13 @@ export default class Node {
     return pos;
   }
 
-  changePos(x, y) {
+  async changePos(x, y) {
     const pos = this.getClosestPos(x, y);
-    // posDic[this.id] = pos;
+    posDic[this.id] = pos;
 
-    Storage.setPos(this.id, pos);
+    await Storage.setPos(this.id, pos);
+
+    this.init();
   }
 
   getClosestPos(x, y) {

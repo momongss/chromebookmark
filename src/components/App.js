@@ -256,7 +256,7 @@ export default class App {
           const dy = iy - y;
 
           for (const node of this.selectedObjs) {
-            node.changePos(node.pos.x - dx, node.pos.y - dy);
+            await node.changePos(node.pos.x - dx, node.pos.y - dy);
           }
         }
 
