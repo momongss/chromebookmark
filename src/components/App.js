@@ -53,12 +53,18 @@ export default class App {
   }
 
   async render() {
+    const rootTree = await this.getBookMarkList();
+    const bookMarkTree = rootTree.children;
+    this.bookMarkTree = bookMarkTree;
+
     await this.renderRunned(this.bookMarkTree, this.$app);
   }
 
   async renderRunned(bookMarkTree, $app) {
     const lenX = 20;
     const lenY = 9;
+
+    $app.innerHTML = "";
 
     const posUndefineds = [];
 
@@ -244,13 +250,9 @@ export default class App {
           const x = parseInt(tmp[2]);
           const y = parseInt(tmp[3]);
 
-          console.log(x, y, this.draggedNode);
-
           const pos = await Storage.getPos(this.draggedNode.id);
           const ix = parseInt(pos.x);
           const iy = parseInt(pos.y);
-
-          console.log(ix, iy);
 
           const dx = ix - x;
           const dy = iy - y;

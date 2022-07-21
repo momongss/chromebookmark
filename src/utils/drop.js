@@ -5,9 +5,12 @@ import FileApp from "../components/File/FileApp.js";
 import FileMain from "../components/File/FileMain.js";
 import FolderApp from "../components/Folder/FolderApp.js";
 import FolderMain from "../components/Folder/FolderMain.js";
+import { app } from "../../main.js";
+import FolderManager from "../components/FolderManager.js";
 
 export async function dropHandler(dragged, $target, rootId) {
-  if (!dragged.classList.contains("node") || dragged === $target.parentElement) return;
+  if (!dragged.classList.contains("node") || dragged === $target.parentElement)
+    return;
 
   let nodeType, nodeId;
 
@@ -25,80 +28,41 @@ export async function dropHandler(dragged, $target, rootId) {
   if ($target.parentNode.className === "app") {
     if ($target.childNodes.length > 0) return;
     let pos;
+    const tmp = $target.className.split("-");
+    pos = {
+      x: tmp[2],
+      y: tmp[3],
+    };
 
     if (dragged.parentNode.parentNode.className === "app") {
-      const tmp = $target.className.split("-");
-      pos = {
-        x: tmp[2],
-        y: tmp[3],
-      };
-
       Storage.setPos(dragged.dataset.id, pos);
     } else if (dragged.parentNode.parentNode.className === "folder-manager") {
       const rootTree = await Bookmark.getSubTree(rootId);
-      const node = await Bookmark.getNode(dragged.dataset.id);
-      for (const child of rootTree[0].children) {
-        if (child.title === node.title) {
-          const $div = dragged.querySelector("div");
-          $div.innerHTML = node.title;
-          Bookmark.updateBookmarktitle(dragged.dataset.id, $div.innerHTML);
-          break;
-        }
-      }
-
-      Bookmark.moveTree(dragged.dataset.id, rootTree[0].id);
-      const tmp = $target.className.split("-");
-      pos = {
-        x: tmp[2],
-        y: tmp[3],
-      };
-      Storage.setPos(dragged.dataset.id, pos);
+      await Bookmark.moveTree(dragged.dataset.id, rootTree[0].id);
     }
-
-    if (nodeType === "file") {
-      new FileApp({
-        $manager: $target.parentNode,
-        bookMark: bookMark,
-        pos: pos,
-      });
-    } else {
-      new FolderApp({
-        $app: $target.parentNode,
-        bookMark: bookMark,
-        pos: pos,
-      });
-    }
-
-    removeDragged(dragged);
   } else if ($target.className === "folder-manager") {
     if (dragged.parentNode.parentNode.dataset.id === $target.dataset.id) return;
 
     if (dragged.classList.contains("folder")) {
-      const isContained = await Bookmark.searchTree(dragged.dataset.id, $target.dataset.id);
+      const isContained = await Bookmark.searchTree(
+        dragged.dataset.id,
+        $target.dataset.id
+      );
       if (isContained) {
         return;
       }
     }
 
-    if (nodeType === "file") {
-      new FileMain({
-        $manager: $target,
-        bookMark: bookMark,
-      });
-    } else {
-      new FolderMain({
-        $manager: $target,
-        bookMark: bookMark,
-      });
-    }
+    await Bookmark.moveTree(dragged.dataset.id, $target.dataset.id);
 
-    removeDragged(dragged);
-    Bookmark.moveTree(dragged.dataset.id, $target.dataset.id);
+    const folderManager = FolderManager.GetFolderManager($target.dataset.id);
   } else if ($target.parentElement.classList.contains("folder")) {
     $target = $target.parentElement;
     Bookmark.moveTree(dragged.dataset.id, $target.dataset.id);
     dragged.remove();
   }
+
+  app.render();
 }
 
 function removeDragged(dragged) {

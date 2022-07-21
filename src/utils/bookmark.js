@@ -30,8 +30,8 @@ class bookmark {
     chrome.bookmarks.removeTree(treeId, () => {});
   }
 
-  moveTree(id, destId) {
-    chrome.bookmarks.move(id, {
+  async moveTree(id, destId) {
+    await chrome.bookmarks.move(id, {
       parentId: destId,
     });
   }

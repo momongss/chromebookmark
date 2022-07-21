@@ -4,15 +4,29 @@ import OptionCreate from "./Options/OptionCreate.js";
 
 import Bookmark from "../utils/bookmark.js";
 
+import { folderManagerDic } from "./FolderManagerDic.js";
 import { FolderManagerData } from "../utils/FolderManagerData.js";
 
 export default class FolderManager {
+  static GetFolderManager(id) {
+    if (!folderManagerDic.contains(id)) {
+      console.error("존재하지 않는 id", id);
+    }
+
+    return folderManagerDic[id];
+  }
+
   constructor({ $app, id, initPos, onDestroy }) {
+    this.id = id;
+    this.curId = id;
+
     this.selectedObjs = [];
     this.initX = 0;
     this.initY = 0;
 
     this.isDragging = false;
+
+    folderManagerDic[id] = this;
 
     this.$div = document.createElement("div");
     this.$div.className = "drag-select-box";
@@ -249,10 +263,12 @@ export default class FolderManager {
   }
 
   async render({ id, mode }) {
+    this.curId = id;
+
     const subTree = await Bookmark.getSubTree(id);
     const title = subTree[0].title;
     const bookMarkTree = subTree[0].children;
-    if (mode !== "back") {
+    if (mode !== "back" && mode !== "rerender") {
       this.history.push({
         id: id,
       });
@@ -291,9 +307,7 @@ export default class FolderManager {
 
     const $closeBtn = $header.querySelector(".folder-close");
     $closeBtn.addEventListener("click", (e) => {
-      this.$folderManagerWrapper.remove();
-      this.history = [];
-      this.onDestroy();
+      this.CloseFolderManager();
     });
 
     const $folderManager = document.createElement("div");
@@ -347,6 +361,14 @@ export default class FolderManager {
     }
 
     this.rightClickHandler();
+  }
+
+  CloseFolderManager() {
+    folderManagerDic[this.id] = null;
+
+    this.$folderManagerWrapper.remove();
+    this.history = [];
+    this.onDestroy();
   }
 
   addFolder($folderManager, bookMark) {

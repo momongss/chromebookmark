@@ -1,5 +1,6 @@
 import { nodeList } from "./NodeList.js";
 import Storage from "../utils/storage.js";
+import { app } from "../../main.js";
 
 const posDic = {};
 
@@ -43,12 +44,14 @@ export default class Node {
 
   async loadPos() {
     const pos = await Storage.getPos(this.id);
+    if (pos == null) return;
+
     posDic[this.id] = pos;
     return pos;
   }
 
   async changePos(x, y) {
-    const pos = this.getClosestPos(x, y);
+    const pos = this.getPossiblePos(x, y);
     posDic[this.id] = pos;
 
     await Storage.setPos(this.id, pos);
@@ -56,7 +59,7 @@ export default class Node {
     this.init();
   }
 
-  getClosestPos(x, y) {
+  getPossiblePos(x, y) {
     const queue = [{ x, y }];
     const visited = [];
 

@@ -17,6 +17,10 @@ export default class Storage {
   static async getPos(id) {
     const pos = await this.getItem(`mainPos${id}`);
 
+    if (pos == null) {
+      return;
+    }
+
     pos.x = parseInt(pos.x);
     pos.y = parseInt(pos.y);
     return pos;

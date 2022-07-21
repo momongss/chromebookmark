@@ -1,5 +1,6 @@
 import Node from "../Node.js";
 import OptionEdit from "../Options/OptionEdit.js";
+import Bookmark from "../../utils/bookmark.js";
 
 export default class Folder extends Node {
   constructor({ bookMark }) {
@@ -20,6 +21,10 @@ export default class Folder extends Node {
           <div class="text" draggable=true contenteditable=true>${bookMark.title}</div>
           <div class="drag-area"></div>
         `;
+  }
+
+  async addNode(nodeId) {
+    await Bookmark.moveTree(nodeId, this.id);
   }
 
   eventListeners() {
