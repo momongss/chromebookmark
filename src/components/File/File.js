@@ -13,11 +13,18 @@ export default class File extends Node {
     this.render(bookMark);
   }
 
+  faviconURL(u) {
+    const url = new URL(chrome.runtime.getURL("/_favicon/"));
+    url.searchParams.set("pageUrl", u);
+    url.searchParams.set("size", "32");
+    return url.toString();
+  }
+
   render(bookMark) {
     this.$node.href = bookMark.url;
     this.$node.dataset.id = bookMark.id;
 
-    let faviconURL = `chrome://favicon/size/256@1x/${bookMark.url}`;
+    let faviconURL = this.faviconURL(bookMark.url);
     if (bookMark.url.includes("youtube.com")) {
       faviconURL = "../../assets/youtube.svg";
     }

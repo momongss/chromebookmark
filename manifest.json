@@ -1,18 +1,29 @@
 {
   "name": "__MSG_appName__",
   "version": "1.0.3",
-  "manifest_version": 2,
+  "manifest_version": 3,
   "description": "__MSG_appDesc__",
   "author": "taehyung",
-  "chrome_url_overrides": {
-    "newtab": "index.html"
+  "action": {
+    "default_popup": "./credit/credit.html",
+    "default_icon": {
+      "128": "assets/bookmark.png"
+    }
   },
   "icons": {
     "128": "assets/bookmark.png"
   },
-  "permissions": ["bookmarks", "chrome://favicon/", "storage", "unlimitedStorage"],
-  "browser_action": {
-    "default_popup": "./credit/credit.html"
+  "permissions": ["bookmarks", "favicon", "storage"],
+  "chrome_url_overrides": {
+    "newtab": "index.html"
   },
+  "web_accessible_resources": [
+    {
+      "resources": ["_favicon/*"],
+      "matches": ["<all_urls>"],
+      "extension_ids": ["*"]
+    }
+  ],
+  "host_permissions": ["<all_urls>"],
   "default_locale": "en"
 }
