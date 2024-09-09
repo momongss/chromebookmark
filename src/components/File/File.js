@@ -23,7 +23,6 @@ export default class File extends Node {
     this.$node.href = bookMark.url;
     this.$node.dataset.id = bookMark.id;
 
-    // let faviconURL = `chrome://favicon/size/256@1x/${bookMark.url}`;
     let faviconURL = this.getFaviconURL(bookMark.url);
     if (bookMark.url.includes("youtube.com")) {
       faviconURL = "../../assets/youtube.svg";
