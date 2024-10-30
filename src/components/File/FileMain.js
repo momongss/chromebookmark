@@ -1,6 +1,6 @@
-import File from "./File.js";
+import FileNode from "./File.js";
 
-export default class FileMain extends File {
+export default class FileMain extends FileNode {
   constructor({ $manager, bookMark }) {
     super({ bookMark });
 

@@ -29,7 +29,9 @@ export default class App {
 
     const state = await Storage.getState();
 
-    state ? this.renderRunned(bookMarkTree, $app) : this.renderMainInit(bookMarkTree, $app);
+    state
+      ? this.renderRunned(bookMarkTree, $app)
+      : this.renderMainInit(bookMarkTree, $app);
 
     this.eventListeners();
   }
@@ -54,7 +56,10 @@ export default class App {
     for (const bookMark of bookMarkTree) {
       if (bookMark.children == null) {
         const filePos = await Storage.getPos(bookMark.id);
-        if (filePos == null || (filePos.constructor === Object && Object.keys(filePos).length === 0)) {
+        if (
+          filePos == null ||
+          (filePos.constructor === Object && Object.keys(filePos).length === 0)
+        ) {
           posUndefineds.push(bookMark);
           continue;
         }
@@ -221,6 +226,7 @@ export default class App {
           filePos.y = parseInt(tmp[3]);
         }
         Storage.setPos(bookMark.id, filePos);
+
         new FileApp({
           $manager: $app,
           bookMark: bookMark,
@@ -242,6 +248,9 @@ export default class App {
           folderPos.y = parseInt(tmp[3]);
         }
         Storage.setPos(bookMark.id, folderPos);
+
+        const fileAppNode = document.createElement("file-app-node");
+        fileAppNode.Init({ $app: $app, pos: folderPos });
         new FolderApp({
           $app: $app,
           pos: folderPos,
@@ -271,7 +280,10 @@ export default class App {
 
 function findEmpty($app) {
   for (const $child of $app.childNodes) {
-    if ($child.className.includes("node-wrapper") && $child.childElementCount === 0) {
+    if (
+      $child.className.includes("node-wrapper") &&
+      $child.childElementCount === 0
+    ) {
       return $child;
     }
   }

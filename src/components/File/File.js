@@ -1,15 +1,28 @@
-import Node from "../Node.js";
 import OptionEdit from "../Options/OptionEdit.js";
 
-export default class File extends Node {
-  constructor({ bookMark }) {
+class FileNode extends HTMLElement {
+  constructor() {
     super();
+  }
+
+  Init() {
+    this.attachShadow({ mode: "open" });
     this.$node = document.createElement("a");
     this.$node.className = "node file";
-    this.$node.draggable = true;
-    this.eventListeners();
+    this.shadowRoot.appendChild(this.$node);
 
-    this.render(bookMark);
+    this.eventListeners();
+  }
+
+  static get observedAttributes() {
+    return ["book-mark"];
+  }
+
+  attributeChangedCallback(name, oldValue, newValue) {
+    if (name === "book-mark" && newValue) {
+      this.bookMark = JSON.parse(newValue);
+      this.render();
+    }
   }
 
   getFaviconURL(u) {
@@ -19,25 +32,28 @@ export default class File extends Node {
     return url.toString();
   }
 
-  render(bookMark) {
-    this.$node.href = bookMark.url;
-    this.$node.dataset.id = bookMark.id;
+  render() {
+    if (!this.bookMark) return;
 
-    let faviconURL = this.getFaviconURL(bookMark.url);
-    if (bookMark.url.includes("youtube.com")) {
+    this.$node.href = this.bookMark.url;
+    this.$node.dataset.id = this.bookMark.id;
+
+    let faviconURL = this.getFaviconURL(this.bookMark.url);
+    if (this.bookMark.url.includes("youtube.com")) {
       faviconURL = "../../assets/youtube.svg";
     }
+
     this.$node.innerHTML = `
       <div class="file-wrapper">
         <img src="${faviconURL}" draggable=true/>
-        <div class="text" draggable=true contenteditable=true>${bookMark.title}</div>
+        <div class="text" draggable=true contenteditable=true>${this.bookMark.title}</div>
         <div class="drag-area"></div>
       </div>
     `;
   }
 
   eventListeners() {
-    document.addEventListener("click", (e) => {
+    document.addEventListener("click", () => {
       if (this.$nodeOptions) this.$nodeOptions.remove();
     });
 
@@ -55,8 +71,12 @@ export default class File extends Node {
         y: e.clientY,
       });
       this.$nodeOptions = this.optionEdit.$nodeOptions;
-      if (e.target.parentElement === this.$node) {
-      }
     });
   }
 }
+
+console.log("dd");
+customElements.define("file-node", FileNode);
+console.log("dd");
+
+export default FileNode;

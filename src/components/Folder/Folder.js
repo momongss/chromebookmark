@@ -1,9 +1,8 @@
-import Node from "../Node.js";
+import ItemNode from "../Node.js";
 import OptionEdit from "../Options/OptionEdit.js";
 
-export default class Folder extends Node {
+export default class Folder {
   constructor({ bookMark }) {
-    super();
     this.$node = document.createElement("div");
     this.$node.className = "node folder";
     this.eventListeners();
@@ -14,7 +13,6 @@ export default class Folder extends Node {
   render(bookMark) {
     this.bookMark = bookMark;
     this.$node.dataset.id = bookMark.id;
-    this.$node.draggable = true;
     this.$node.innerHTML = `
           <img id="logo-8f8894ba7a1f5c7a94a170b7dc841190" src="chrome-extension://${chrome.runtime.id}/assets/folder.svg" draggable=true alt="문서"></img>
           <div class="text" draggable=true contenteditable=true>${bookMark.title}</div>

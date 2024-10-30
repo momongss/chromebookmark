@@ -1,9 +1,12 @@
-import File from "./File.js";
+import FileNode from "./File.js";
 
-export default class FileApp extends File {
-  constructor({ $manager, bookMark, pos }) {
-    super({ bookMark });
+export default class FileApp extends FileNode {
+  constructor() {
+    super();
+  }
 
+  Init({ $manager, pos }) {
+    super();
     const $div = $manager.querySelector(`.node-wrapper-${pos.x}-${pos.y}`);
     $div.innerHTML = "";
     $div.appendChild(this.$node);
@@ -11,3 +14,5 @@ export default class FileApp extends File {
     this.$ = $div;
   }
 }
+
+customElements.define("file-app-node", FileAppNode);
