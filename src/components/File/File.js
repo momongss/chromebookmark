@@ -37,8 +37,8 @@ export default class FileNode extends ItemNode {
 
     this.$node.innerHTML = `
       <div class="file-wrapper">
-        <img src="${faviconURL}" draggable=true/>
-        <div class="text" draggable=true contenteditable=true>${this.bookMark.title}</div>
+        <img src="${faviconURL}"/>
+        <div class="text"contenteditable=true>${this.bookMark.title}</div>
         <div class="drag-area"></div>
       </div>
     `;

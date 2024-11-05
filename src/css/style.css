@@ -191,6 +191,8 @@ button:active {
 .node {
   width: var(--grid-item-width);
   position: relative;
+
+  border-radius: 12%;
 }
 
 .app .node {
