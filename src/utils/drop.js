@@ -1,5 +1,5 @@
 import Storage from "../utils/storage.js";
-import Bookmark from "../utils/bookmark.js";
+import bookmarkManager from "../utils/bookmark.js";
 
 import FileApp from "../components/File/FileApp.js";
 import FileMain from "../components/File/FileMain.js";
@@ -7,7 +7,8 @@ import FolderApp from "../components/Folder/FolderApp.js";
 import FolderMain from "../components/Folder/FolderMain.js";
 
 export async function dropHandler(dragged, $target, rootId) {
-  if (!dragged.classList.contains("node") || dragged === $target.parentElement) return;
+  if (!dragged.classList.contains("node") || dragged === $target.parentElement)
+    return;
 
   let nodeType, nodeId;
 
@@ -19,7 +20,7 @@ export async function dropHandler(dragged, $target, rootId) {
 
   nodeId = dragged.dataset.id;
 
-  let bookMark = await Bookmark.getSubTree(nodeId);
+  let bookMark = await bookmarkManager.getSubTree(nodeId);
   bookMark = bookMark[0];
 
   if ($target.parentNode.className === "app") {
@@ -35,18 +36,21 @@ export async function dropHandler(dragged, $target, rootId) {
 
       Storage.setPos(dragged.dataset.id, pos);
     } else if (dragged.parentNode.parentNode.className === "folder-manager") {
-      const rootTree = await Bookmark.getSubTree(rootId);
-      const node = await Bookmark.getNode(dragged.dataset.id);
+      const rootTree = await bookmarkManager.getSubTree(rootId);
+      const node = await bookmarkManager.getNode(dragged.dataset.id);
       for (const child of rootTree[0].children) {
         if (child.title === node.title) {
           const $div = dragged.querySelector("div");
           $div.innerHTML = node.title;
-          Bookmark.updateBookmarktitle(dragged.dataset.id, $div.innerHTML);
+          bookmarkManager.updateBookmarktitle(
+            dragged.dataset.id,
+            $div.innerHTML
+          );
           break;
         }
       }
 
-      Bookmark.moveTree(dragged.dataset.id, rootTree[0].id);
+      bookmarkManager.moveTree(dragged.dataset.id, rootTree[0].id);
       const tmp = $target.className.split("-");
       pos = {
         x: tmp[2],
@@ -74,7 +78,10 @@ export async function dropHandler(dragged, $target, rootId) {
     if (dragged.parentNode.parentNode.dataset.id === $target.dataset.id) return;
 
     if (dragged.classList.contains("folder")) {
-      const isContained = await Bookmark.searchTree(dragged.dataset.id, $target.dataset.id);
+      const isContained = await bookmarkManager.searchTree(
+        dragged.dataset.id,
+        $target.dataset.id
+      );
       if (isContained) {
         return;
       }
@@ -93,10 +100,10 @@ export async function dropHandler(dragged, $target, rootId) {
     }
 
     removeDragged(dragged);
-    Bookmark.moveTree(dragged.dataset.id, $target.dataset.id);
+    bookmarkManager.moveTree(dragged.dataset.id, $target.dataset.id);
   } else if ($target.parentElement.classList.contains("folder")) {
     $target = $target.parentElement;
-    Bookmark.moveTree(dragged.dataset.id, $target.dataset.id);
+    bookmarkManager.moveTree(dragged.dataset.id, $target.dataset.id);
     dragged.remove();
   }
 }

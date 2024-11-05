@@ -1,14 +1,3 @@
 import FileNode from "./File.js";
 
-export default class FileMain extends FileNode {
-  constructor({ $manager, bookMark }) {
-    super({ bookMark });
-
-    const $div = document.createElement("div");
-    $div.className = "node-wrapper";
-    $div.appendChild(this.$node);
-    $manager.appendChild($div);
-
-    this.$ = $div;
-  }
-}
+export default class FileMain extends FileNode {}

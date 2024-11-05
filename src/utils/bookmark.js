@@ -1,4 +1,4 @@
-class bookmark {
+class BookmarkManager {
   constructor() {
     this.history = [];
   }
@@ -69,5 +69,5 @@ class bookmark {
   }
 }
 
-const Bookmark = new bookmark();
-export default Bookmark;
+const bookmarkManager = new BookmarkManager();
+export default bookmarkManager;

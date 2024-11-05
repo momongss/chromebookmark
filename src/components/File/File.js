@@ -1,28 +1,20 @@
+import ItemNode from "../Node.js";
 import OptionEdit from "../Options/OptionEdit.js";
 
-class FileNode extends HTMLElement {
-  constructor() {
-    super();
-  }
-
-  Init() {
-    this.attachShadow({ mode: "open" });
+export default class FileNode extends ItemNode {
+  Init(bookMark) {
+    this.bookMark = bookMark;
     this.$node = document.createElement("a");
     this.$node.className = "node file";
-    this.shadowRoot.appendChild(this.$node);
-
+    this.appendChild(this.$node);
+    this.render();
     this.eventListeners();
   }
 
-  static get observedAttributes() {
-    return ["book-mark"];
-  }
-
-  attributeChangedCallback(name, oldValue, newValue) {
-    if (name === "book-mark" && newValue) {
-      this.bookMark = JSON.parse(newValue);
-      this.render();
-    }
+  Init_App({ $parent, bookMark }) {
+    this.Init(bookMark);
+    $parent.innerHTML = "";
+    $parent.appendChild(this);
   }
 
   getFaviconURL(u) {
@@ -75,8 +67,4 @@ class FileNode extends HTMLElement {
   }
 }
 
-console.log("dd");
 customElements.define("file-node", FileNode);
-console.log("dd");
-
-export default FileNode;

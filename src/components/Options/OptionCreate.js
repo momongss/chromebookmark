@@ -22,20 +22,15 @@ export default class OptionCreate {
 
     $createOptions.addEventListener("click", (e) => {
       const bookMark = { id: 0, title: "", children: [] };
-      if (mode === "app") {
-      }
-      const newFolder =
-        mode === "app"
-          ? new FolderApp({
-              $app: $app,
-              $target,
-              bookMark: bookMark,
-              $target: $target,
-            })
-          : new FolderMain({
-              $manager: $target,
-              bookMark: bookMark,
-            });
+
+      const tmp = $target.className.split("-");
+      const pos = { x: parseInt(tmp[2]), y: parseInt(tmp[3]) };
+
+      const newFolder = document.createElement("folder-node");
+      newFolder.Init({
+        $parent: $target,
+        bookMark: bookMark,
+      });
 
       const $text = newFolder.$node.querySelector(".text");
       selectAll($text);
@@ -44,9 +39,6 @@ export default class OptionCreate {
           $text.blur();
         }
       });
-
-      const tmp = $target.className.split("-");
-      const pos = { x: parseInt(tmp[2]), y: parseInt(tmp[3]) };
 
       $text.addEventListener("blur", (e) => {
         const parentId = $target.dataset.id

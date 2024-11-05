@@ -1,11 +1,7 @@
 import Folder from "./Folder.js";
 
-export default class FolderMain extends Folder {
+export default class FolderMain {
   constructor({ $manager, bookMark }) {
-    super({
-      bookMark: bookMark,
-    });
-
     this.bookMark = bookMark;
 
     const $div = document.createElement("div");

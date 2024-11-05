@@ -1,13 +1,13 @@
 import FileMain from "./File/FileMain.js";
-import FolderMain from "./Folder/FolderMain.js";
 import OptionCreate from "./Options/OptionCreate.js";
 
 import Bookmark from "../utils/bookmark.js";
 
 import { FolderManagerData } from "../utils/FolderManagerData.js";
+import App from "./App.js";
 
 export default class FolderManager {
-  constructor({ $app, id, initPos, onDestroy }) {
+  constructor({ id, initPos, onDestroy }) {
     const $folderWrapper = document.createElement("div");
     $folderWrapper.className = `folder-manager-wrapper`;
 
@@ -24,7 +24,7 @@ export default class FolderManager {
 
     document.body.appendChild($folderWrapper);
 
-    this.$app = $app;
+    this.$app = App.$dom;
 
     this.$folderManagerWrapper = $folderWrapper;
     this.history = [];
@@ -43,7 +43,8 @@ export default class FolderManager {
   }
 
   rightClickHandler() {
-    const $folderManager = this.$folderManagerWrapper.querySelector(".folder-manager");
+    const $folderManager =
+      this.$folderManagerWrapper.querySelector(".folder-manager");
 
     document.addEventListener("click", (e) => {
       if (this.$nodeOptions) this.$nodeOptions.remove();
@@ -72,7 +73,6 @@ export default class FolderManager {
           $target: e.target,
           x: e.clientX,
           y: e.clientY,
-          mode: "manager",
         });
         this.$createOptions = optionCreate.$createOptions;
       }
@@ -90,9 +90,19 @@ export default class FolderManager {
       initX = e.clientX;
       initY = e.clientY;
 
-      folderX = parseInt(this.$folderManagerWrapper.style.left.slice(0, this.$folderManagerWrapper.style.left.length - 2));
+      folderX = parseInt(
+        this.$folderManagerWrapper.style.left.slice(
+          0,
+          this.$folderManagerWrapper.style.left.length - 2
+        )
+      );
 
-      folderY = parseInt(this.$folderManagerWrapper.style.top.slice(0, this.$folderManagerWrapper.style.top.length - 2));
+      folderY = parseInt(
+        this.$folderManagerWrapper.style.top.slice(
+          0,
+          this.$folderManagerWrapper.style.top.length - 2
+        )
+      );
     });
 
     let left;
@@ -214,18 +224,20 @@ export default class FolderManager {
   }
 
   addFolder($folderManager, bookMark) {
-    const folder = new FolderMain({
-      $manager: $folderManager,
-      bookMark,
+    const folderNode = document.createElement("folder-node");
+    folderNode.Init({
+      $parent: $folderManager,
+      bookMark: bookMark,
     });
 
     this.nodeCount++;
-    folder.$.style.zIndex = -this.nodeCount + FolderManagerData.zindex;
+    // folder.$.style.zIndex = -this.nodeCount + FolderManagerData.zindex;
   }
 
   addFile($folderManager, bookMark) {
-    const file = new FileMain({
-      $manager: $folderManager,
+    const folderNode = document.createElement("folder-node");
+    folderNode.Init({
+      $parent: $folderManager,
       bookMark: bookMark,
     });
 

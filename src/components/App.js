@@ -10,7 +10,10 @@ import { dropHandler } from "../utils/drop.js";
 import { constDatas } from "../utils/const.js";
 
 export default class App {
+  static $dom;
+
   constructor({ $app }) {
+    this.$dom = this;
     this._constructor($app);
   }
 
@@ -55,30 +58,32 @@ export default class App {
 
     for (const bookMark of bookMarkTree) {
       if (bookMark.children == null) {
-        const filePos = await Storage.getPos(bookMark.id);
+        const pos = await Storage.getPos(bookMark.id);
         if (
-          filePos == null ||
-          (filePos.constructor === Object && Object.keys(filePos).length === 0)
+          pos == null ||
+          (pos.constructor === Object && Object.keys(pos).length === 0)
         ) {
           posUndefineds.push(bookMark);
           continue;
         }
-        new FileApp({
-          $manager: $app,
+
+        const fileNode = document.createElement("file-node");
+        fileNode.Init_App({
+          $parent: $app.querySelector(`.node-wrapper-${pos.x}-${pos.y}`),
           bookMark: bookMark,
-          pos: filePos,
         });
       } else {
-        const folderPos = await Storage.getPos(bookMark.id);
-        if (folderPos == null) {
+        const pos = await Storage.getPos(bookMark.id);
+        if (pos == null) {
           posUndefineds.push(bookMark);
           continue;
         }
 
-        new FolderApp({
-          $app: $app,
-          pos: folderPos,
+        const folderNode = document.createElement("folder-node");
+        folderNode.Init({
+          $parent: $app.querySelector(`.node-wrapper-${pos.x}-${pos.y}`),
           bookMark: bookMark,
+          isRoot: true,
         });
       }
     }
@@ -91,11 +96,12 @@ export default class App {
           x: tmp[2],
           y: tmp[3],
         };
-        new FileApp({
-          $manager: $app,
+        const fileNode = document.createElement("file-node");
+        fileNode.Init_App({
+          $parent: $app.querySelector(`.node-wrapper-${pos.x}-${pos.y}`),
           bookMark: bookMark,
-          pos: pos,
         });
+
         Storage.setPos(bookMark.id, pos);
       } else {
         const $wrapper = findEmpty($app);
@@ -104,10 +110,11 @@ export default class App {
           x: tmp[2],
           y: tmp[3],
         };
-        const folder = new FolderApp({
-          $app: $app,
-          pos: pos,
+        const folderNode = document.createElement("folder-node");
+        folderNode.Init({
+          $parent: $app.querySelector(`.node-wrapper-${pos.x}-${pos.y}`),
           bookMark: bookMark,
+          isRoot: true,
         });
         Storage.setPos(bookMark.id, pos);
       }
@@ -227,11 +234,14 @@ export default class App {
         }
         Storage.setPos(bookMark.id, filePos);
 
-        new FileApp({
-          $manager: $app,
+        const fileNode = document.createElement("file-node");
+        fileNode.Init_App({
+          $parent: $app.querySelector(
+            `.node-wrapper-${filePos.x}-${filePos.y}`
+          ),
           bookMark: bookMark,
-          pos: filePos,
         });
+
         filePos.x++;
         if (filePos.x >= fileEndX) {
           filePos.x = fileInitX;
@@ -249,13 +259,15 @@ export default class App {
         }
         Storage.setPos(bookMark.id, folderPos);
 
-        const fileAppNode = document.createElement("file-app-node");
-        fileAppNode.Init({ $app: $app, pos: folderPos });
-        new FolderApp({
-          $app: $app,
-          pos: folderPos,
+        const folderNode = document.createElement("folder-node");
+        folderNode.Init({
+          $parent: $app.querySelector(
+            `.node-wrapper-${folderPos.x}-${folderPos.y}`
+          ),
           bookMark: bookMark,
+          isRoot: true,
         });
+
         folderPos.x++;
         if (folderPos.x >= folderEndX) {
           folderPos.x = folderInitX;

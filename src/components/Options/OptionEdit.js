@@ -1,4 +1,4 @@
-import Bookmark from "../../utils/bookmark.js";
+import bookmarkManager from "../../utils/bookmark.js";
 import { selectAll, clearSelection } from "../../utils/caret.js";
 
 export default class OptionEdit {
@@ -54,18 +54,18 @@ export default class OptionEdit {
       e.stopPropagation();
       const $folder = this.$nodeOptions.parentElement;
       if ($folder && $folder.classList.contains("node")) {
-        const subTree = await Bookmark.getSubTree($folder.dataset.id);
+        const subTree = await bookmarkManager.getSubTree($folder.dataset.id);
         if (subTree[0].children != null && subTree[0].children.length > 0) {
           const msg = chrome.i18n.getMessage("remove");
           console.log(msg, "msg");
           const answer = confirm(msg ? msg : "really delete folder?");
 
           if (answer) {
-            Bookmark.removeTree($folder.dataset.id);
+            bookmarkManager.removeTree($folder.dataset.id);
             $folder.remove();
           }
         } else {
-          Bookmark.remove($folder.dataset.id);
+          bookmarkManager.remove($folder.dataset.id);
           $folder.remove();
         }
       }

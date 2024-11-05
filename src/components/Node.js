@@ -1,34 +1,8 @@
-export default class ItemNode extends HTMLElement {
+class ItemNode extends HTMLElement {
   data = null;
   isDragging = false;
   offsetX = 0;
   offsetY = 0;
-
-  constructor() {
-    super(); // 부모 클래스의 생성자 호출
-
-    // Shadow DOM이 필요하면 주석을 해제하세요.
-    // this.attachShadow({ mode: 'open' });
-
-    this.style.position = "absolute";
-  }
-
-  connectedCallback() {
-    this.render();
-    this.addEventListeners();
-  }
-
-  disconnectedCallback() {
-    this.removeEventListeners();
-  }
-
-  render() {
-    this.innerHTML = `
-      <div style="cursor: move;">
-        Node Component
-      </div>
-    `;
-  }
 
   addEventListeners() {
     this.addEventListener("mousedown", this.onMouseDown);
@@ -61,3 +35,7 @@ export default class ItemNode extends HTMLElement {
     this.isDragging = false;
   };
 }
+
+customElements.define("item-node", ItemNode);
+
+export default ItemNode;
