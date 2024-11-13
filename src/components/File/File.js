@@ -9,11 +9,18 @@ export default class FileNode extends ItemNode {
     this.appendChild(this.$node);
     this.render();
     this.eventListeners();
+
+    console.log(bookMark);
   }
 
   Init_App({ $parent, bookMark }) {
     this.Init(bookMark);
     $parent.innerHTML = "";
+    $parent.appendChild(this);
+  }
+
+  Init_Manage({ $parent, bookMark }) {
+    this.Init(bookMark);
     $parent.appendChild(this);
   }
 

@@ -26,8 +26,8 @@ export default class Storage {
     return await this.getItem(`state`);
   }
 
-  static async setState(state) {
-    return await this.setItem(`state`, state);
+  static setState(state) {
+    this.setItem(`state`, state);
   }
 
   static getItem(key) {
@@ -44,15 +44,8 @@ export default class Storage {
   }
 
   static setItem(key, data) {
-    return new Promise((resolve) => {
-      storage.set(
-        {
-          [mainKey + key]: data,
-        },
-        resolve
-      );
-    }).catch((err) => {
-      console.error(err);
+    storage.set({
+      [mainKey + key]: data,
     });
   }
 }

@@ -1,9 +1,8 @@
-import FolderManager from "../FolderManager.js";
 import ItemNode from "../Node.js";
 import OptionEdit from "../Options/OptionEdit.js";
 
 export default class Folder extends ItemNode {
-  Init({ $parent, bookMark, isRoot }) {
+  Init({ $parent, bookMark, isRoot, folderManager }) {
     this.bookMark = bookMark;
 
     this.$node = document.createElement("div");
@@ -15,10 +14,15 @@ export default class Folder extends ItemNode {
     $parent.appendChild(this);
 
     if (isRoot) this.#InitRoot();
-    else this.#InitSearch();
+    else this.#InitSearch(folderManager);
   }
 
-  #InitSearch() {}
+  #InitSearch(folderManager) {
+    this.$node.addEventListener("click", (e) => {
+      console.log(folderManager);
+      folderManager.render({ id: this.bookMark.id });
+    });
+  }
 
   #InitRoot() {
     this.managerCnt = 0;
@@ -30,7 +34,8 @@ export default class Folder extends ItemNode {
         left: $rect.x + this.managerCnt * 35,
       };
       this.managerCnt++;
-      new FolderManager({
+      const folderManager = document.createElement("folder-manager");
+      folderManager.Init({
         id: this.bookMark.id,
         initPos: initPos,
         onDestroy: () => {
@@ -43,8 +48,8 @@ export default class Folder extends ItemNode {
   render(bookMark) {
     this.$node.dataset.id = bookMark.id;
     this.$node.innerHTML = `
-          <img id="logo-8f8894ba7a1f5c7a94a170b7dc841190" src="chrome-extension://${chrome.runtime.id}/assets/folder.svg" draggable=true alt="문서"></img>
-          <div class="text" draggable=true contenteditable=true>${bookMark.title}</div>
+          <img id="logo-8f8894ba7a1f5c7a94a170b7dc841190" src="chrome-extension://${chrome.runtime.id}/assets/folder.svg" alt="문서"></img>
+          <div class="text" contenteditable=true>${bookMark.title}</div>
           <div class="drag-area"></div>
         `;
   }

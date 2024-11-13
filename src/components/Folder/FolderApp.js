@@ -1,5 +1,4 @@
 import Folder from "./Folder.js";
-import FolderManager from "../FolderManager.js";
 
 export default class FolderApp extends Folder {
   constructor({ $app, bookMark, pos, $target }) {
@@ -25,8 +24,8 @@ export default class FolderApp extends Folder {
         left: $rect.x + this.managerCnt * 35,
       };
       this.managerCnt++;
-      new FolderManager({
-        $app: $app,
+      const folderManager = document.createElement("folder-manager");
+      folderManager.Init({
         id: this.bookMark.id,
         initPos: initPos,
         onDestroy: () => {

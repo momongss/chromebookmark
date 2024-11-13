@@ -1,5 +1,6 @@
 import FileApp from "./File/FileApp.js";
 import FolderApp from "./Folder/FolderApp.js";
+import FolderManager from "./FolderManager.js";
 import Wallpaper from "./Wallpaper/Wallpaper.js";
 
 import OptionCreate from "./Options/OptionCreate.js";
@@ -14,6 +15,7 @@ export default class App {
 
   constructor({ $app }) {
     this.$dom = this;
+    console.log(this.$dom);
     this._constructor($app);
   }
 
@@ -150,45 +152,6 @@ export default class App {
         });
         this.$createOptions = optionCreate.$createOptions;
       }
-    });
-
-    document.addEventListener("dragstart", (e) => {
-      $dragged = e.target;
-      $dragged.style.opacity = 0.5;
-    });
-
-    document.addEventListener("dragend", (e) => {
-      e.target.style.opacity = "";
-    });
-
-    document.addEventListener("dragover", (e) => {
-      e.preventDefault();
-    });
-
-    document.addEventListener("dragenter", (e) => {
-      // 이미 북마크가 존재하는 곳으로 옮겨짐 방지.
-      if (e.target.parentElement.className === "file-wrapper") {
-        e.preventDefault();
-        return;
-      }
-      if (e.target.className.includes("node-wrapper")) {
-        if (e.target.childElementCount > 0) {
-          e.preventDefault();
-          return;
-        }
-      }
-      e.target.style.backgroundColor = "rgba(0, 0, 0, 0.4)";
-    });
-
-    document.addEventListener("dragleave", (e) => {
-      e.target.style.backgroundColor = "";
-    });
-
-    document.addEventListener("drop", async (e) => {
-      e.preventDefault();
-
-      dropHandler($dragged, e.target, this.rootId);
-      e.target.style.backgroundColor = "";
     });
   }
 

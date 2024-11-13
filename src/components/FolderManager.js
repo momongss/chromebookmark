@@ -1,32 +1,30 @@
-import FileMain from "./File/FileMain.js";
 import OptionCreate from "./Options/OptionCreate.js";
 
 import Bookmark from "../utils/bookmark.js";
 
 import { FolderManagerData } from "../utils/FolderManagerData.js";
 import App from "./App.js";
+import bookmarkManager from "../utils/bookmark.js";
 
-export default class FolderManager {
-  constructor({ id, initPos, onDestroy }) {
-    const $folderWrapper = document.createElement("div");
-    $folderWrapper.className = `folder-manager-wrapper`;
+export default class FolderManager extends HTMLElement {
+  Init({ id, initPos, onDestroy }) {
+    this.className = `folder-manager-wrapper`;
 
     FolderManagerData.zindex++;
-    $folderWrapper.style.zIndex = FolderManagerData.zindex;
-    FolderManagerData.$prevManager = $folderWrapper;
+    this.style.zIndex = FolderManagerData.zindex;
+    FolderManagerData.$prevManager = this;
 
-    $folderWrapper.addEventListener("mousedown", (e) => {
-      if (FolderManagerData.$prevManager === $folderWrapper) return;
+    this.addEventListener("mousedown", (e) => {
+      if (FolderManagerData.$prevManager === this) return;
       FolderManagerData.zindex++;
-      $folderWrapper.style.zIndex = FolderManagerData.zindex;
-      FolderManagerData.$prevManager = $folderWrapper;
+      this.style.zIndex = FolderManagerData.zindex;
+      FolderManagerData.$prevManager = this;
     });
 
-    document.body.appendChild($folderWrapper);
+    document.body.appendChild(this);
 
     this.$app = App.$dom;
 
-    this.$folderManagerWrapper = $folderWrapper;
     this.history = [];
     this.nodeCount = 0;
 
@@ -37,21 +35,25 @@ export default class FolderManager {
 
     this.onDestroy = onDestroy;
 
+    this.id = id;
+
     this.render({
       id: id,
     });
   }
 
-  rightClickHandler() {
-    const $folderManager =
-      this.$folderManagerWrapper.querySelector(".folder-manager");
+  addItem(node) {
+    bookmarkManager.moveTree(node.id, this.id);
+    this.render(this.id);
+  }
 
+  rightClickHandler() {
     document.addEventListener("click", (e) => {
       if (this.$nodeOptions) this.$nodeOptions.remove();
       if (this.$createOptions) this.$createOptions.remove();
     });
 
-    $folderManager.addEventListener("click", (e) => {
+    this.addEventListener("click", (e) => {
       if (this.$nodeOptions) this.$nodeOptions.remove();
       if (this.$createOptions) this.$createOptions.remove();
       document.querySelectorAll(".options").forEach(($el) => {
@@ -59,7 +61,7 @@ export default class FolderManager {
       });
     });
 
-    $folderManager.addEventListener("contextmenu", (e) => {
+    this.addEventListener("contextmenu", (e) => {
       e.preventDefault();
       e.stopPropagation();
 
@@ -90,19 +92,9 @@ export default class FolderManager {
       initX = e.clientX;
       initY = e.clientY;
 
-      folderX = parseInt(
-        this.$folderManagerWrapper.style.left.slice(
-          0,
-          this.$folderManagerWrapper.style.left.length - 2
-        )
-      );
+      folderX = parseInt(this.style.left.slice(0, this.style.left.length - 2));
 
-      folderY = parseInt(
-        this.$folderManagerWrapper.style.top.slice(
-          0,
-          this.$folderManagerWrapper.style.top.length - 2
-        )
-      );
+      folderY = parseInt(this.style.top.slice(0, this.style.top.length - 2));
     });
 
     let left;
@@ -113,8 +105,8 @@ export default class FolderManager {
         left = folderX + e.clientX - initX;
         top = folderY + e.clientY - initY;
 
-        this.$folderManagerWrapper.style.left = `${left}px`;
-        this.$folderManagerWrapper.style.top = `${top}px`;
+        this.style.left = `${left}px`;
+        this.style.top = `${top}px`;
       }
     });
 
@@ -126,19 +118,20 @@ export default class FolderManager {
     });
   }
 
-  async render({ id, mode }) {
-    const subTree = await Bookmark.getSubTree(id);
+  async render({ mode }) {
+    console.log(this.id);
+    const subTree = await Bookmark.getSubTree(this.id);
     const title = subTree[0].title;
     const bookMarkTree = subTree[0].children;
     if (mode !== "back") {
       this.history.push({
-        id: id,
+        id: this.id,
       });
     }
-    this.$folderManagerWrapper.innerHTML = "";
-    this.$folderManagerWrapper.classList.add("show");
-    this.$folderManagerWrapper.style.top = `${this.pos.top}px`;
-    this.$folderManagerWrapper.style.left = `${this.pos.left}px`;
+    this.innerHTML = "";
+    this.classList.add("show");
+    this.style.top = `${this.pos.top}px`;
+    this.style.left = `${this.pos.left}px`;
 
     const $backBtn = document.createElement("div");
     $backBtn.className = "back-btn";
@@ -169,14 +162,14 @@ export default class FolderManager {
 
     const $closeBtn = $header.querySelector(".folder-close");
     $closeBtn.addEventListener("click", (e) => {
-      this.$folderManagerWrapper.remove();
+      this.remove();
       this.history = [];
       this.onDestroy();
     });
 
     const $folderManager = document.createElement("div");
     $folderManager.className = `folder-manager`;
-    $folderManager.dataset.id = id;
+    $folderManager.dataset.id = this.id;
 
     $folderManager.addEventListener("click", (e) => {
       const $node = e.target.parentElement;
@@ -185,8 +178,8 @@ export default class FolderManager {
       }
     });
 
-    this.$folderManagerWrapper.appendChild($header);
-    this.$folderManagerWrapper.appendChild($folderManager);
+    this.appendChild($header);
+    this.appendChild($folderManager);
 
     const folderBookMark = [];
     const fileBookMark = [];
@@ -228,20 +221,23 @@ export default class FolderManager {
     folderNode.Init({
       $parent: $folderManager,
       bookMark: bookMark,
+      isRoot: false,
+      folderManager: this,
     });
 
     this.nodeCount++;
-    // folder.$.style.zIndex = -this.nodeCount + FolderManagerData.zindex;
   }
 
   addFile($folderManager, bookMark) {
-    const folderNode = document.createElement("folder-node");
-    folderNode.Init({
+    const fileNode = document.createElement("file-node");
+    fileNode.Init_Manage({
       $parent: $folderManager,
       bookMark: bookMark,
     });
 
     this.nodeCount++;
-    file.$.style.zIndex = -this.nodeCount + FolderManagerData.zindex;
+    // file.$.style.zIndex = -this.nodeCount + FolderManagerData.zindex;
   }
 }
+
+customElements.define("folder-manager", FolderManager);
