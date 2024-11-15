@@ -280,3 +280,17 @@ button:active {
   margin-bottom: 0.313rem;
   width: 1.875rem;
 }
+
+rect-dragger {
+  position: absolute;
+  border: 2px solid rgba(255, 140, 0, 0.8);
+  background: linear-gradient(
+    135deg,
+    rgba(255, 165, 0, 0.2),
+    rgba(255, 140, 0, 0.1)
+  );
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* 부드러운 그림자 */
+  border-radius: 6px; /* 둥근 테두리 */
+  pointer-events: none; /* 선택 불가능하게 설정 */
+  transition: box-shadow 0.2s ease, opacity 0.3s ease; /* 부드러운 애니메이션 */
+}

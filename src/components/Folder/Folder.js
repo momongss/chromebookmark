@@ -1,3 +1,4 @@
+import bookmarkManager from "../../utils/bookmark.js";
 import ItemNode from "../Node.js";
 import OptionEdit from "../Options/OptionEdit.js";
 
@@ -12,6 +13,8 @@ export default class Folder extends ItemNode {
 
     this.appendChild(this.$node);
     $parent.appendChild(this);
+
+    this.isRoot = isRoot;
 
     if (isRoot) this.#InitRoot();
     else this.#InitSearch(folderManager);
@@ -43,6 +46,11 @@ export default class Folder extends ItemNode {
         },
       });
     });
+  }
+
+  addItem(bookMark) {
+    console.log(bookMark);
+    bookmarkManager.moveTree(bookMark.id, this.bookMark.id);
   }
 
   render(bookMark) {

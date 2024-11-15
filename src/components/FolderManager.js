@@ -5,6 +5,7 @@ import Bookmark from "../utils/bookmark.js";
 import { FolderManagerData } from "../utils/FolderManagerData.js";
 import App from "./App.js";
 import bookmarkManager from "../utils/bookmark.js";
+import RectDragger from "../utils/rectangleDrag.js";
 
 export default class FolderManager extends HTMLElement {
   Init({ id, initPos, onDestroy }) {
@@ -51,6 +52,10 @@ export default class FolderManager extends HTMLElement {
     document.addEventListener("click", (e) => {
       if (this.$nodeOptions) this.$nodeOptions.remove();
       if (this.$createOptions) this.$createOptions.remove();
+    });
+
+    this.addEventListener("mousedown", (e) => {
+      e.stopPropagation();
     });
 
     this.addEventListener("click", (e) => {
@@ -119,7 +124,6 @@ export default class FolderManager extends HTMLElement {
   }
 
   async render({ mode }) {
-    console.log(this.id);
     const subTree = await Bookmark.getSubTree(this.id);
     const title = subTree[0].title;
     const bookMarkTree = subTree[0].children;
@@ -176,6 +180,15 @@ export default class FolderManager extends HTMLElement {
       if ($node.classList.contains("folder")) {
         this.render({ id: $node.dataset.id });
       }
+    });
+
+    const dragger = document.createElement("rect-dragger");
+    $folderManager.appendChild(dragger);
+    console.log($folderManager.style.top);
+    console.log($folderManager.top);
+    dragger.Init($folderManager, {
+      x: this.pos.left + 2,
+      y: this.pos.top + 37,
     });
 
     this.appendChild($header);

@@ -2,6 +2,8 @@ import ItemNode from "../Node.js";
 import OptionEdit from "../Options/OptionEdit.js";
 
 export default class FileNode extends ItemNode {
+  isRoot = false;
+
   Init(bookMark) {
     this.bookMark = bookMark;
     this.$node = document.createElement("a");
@@ -9,19 +11,22 @@ export default class FileNode extends ItemNode {
     this.appendChild(this.$node);
     this.render();
     this.eventListeners();
-
-    console.log(bookMark);
   }
 
   Init_App({ $parent, bookMark }) {
     this.Init(bookMark);
     $parent.innerHTML = "";
     $parent.appendChild(this);
+
+    this.isRoot = true;
+    console.log(bookMark);
   }
 
   Init_Manage({ $parent, bookMark }) {
     this.Init(bookMark);
     $parent.appendChild(this);
+
+    this.isRoot = false;
   }
 
   getFaviconURL(u) {

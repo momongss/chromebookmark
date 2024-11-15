@@ -3,6 +3,7 @@ import Storage from "../utils/storage.js";
 import App from "./App.js";
 
 class ItemNode extends HTMLElement {
+  bookMark = null;
   data = null;
   isDragging = false;
 
@@ -12,45 +13,54 @@ class ItemNode extends HTMLElement {
   }
 
   #addEventListeners() {
-    this.addEventListener("mousedown", this.onDragStart);
+    this.addEventListener("mousedown", this.onMouseDown);
+    this.addEventListener("dragstart", this.onDragStart);
     this.addEventListener("click", this.onClick);
     document.addEventListener("mousemove", this.onMouseMove);
     document.addEventListener("mouseup", this.onMouseUp);
   }
 
   removeEventListeners() {
-    this.removeEventListener("mousedown", this.onDragStart);
+    this.removeEventListener("mousedown", this.onMouseDown);
+    this.removeEventListener("dragstart", this.onDragStart);
     this.removeEventListener("click", this.onClick);
-    document.removeEventListener("mousedown", this.onMouseDown);
     document.removeEventListener("mousemove", this.onMouseMove);
     document.removeEventListener("mouseup", this.onMouseUp);
   }
 
-  onMouseDown = (event) => {
-    console.log("hit");
+  dragStartPos = {
+    x: 0,
+    y: 0,
   };
 
-  #originParent = null;
+  dragEndPos = {
+    x: 0,
+    y: 0,
+  };
 
-  onDragStart = (event) => {
-    event.preventDefault(); // 기본 드래그 동작 비활성화
+  onMouseDown = (e) => {
+    e.preventDefault(); // 기본 드래그 동작 비활성화
+    e.stopPropagation();
 
     // 드래그 시작 위치에서의 오프셋 저장
-    this.offsetX = event.clientX - this.getBoundingClientRect().left;
-    this.offsetY = event.clientY - this.getBoundingClientRect().top;
+    this.offsetX = e.clientX - this.getBoundingClientRect().left;
+    this.offsetY = e.clientY - this.getBoundingClientRect().top;
 
     // 클릭을 막기 위한 드래그 시작 위치 저장
-    this.startX = event.clientX;
-    this.startY = event.clientY;
+    this.startX = e.clientX;
+    this.startY = e.clientY;
 
     this.style.position = "fixed"; // 요소 위치를 업데이트하기 위해 필요
     this.isDragging = true;
 
-    const x = event.clientX - this.offsetX;
-    const y = event.clientY - this.offsetY;
+    const x = e.clientX - this.offsetX;
+    const y = e.clientY - this.offsetY;
 
     this.style.left = `${x}px`;
     this.style.top = `${y}px`;
+
+    this.dragStartPos.x = x;
+    this.dragStartPos.y = y;
 
     this.parentElement.style.zIndex = 10000;
     this.style.zIndex = 10000;
@@ -58,7 +68,6 @@ class ItemNode extends HTMLElement {
 
   onMouseMove = (event) => {
     if (this.isDragging) {
-      console.log("move");
       // 마우스 위치에서 오프셋을 빼서 새로운 위치 계산
       const x = event.clientX - this.offsetX;
       const y = event.clientY - this.offsetY;
@@ -67,29 +76,36 @@ class ItemNode extends HTMLElement {
     }
   };
 
-  dragEndTime;
+  calculateDistance(point1, point2) {
+    const dx = point2.x - point1.x;
+    const dy = point2.y - point1.y;
+    return Math.sqrt(dx * dx + dy * dy);
+  }
 
   onMouseUp = (event) => {
     this.style = "";
 
     if (this.isDragging == false) return;
     this.isDragging = false;
-    this.dragEndTime = performance.now();
 
     const centerX = event.clientX - this.offsetX + this.offsetWidth / 2;
     const centerY = event.clientY - this.offsetY + this.offsetHeight / 2;
 
     const elementsAtPoint = document.elementsFromPoint(centerX, centerY);
 
-    const folderManager = elementsAtPoint.find(
-      (element) => element.tagName == "FOLDER-MANAGER"
+    const folderNode = elementsAtPoint.find((element) =>
+      element.tagName.includes("FOLDER-NODE")
     );
 
-    if (folderManager) {
-      folderManager.addItem(this.bookMark);
+    if (folderNode && folderNode != this) {
+      folderNode.addItem(this.bookMark);
       this.remove();
       return;
     }
+
+    const folderManager = elementsAtPoint.find(
+      (element) => element.tagName == "FOLDER-MANAGER"
+    );
 
     const targetWrapper = elementsAtPoint.find((element) =>
       element.className.includes("node-wrapper-")
@@ -97,11 +113,20 @@ class ItemNode extends HTMLElement {
 
     const className = targetWrapper.className;
 
+    if (folderManager) {
+      folderManager.addItem(this.bookMark);
+      this.remove();
+      return;
+    }
+
     const match = className.match(/node-wrapper-(\d+)-(\d+)/);
+    const x = parseInt(match[1], 10); // x 값을 정수로 변환
+    const y = parseInt(match[2], 10); // y 값을 정수로 변환
+
     if (match && targetWrapper.childNodes.length == 0) {
-      const x = parseInt(match[1], 10); // x 값을 정수로 변환
-      const y = parseInt(match[2], 10); // y 값을 정수로 변환
-      bookmarkManager.moveTree(this.bookMark.id, "1");
+      if (this.bookMark.parentId != "1") {
+        bookmarkManager.moveTree(this.bookMark.id, "1");
+      }
 
       this.movePosition(x, y, targetWrapper);
     } else {
@@ -112,14 +137,14 @@ class ItemNode extends HTMLElement {
     this.style.zIndex = 0;
   };
 
-  onClick = (e) => {
-    const now = performance.now();
-    if (isNaN(this.dragEndTime)) return;
+  onClick = (event) => {
+    this.dragEndPos.x = event.clientX - this.offsetX;
+    this.dragEndPos.y = event.clientY - this.offsetY;
 
-    const delay = now - this.dragEndTime;
-    if (delay < 10) {
-      e.preventDefault();
-      e.stopPropagation();
+    const distance = this.calculateDistance(this.dragStartPos, this.dragEndPos);
+    if (distance > 10) {
+      event.preventDefault();
+      event.stopPropagation();
     }
   };
 

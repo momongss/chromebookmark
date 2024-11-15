@@ -1,6 +1,7 @@
 import FileApp from "./File/FileApp.js";
 import FolderApp from "./Folder/FolderApp.js";
 import FolderManager from "./FolderManager.js";
+import RectDragger from "../utils/rectangleDrag.js";
 import Wallpaper from "./Wallpaper/Wallpaper.js";
 
 import OptionCreate from "./Options/OptionCreate.js";
@@ -15,7 +16,6 @@ export default class App {
 
   constructor({ $app }) {
     this.$dom = this;
-    console.log(this.$dom);
     this._constructor($app);
   }
 
@@ -37,6 +37,10 @@ export default class App {
     state
       ? this.renderRunned(bookMarkTree, $app)
       : this.renderMainInit(bookMarkTree, $app);
+
+    const dragger = document.createElement("rect-dragger");
+    $app.appendChild(dragger);
+    dragger.Init($app);
 
     this.eventListeners();
   }
@@ -124,8 +128,6 @@ export default class App {
   }
 
   eventListeners() {
-    let $dragged;
-
     document.addEventListener("click", async (e) => {
       document.querySelectorAll(".options").forEach(($el) => {
         $el.remove();
