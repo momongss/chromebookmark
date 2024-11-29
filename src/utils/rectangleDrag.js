@@ -33,6 +33,7 @@ class RectDragger extends HTMLElement {
 
     for (const el of this.matchingElements) {
       el.firstElementChild.classList.remove("selected");
+      el.classList.remove("multi");
     }
     this.matchingElements = [];
   };
@@ -74,12 +75,14 @@ class RectDragger extends HTMLElement {
         if (this.matchingElements.includes(element) == false) {
           this.matchingElements.push(element);
           element.firstElementChild.classList.add("selected");
+          element.classList.add("multi");
         }
       } else {
         if (this.matchingElements.includes(element)) {
           const index = this.matchingElements.indexOf(element);
           this.matchingElements.splice(index, 1);
           element.firstElementChild.classList.remove("selected");
+          element.classList.remove("multi");
         }
       }
     });
