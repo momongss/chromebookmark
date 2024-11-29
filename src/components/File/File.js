@@ -19,7 +19,6 @@ export default class FileNode extends ItemNode {
     $parent.appendChild(this);
 
     this.isRoot = true;
-    console.log(bookMark);
   }
 
   Init_Manage({ $parent, bookMark }) {

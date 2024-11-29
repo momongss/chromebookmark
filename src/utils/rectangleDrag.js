@@ -30,6 +30,11 @@ class RectDragger extends HTMLElement {
 
     dragBox.style.width = `${0}px`;
     dragBox.style.height = `${0}px`;
+
+    for (const el of this.matchingElements) {
+      el.firstElementChild.classList.remove("selected");
+    }
+    this.matchingElements = [];
   };
 
   matchingElements = [];
@@ -54,20 +59,26 @@ class RectDragger extends HTMLElement {
     const allNode = Array.from(this.$parent.querySelectorAll("*")).filter(
       (el) => el.tagName.toLowerCase().includes("node")
     );
+
+    const boxRect = dragBox.getBoundingClientRect();
+
     allNode.forEach((element) => {
       const elementRect = element.getBoundingClientRect();
       // 요소가 dragBox 범위 내에 있는지 확인
       if (
-        elementRect.right > parseInt(dragBox.left) &&
-        elementRect.left < parseInt(dragBox.right) &&
-        elementRect.bottom > parseInt(dragBox.top) &&
-        elementRect.top < parseInt(dragBox.bottom)
+        elementRect.right > boxRect.left &&
+        elementRect.left < boxRect.right &&
+        elementRect.bottom > boxRect.top &&
+        elementRect.top < boxRect.bottom
       ) {
-        this.matchingElements.push(element);
+        if (this.matchingElements.includes(element) == false) {
+          this.matchingElements.push(element);
+          element.firstElementChild.classList.add("selected");
+        }
       }
     });
 
-    console.log(this.matchingElements);
+    console.log(this.matchingElements.length);
   };
 
   onMouseUp = (e) => {
