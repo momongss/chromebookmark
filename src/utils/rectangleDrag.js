@@ -76,6 +76,8 @@ class RectDragger extends HTMLElement {
           this.matchingElements.push(element);
           element.firstElementChild.classList.add("selected");
           element.classList.add("multi");
+
+          element.dragger = this;
         }
       } else {
         if (this.matchingElements.includes(element)) {

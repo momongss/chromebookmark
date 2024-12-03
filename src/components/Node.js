@@ -42,6 +42,11 @@ class ItemNode extends HTMLElement {
     e.preventDefault(); // 기본 드래그 동작 비활성화
     e.stopPropagation();
 
+    if (this.classList.contains("multi")) {
+      console.log(this.dragger.matchingElements.length);
+      return;
+    }
+
     // 드래그 시작 위치에서의 오프셋 저장
     this.offsetX = e.clientX - this.getBoundingClientRect().left;
     this.offsetY = e.clientY - this.getBoundingClientRect().top;
@@ -83,13 +88,24 @@ class ItemNode extends HTMLElement {
   }
 
   onMouseUp = (event) => {
-    this.style = "";
-
     if (this.isDragging == false) return;
     this.isDragging = false;
 
-    const centerX = event.clientX - this.offsetX + this.offsetWidth / 2;
-    const centerY = event.clientY - this.offsetY + this.offsetHeight / 2;
+    // 요소의 style.left 및 style.top 값을 숫자로 변환
+    console.log(this.style.left);
+    const left = parseInt(this.style.left);
+    const top = parseInt(this.style.top);
+
+    // 요소의 크기를 가져오기 위해 getBoundingClientRect 사용
+    const rect = this.getBoundingClientRect();
+
+    // 중심 좌표 계산
+    const centerX = left + rect.width / 2;
+    const centerY = top + rect.height / 2;
+
+    console.log(centerX, centerY);
+    // const centerX = event.clientX - this.offsetX + this.offsetWidth / 2;
+    // const centerY = event.clientY - this.offsetY + this.offsetHeight / 2;
 
     const elementsAtPoint = document.elementsFromPoint(centerX, centerY);
 
@@ -132,6 +148,8 @@ class ItemNode extends HTMLElement {
     } else {
       console.log("node-wrapper-x-y 형식의 클래스 이름을 찾을 수 없습니다.");
     }
+
+    this.style = "";
 
     this.parentElement.style.zIndex = 0;
     this.style.zIndex = 0;
