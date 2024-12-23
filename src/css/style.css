@@ -200,18 +200,22 @@ button:active {
   text-shadow: black 0.063rem 0 0.125rem;
 }
 
+.app > div.hover {
+  background-color: rgba(150, 156, 169, 1);
+}
+
 .node.selected {
   background-color: rgba(255, 255, 255, 0.3); /* hover와 동일한 색상 */
-  outline: 2px solid rgba(255, 255, 255, 0.6); /* 흰색 아웃라인 */
+  outline: 1px solid rgba(255, 255, 255, 0.6); /* 흰색 아웃라인 */
   outline-offset: -2px; /* 아웃라인이 요소 안쪽으로 약간 들어오게 설정 */
   box-shadow: 0 0 2px rgba(255, 255, 255, 0.6); /* 외부 빛나는 효과 */
 }
 
 .app .node:hover {
-  background-color: rgba(255, 255, 255, 0.3); /* hover와 동일한 색상 */
-  outline: 2px solid rgba(255, 255, 255, 0.6); /* 흰색 아웃라인 */
+  background-color: rgba(255, 255, 255, 0.144); /* hover와 동일한 색상 */
+  outline: 1px solid rgba(255, 255, 255, 0.6); /* 흰색 아웃라인 */
   outline-offset: -2px; /* 아웃라인이 요소 안쪽으로 약간 들어오게 설정 */
-  box-shadow: 0 0 2px rgba(255, 255, 255, 0.6); /* 외부 빛나는 효과 */
+  box-shadow: 0 0 1px rgba(255, 255, 255, 0.342); /* 외부 빛나는 효과 */
 }
 
 .app .node:active {

@@ -40,6 +40,19 @@ class RectDragger extends HTMLElement {
 
   matchingElements = [];
 
+  sortElementsByReverseDOMOrder(elements) {
+    if (!elements || elements.length === 0) {
+      return [];
+    }
+
+    // DOM 역순으로 정렬
+    return elements.sort((a, b) => {
+      return a.compareDocumentPosition(b) & Node.DOCUMENT_POSITION_PRECEDING
+        ? -1
+        : 1;
+    });
+  }
+
   onMouseMove = (e) => {
     if (this.isDragging == false) return;
     // 드래그 상자의 크기와 위치 업데이트
@@ -88,8 +101,6 @@ class RectDragger extends HTMLElement {
         }
       }
     });
-
-    console.log(this.matchingElements.length);
   };
 
   onMouseUp = (e) => {
@@ -105,6 +116,11 @@ class RectDragger extends HTMLElement {
     dragBox.style.height = `${0}px`;
 
     dragBox.style.visibility = "hidden";
+
+    this.matchingElements = this.sortElementsByReverseDOMOrder(
+      this.matchingElements
+    );
+    console.log(this.matchingElements);
   };
 
   end = () => {};

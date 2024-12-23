@@ -43,10 +43,15 @@ class ItemNode extends HTMLElement {
     e.stopPropagation();
 
     if (this.classList.contains("multi")) {
-      console.log(this.dragger.matchingElements.length);
-      return;
+      this.dragger.matchingElements.forEach((element) => {
+        element.onDragStart(e);
+      });
+    } else {
+      this.onDragStart(e);
     }
+  };
 
+  onDragStart = (e) => {
     // 드래그 시작 위치에서의 오프셋 저장
     this.offsetX = e.clientX - this.getBoundingClientRect().left;
     this.offsetY = e.clientY - this.getBoundingClientRect().top;
@@ -71,15 +76,48 @@ class ItemNode extends HTMLElement {
     this.style.zIndex = 10000;
   };
 
-  onMouseMove = (event) => {
+  onMouseMove = (e) => {
     if (this.isDragging) {
       // 마우스 위치에서 오프셋을 빼서 새로운 위치 계산
-      const x = event.clientX - this.offsetX;
-      const y = event.clientY - this.offsetY;
+      const x = e.clientX - this.offsetX;
+      const y = e.clientY - this.offsetY;
       this.style.left = `${x}px`;
       this.style.top = `${y}px`;
+
+      const eventX = e.clientX;
+      const eventY = e.clientY;
+
+      const left = parseInt(this.style.left);
+      const top = parseInt(this.style.top);
+
+      // 요소의 크기를 가져오기 위해 getBoundingClientRect 사용
+      const rect = this.getBoundingClientRect();
+
+      // 중심 좌표 계산
+      const centerX = left + rect.width / 2;
+      const centerY = top + rect.height / 2;
+
+      const eventPosElements = document.elementsFromPoint(centerX, centerY);
+      const folderNodeAtEvent = eventPosElements.find((element) => {
+        return (
+          element.tagName.includes("FOLDER-NODE") ||
+          element.tagName.includes("FILE-NODE")
+        );
+      });
+
+      if (this.wrapper != null) {
+        this.wrapper.classList.remove("hover");
+      }
+
+      this.wrapper = eventPosElements.find((element) => {
+        return element.className.includes("node-wrapper");
+      });
+
+      this.wrapper.classList.add("hover");
     }
   };
+
+  wrapper;
 
   calculateDistance(point1, point2) {
     const dx = point2.x - point1.x;
@@ -87,12 +125,35 @@ class ItemNode extends HTMLElement {
     return Math.sqrt(dx * dx + dy * dy);
   }
 
-  onMouseUp = (event) => {
+  onMouseUp = (e) => {
     if (this.isDragging == false) return;
     this.isDragging = false;
 
+    const eventX = e.clientX;
+    const eventY = e.clientY;
+
+    const eventPosElements = document.elementsFromPoint(eventX, eventY);
+    const folderNodeAtEvent = eventPosElements.find((element) =>
+      element.tagName.includes("FOLDER-NODE")
+    );
+
+    if (folderNodeAtEvent && folderNodeAtEvent != this) {
+      folderNodeAtEvent.addItem(this.bookMark);
+      this.remove();
+      return;
+    }
+
+    const folderManagerAtEvent = eventPosElements.find(
+      (element) => element.tagName == "FOLDER-MANAGER"
+    );
+
+    if (folderManagerAtEvent) {
+      folderManagerAtEvent.addItem(this.bookMark);
+      this.remove();
+      return;
+    }
+
     // 요소의 style.left 및 style.top 값을 숫자로 변환
-    console.log(this.style.left);
     const left = parseInt(this.style.left);
     const top = parseInt(this.style.top);
 
@@ -103,10 +164,6 @@ class ItemNode extends HTMLElement {
     const centerX = left + rect.width / 2;
     const centerY = top + rect.height / 2;
 
-    console.log(centerX, centerY);
-    // const centerX = event.clientX - this.offsetX + this.offsetWidth / 2;
-    // const centerY = event.clientY - this.offsetY + this.offsetHeight / 2;
-
     const elementsAtPoint = document.elementsFromPoint(centerX, centerY);
 
     const folderNode = elementsAtPoint.find((element) =>
@@ -115,13 +172,10 @@ class ItemNode extends HTMLElement {
 
     if (folderNode && folderNode != this) {
       folderNode.addItem(this.bookMark);
+      console.log(centerX, centerY, folderNode);
       this.remove();
       return;
     }
-
-    const folderManager = elementsAtPoint.find(
-      (element) => element.tagName == "FOLDER-MANAGER"
-    );
 
     const targetWrapper = elementsAtPoint.find((element) =>
       element.className.includes("node-wrapper-")
@@ -129,17 +183,11 @@ class ItemNode extends HTMLElement {
 
     const className = targetWrapper.className;
 
-    if (folderManager) {
-      folderManager.addItem(this.bookMark);
-      this.remove();
-      return;
-    }
-
     const match = className.match(/node-wrapper-(\d+)-(\d+)/);
     const x = parseInt(match[1], 10); // x 값을 정수로 변환
     const y = parseInt(match[2], 10); // y 값을 정수로 변환
 
-    if (match && targetWrapper.childNodes.length == 0) {
+    if (this.isEmpty(match, targetWrapper)) {
       if (this.bookMark.parentId != "1") {
         bookmarkManager.moveTree(this.bookMark.id, "1");
       }
@@ -153,6 +201,18 @@ class ItemNode extends HTMLElement {
 
     this.parentElement.style.zIndex = 0;
     this.style.zIndex = 0;
+  };
+
+  isEmpty = (match, targetWrapper) => {
+    if (match && targetWrapper.childNodes.length == 0) {
+      return true;
+    }
+
+    if (targetWrapper.childNodes[0].isDragging) {
+      return true;
+    }
+
+    return false;
   };
 
   onClick = (event) => {
