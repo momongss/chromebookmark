@@ -51,14 +51,14 @@ export default class App {
 
     const posUndefineds = [];
 
-    let zIndex = 1000;
+    let zIndex = 0;
     for (let y = 0; y < lenY; y++) {
       for (let x = 0; x < lenX; x++) {
         const $div = document.createElement("div");
         $div.className = `node-wrapper-${x}-${y}`;
-        $div.style.zIndex = zIndex;
+        // $div.style.zIndex = zIndex;
         $app.appendChild($div);
-        zIndex -= 1;
+        // zIndex -= 1;
       }
     }
 

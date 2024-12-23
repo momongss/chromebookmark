@@ -98,12 +98,6 @@ class ItemNode extends HTMLElement {
       const centerY = top + rect.height / 2;
 
       const eventPosElements = document.elementsFromPoint(centerX, centerY);
-      const folderNodeAtEvent = eventPosElements.find((element) => {
-        return (
-          element.tagName.includes("FOLDER-NODE") ||
-          element.tagName.includes("FILE-NODE")
-        );
-      });
 
       if (this.wrapper != null) {
         this.wrapper.classList.remove("hover");
@@ -128,6 +122,9 @@ class ItemNode extends HTMLElement {
   onMouseUp = (e) => {
     if (this.isDragging == false) return;
     this.isDragging = false;
+    if (this.wrapper != null) {
+      this.wrapper.classList.remove("hover");
+    }
 
     const eventX = e.clientX;
     const eventY = e.clientY;

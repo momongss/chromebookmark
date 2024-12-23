@@ -44,13 +44,15 @@ button:active {
 
 .options {
   position: fixed;
-  background-color: white;
+  background-color: rgba(255, 255, 255, 0.904);
   display: none;
 
   color: black;
   text-shadow: none;
 
   z-index: 1;
+
+  outline: 2px solid rgb(255, 255, 255); /* 흰색 아웃라인 */
 
   border-radius: 0.313rem;
   padding-top: 0.188rem;
@@ -66,8 +68,8 @@ button:active {
 }
 
 .options img {
-  width: 1.25rem;
-  height: 1.25rem;
+  width: 1rem;
+  height: 1rem;
 }
 
 .options > *:hover {
@@ -200,8 +202,12 @@ button:active {
   text-shadow: black 0.063rem 0 0.125rem;
 }
 
+.app > div {
+  border-radius: 12%;
+}
+
 .app > div.hover {
-  background-color: rgba(150, 156, 169, 1);
+  background-color: rgba(255, 255, 255, 0.226);
 }
 
 .node.selected {
