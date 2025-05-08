@@ -13,19 +13,19 @@ class ItemNode extends HTMLElement {
   }
 
   #addEventListeners() {
-    this.addEventListener("mousedown", this.onMouseDown);
+    this.addEventListener("pointerdown", this.onMouseDown);
     this.addEventListener("dragstart", this.onDragStart);
     this.addEventListener("click", this.onClick);
-    document.addEventListener("mousemove", this.onMouseMove);
-    document.addEventListener("mouseup", this.onMouseUp);
+    document.addEventListener("pointermove", this.onMouseMove);
+    document.addEventListener("pointerup", this.onMouseUp);
   }
 
   removeEventListeners() {
-    this.removeEventListener("mousedown", this.onMouseDown);
+    this.removeEventListener("pointerdown", this.onMouseDown);
     this.removeEventListener("dragstart", this.onDragStart);
     this.removeEventListener("click", this.onClick);
-    document.removeEventListener("mousemove", this.onMouseMove);
-    document.removeEventListener("mouseup", this.onMouseUp);
+    document.removeEventListener("pointermove", this.onMouseMove);
+    document.removeEventListener("pointerup", this.onMouseUp);
   }
 
   dragStartPos = {
