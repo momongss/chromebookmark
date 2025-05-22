@@ -1,11 +1,12 @@
 import bookmarkManager from "../utils/bookmark.js";
 import Storage from "../utils/storage.js";
-import App from "./App.js";
 
 class ItemNode extends HTMLElement {
   bookMark = null;
   data = null;
   isDragging = false;
+  parentFolderManager = null;
+  originalParentId = null;
 
   constructor() {
     super();
@@ -39,8 +40,12 @@ class ItemNode extends HTMLElement {
   };
 
   onMouseDown = (e) => {
-    e.preventDefault(); // 기본 드래그 동작 비활성화
+    e.preventDefault();
     e.stopPropagation();
+
+    // 드래그 시작 위치 저장
+    this.dragStartPos.x = e.clientX;
+    this.dragStartPos.y = e.clientY;
 
     if (this.classList.contains("multi")) {
       this.dragger.matchingElements.forEach((element) => {
@@ -60,7 +65,7 @@ class ItemNode extends HTMLElement {
     this.startX = e.clientX;
     this.startY = e.clientY;
 
-    this.style.position = "fixed"; // 요소 위치를 업데이트하기 위해 필요
+    this.style.position = "fixed";
     this.isDragging = true;
 
     const x = e.clientX - this.offsetX;
@@ -83,9 +88,6 @@ class ItemNode extends HTMLElement {
       const y = e.clientY - this.offsetY;
       this.style.left = `${x}px`;
       this.style.top = `${y}px`;
-
-      const eventX = e.clientX;
-      const eventY = e.clientY;
 
       const left = parseInt(this.style.left);
       const top = parseInt(this.style.top);
@@ -120,7 +122,33 @@ class ItemNode extends HTMLElement {
   }
 
   onMouseUp = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
     if (this.isDragging == false) return;
+
+    // 드래그 종료 위치 저장
+    this.dragEndPos.x = e.clientX;
+    this.dragEndPos.y = e.clientY;
+
+    // 드래그 거리 계산 (시작 위치와 종료 위치의 차이)
+    const distance = this.calculateDistance(
+      { x: this.dragStartPos.x, y: this.dragStartPos.y },
+      { x: this.dragEndPos.x, y: this.dragEndPos.y }
+    );
+
+    // 드래그 거리가 5px 미만이면 클릭으로 처리
+    if (distance < 5) {
+      this.isDragging = false;
+      if (this.wrapper != null) {
+        this.wrapper.classList.remove("hover");
+      }
+      this.style = "";
+      this.parentElement.style.zIndex = 0;
+      this.style.zIndex = 0;
+      return;
+    }
+
     this.isDragging = false;
     if (this.wrapper != null) {
       this.wrapper.classList.remove("hover");
@@ -130,72 +158,85 @@ class ItemNode extends HTMLElement {
     const eventY = e.clientY;
 
     const eventPosElements = document.elementsFromPoint(eventX, eventY);
-    const folderNodeAtEvent = eventPosElements.find((element) =>
-      element.tagName.includes("FOLDER-NODE")
-    );
-
-    if (folderNodeAtEvent && folderNodeAtEvent != this) {
-      folderNodeAtEvent.addItem(this.bookMark);
-      this.remove();
-      return;
+    
+    // elementsFromPoint는 z-index가 높은 순서대로 요소를 반환
+    for (const element of eventPosElements) {
+      // 폴더 노드를 찾은 경우
+      if (element.tagName.includes("FOLDER-NODE") && element !== this) {
+        // 폴더를 드래그하는 경우
+        if (this.classList.contains("folder")) {
+          // 폴더를 다른 폴더로 이동
+          element.addItem(this.bookMark);
+          this.remove();
+          this.style = "";
+          this.parentElement.style.zIndex = 0;
+          this.style.zIndex = 0;
+          return;
+        }
+        // 북마크를 드래그하는 경우
+        element.addItem(this.bookMark);
+        this.remove();
+        return;
+      }
+      
+      console.log(element.tagName === "FOLDER-MANAGER");
+      if (element.tagName === "FOLDER-MANAGER") {
+        // 같은 폴더 매니저로 드롭한 경우 아무 동작도 하지 않음
+        if (element === this.parentFolderManager || 
+            (this.bookMark.parentId === "1" && element.id === this.originalParentId)) {
+          this.style = "";
+          this.parentElement.style.zIndex = 0;
+          this.style.zIndex = 0;
+          return;
+        }
+        // 다른 폴더 매니저로 이동
+        element.addItem(this.bookMark);
+        this.remove();
+        return;
+      }
     }
 
-    const folderManagerAtEvent = eventPosElements.find(
-      (element) => element.tagName == "FOLDER-MANAGER"
-    );
+    // 빈 공간으로 이동
+    this.handleEmptySpaceDrop(e);
+  };
 
-    if (folderManagerAtEvent) {
-      folderManagerAtEvent.addItem(this.bookMark);
-      this.remove();
-      return;
-    }
-
-    // 요소의 style.left 및 style.top 값을 숫자로 변환
+  handleEmptySpaceDrop = (e) => {
     const left = parseInt(this.style.left);
     const top = parseInt(this.style.top);
-
-    // 요소의 크기를 가져오기 위해 getBoundingClientRect 사용
     const rect = this.getBoundingClientRect();
-
-    // 중심 좌표 계산
     const centerX = left + rect.width / 2;
     const centerY = top + rect.height / 2;
 
     const elementsAtPoint = document.elementsFromPoint(centerX, centerY);
-
-    const folderNode = elementsAtPoint.find((element) =>
-      element.tagName.includes("FOLDER-NODE")
-    );
-
-    if (folderNode && folderNode != this) {
-      folderNode.addItem(this.bookMark);
-      console.log(centerX, centerY, folderNode);
-      this.remove();
-      return;
-    }
-
     const targetWrapper = elementsAtPoint.find((element) =>
       element.className.includes("node-wrapper-")
     );
 
-    const className = targetWrapper.className;
+    if (!targetWrapper) return;
 
+    const className = targetWrapper.className;
     const match = className.match(/node-wrapper-(\d+)-(\d+)/);
-    const x = parseInt(match[1], 10); // x 값을 정수로 변환
-    const y = parseInt(match[2], 10); // y 값을 정수로 변환
+    
+    if (!match) {
+      console.log("node-wrapper-x-y 형식의 클래스 이름을 찾을 수 없습니다.");
+      return;
+    }
+
+    const x = parseInt(match[1], 10);
+    const y = parseInt(match[2], 10);
 
     if (this.isEmpty(match, targetWrapper)) {
       if (this.bookMark.parentId != "1") {
+        // 원래 부모 ID 저장
+        this.originalParentId = this.bookMark.parentId;
         bookmarkManager.moveTree(this.bookMark.id, "1");
+        // 루트로 이동했으므로 parentFolderManager 초기화
+        this.parentFolderManager = null;
       }
-
       this.movePosition(x, y, targetWrapper);
-    } else {
-      console.log("node-wrapper-x-y 형식의 클래스 이름을 찾을 수 없습니다.");
     }
 
     this.style = "";
-
     this.parentElement.style.zIndex = 0;
     this.style.zIndex = 0;
   };
@@ -233,3 +274,4 @@ class ItemNode extends HTMLElement {
 customElements.define("item-node", ItemNode);
 
 export default ItemNode;
+

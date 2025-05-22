@@ -2,13 +2,15 @@ class RectDragger extends HTMLElement {
   Init($parent, anchor) {
     this.$parent = $parent;
     $parent.appendChild(this);
-    this.hide();
     this.eventListeners();
 
     if (anchor == null) {
       anchor = { x: 0, y: 0 };
     }
     this.anchor = anchor;
+
+    // setTimeout(, 1000);
+    this.hide();
   }
 
   start = () => {};
@@ -55,6 +57,7 @@ class RectDragger extends HTMLElement {
 
   onMouseMove = (e) => {
     if (this.isDragging == false) return;
+
     // 드래그 상자의 크기와 위치 업데이트
     const currentX = e.clientX - this.anchor.x;
     const currentY = e.clientY - this.anchor.y;
@@ -120,13 +123,12 @@ class RectDragger extends HTMLElement {
     this.matchingElements = this.sortElementsByReverseDOMOrder(
       this.matchingElements
     );
-    console.log(this.matchingElements);
   };
 
   end = () => {};
 
   hide = () => {
-    this.style.visibility = false;
+    this.style.visibility = "hidden";
   };
 
   eventListeners = () => {

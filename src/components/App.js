@@ -8,7 +8,6 @@ import OptionCreate from "./Options/OptionCreate.js";
 
 import Storage from "../utils/storage.js";
 
-import { dropHandler } from "../utils/drop.js";
 import { constDatas } from "../utils/const.js";
 
 export default class App {

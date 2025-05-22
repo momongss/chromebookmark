@@ -36,6 +36,11 @@ class BookmarkManager {
     });
   }
 
+  async hasNodeInTree(id, treeId) {
+    const [node] = await chrome.bookmarks.get(id);
+    return node?.parentId == treeId;
+  }
+
   updateBookmarktitle(id, title) {
     chrome.bookmarks.update(id, {
       title: title,

@@ -5,7 +5,6 @@ import Bookmark from "../utils/bookmark.js";
 import { FolderManagerData } from "../utils/FolderManagerData.js";
 import App from "./App.js";
 import bookmarkManager from "../utils/bookmark.js";
-import RectDragger from "../utils/rectangleDrag.js";
 
 export default class FolderManager extends HTMLElement {
   Init({ id, initPos, onDestroy }) {
@@ -44,8 +43,20 @@ export default class FolderManager extends HTMLElement {
   }
 
   addItem(node) {
+    // 북마크 이동을 먼저 수행
     bookmarkManager.moveTree(node.id, this.id);
-    this.render(this.id);
+    
+    // 현재 드래그 중인 요소가 있는지 확인
+    const draggingElement = document.querySelector('.node[style*="position: fixed"]');
+    if (draggingElement) {
+      // 드래그가 완료될 때까지 render 지연
+      requestAnimationFrame(() => {
+        this.render({ id: this.id, mode: "back" });
+      });
+    } else {
+      // 일반적인 경우 즉시 처리
+      this.render({ id: this.id, mode: "back" });
+    }
   }
 
   rightClickHandler() {
@@ -91,7 +102,7 @@ export default class FolderManager extends HTMLElement {
     let initX, initY;
     let folderX, folderY;
 
-    $header.addEventListener("mousedown", (e) => {
+    $header.addEventListener("pointerdown", (e) => {
       if (e.target.className === "folder-close") return;
       dragged = true;
       initX = e.clientX;
@@ -105,7 +116,7 @@ export default class FolderManager extends HTMLElement {
     let left;
     let top;
 
-    document.addEventListener("mousemove", (e) => {
+    document.addEventListener("pointermove", (e) => {
       if (dragged) {
         left = folderX + e.clientX - initX;
         top = folderY + e.clientY - initY;
@@ -115,21 +126,28 @@ export default class FolderManager extends HTMLElement {
       }
     });
 
-    $header.addEventListener("mouseup", (e) => {
+    $header.addEventListener("pointerup", (e) => {
       dragged = false;
 
       this.pos.left = left;
       this.pos.top = top;
+
+      console.log(this.dragger);
+      this.dragger.Init(this.$folderManager, {
+        x: this.pos.left + 2,
+        y: this.pos.top + 37,
+      });
     });
   }
 
-  async render({ mode }) {
-    const subTree = await Bookmark.getSubTree(this.id);
+  async render({ id, mode }) {
+    this.id = id;
+    const subTree = await Bookmark.getSubTree(id);
     const title = subTree[0].title;
     const bookMarkTree = subTree[0].children;
     if (mode !== "back") {
       this.history.push({
-        id: this.id,
+        id: id,
       });
     }
     this.innerHTML = "";
@@ -144,7 +162,10 @@ export default class FolderManager extends HTMLElement {
       $backBtn.classList.add("backable");
     }
     $backBtn.addEventListener("click", (e) => {
-      if (this.history.length === 1) return;
+      console.log(this.history.length);
+      if (this.history.length === 1) {
+        console.error("history");
+      }
       this.history.pop();
       const preFolder = this.history[this.history.length - 1];
       this.render({
@@ -172,21 +193,13 @@ export default class FolderManager extends HTMLElement {
     });
 
     const $folderManager = document.createElement("div");
+    this.$folderManager = $folderManager;
     $folderManager.className = `folder-manager`;
     $folderManager.dataset.id = this.id;
 
-    $folderManager.addEventListener("click", (e) => {
-      const $node = e.target.parentElement;
-      if ($node.classList.contains("folder")) {
-        this.render({ id: $node.dataset.id });
-      }
-    });
-
-    const dragger = document.createElement("rect-dragger");
-    $folderManager.appendChild(dragger);
-    console.log($folderManager.style.top);
-    console.log($folderManager.top);
-    dragger.Init($folderManager, {
+    this.dragger = document.createElement("rect-dragger");
+    $folderManager.appendChild(this.dragger);
+    this.dragger.Init($folderManager, {
       x: this.pos.left + 2,
       y: this.pos.top + 37,
     });
@@ -237,6 +250,7 @@ export default class FolderManager extends HTMLElement {
       isRoot: false,
       folderManager: this,
     });
+    folderNode.parentFolderManager = this;
 
     this.nodeCount++;
   }
@@ -247,9 +261,9 @@ export default class FolderManager extends HTMLElement {
       $parent: $folderManager,
       bookMark: bookMark,
     });
+    fileNode.parentFolderManager = this;
 
     this.nodeCount++;
-    // file.$.style.zIndex = -this.nodeCount + FolderManagerData.zindex;
   }
 }
 

@@ -22,8 +22,15 @@ export default class Folder extends ItemNode {
 
   #InitSearch(folderManager) {
     this.$node.addEventListener("click", (e) => {
-      console.log(folderManager);
-      folderManager.render({ id: this.bookMark.id });
+      if (!this.isDragging) {
+        e.preventDefault();
+        e.stopPropagation();
+        folderManager.id = this.bookMark.id;
+        folderManager.render({ id: this.bookMark.id });
+      } else {
+        e.preventDefault();
+        e.stopPropagation();
+      }
     });
   }
 
@@ -31,6 +38,7 @@ export default class Folder extends ItemNode {
     this.managerCnt = 0;
 
     this.$node.addEventListener("click", (e) => {
+      console.log("click");
       const $rect = this.$node.getBoundingClientRect();
       const initPos = {
         top: $rect.top + this.managerCnt * 35,

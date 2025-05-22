@@ -82,114 +82,6 @@ button:active {
   left: 0.063rem;
 }
 
-.folder-manager-wrapper {
-  display: none;
-  position: fixed;
-
-  padding-bottom: 1.875rem;
-  background-color: rgba(214, 231, 255, 0.95);
-  border-radius: 0.625rem;
-
-  top: calc(100vh - 25rem - 2.625rem);
-
-  box-shadow: 0px 0px 6px #3f3f3f;
-}
-
-.folder-manager-wrapper.show {
-  display: block;
-}
-
-.folder-manager-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  position: relative;
-  bottom: 0.125rem;
-  color: black;
-
-  margin: 0.3rem 0.2rem 0.08rem 0.2rem;
-}
-
-.folder-manager-header .back-btn {
-  width: 1.875rem;
-  height: 1.875rem;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-radius: 0.438rem;
-}
-
-.folder-manager-header .back-btn img {
-  display: none;
-  width: 1rem;
-}
-
-.folder-manager-header .back-btn.backable img {
-  display: block;
-}
-
-.folder-manager-header .back-btn.backable:hover {
-  background-color: rgba(178, 194, 230, 1);
-}
-
-.folder-manager-header .folder-title {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  font-size: 0.85rem;
-  letter-spacing: 0.1rem;
-  font-weight: 550;
-  text-align: center;
-  margin-left: 0.25rem;
-  margin-bottom: 1px;
-}
-
-.folder-manager-header .folder-close {
-  position: relative;
-
-  width: 1.875rem;
-  height: 1.875rem;
-  font-size: 1.25rem;
-
-  text-align: center;
-  line-height: 1.55rem;
-  border-radius: 0.438rem;
-}
-
-.folder-manager-header .folder-close:hover {
-  background-color: rgba(178, 194, 230, 1);
-}
-
-.folder-manager-header .folder-close:active {
-  background-color: rgb(182, 192, 212);
-}
-
-.folder-manager {
-  height: 25rem;
-
-  display: grid;
-  grid-template-columns: repeat(5, var(--grid-item-width));
-  grid-template-rows: repeat(8, var(--grid-item-height));
-  grid-gap: 0.125rem;
-
-  background-color: rgba(234, 246, 255, 0.81);
-
-  overflow-y: scroll;
-
-  position: relative;
-}
-
-.folder-manager::-webkit-scrollbar {
-  width: 0.625rem;
-}
-
-.folder-manager::-webkit-scrollbar-thumb {
-  margin-top: 6.25rem;
-  background-color: rgba(150, 156, 169, 1);
-  border-radius: 0.188rem;
-}
-
 .node {
   width: var(--grid-item-width);
   position: relative;
@@ -226,19 +118,6 @@ button:active {
 
 .app .node:active {
   background-color: rgba(255, 255, 255, 0.08);
-}
-
-.folder-manager .node {
-  color: black;
-  text-shadow: none;
-}
-
-.folder-manager .node:hover {
-  background-color: rgba(178, 194, 230, 0.5);
-}
-
-.folder-manager .node:active {
-  background-color: rgb(164, 176, 202);
 }
 
 .node .drag-area {
