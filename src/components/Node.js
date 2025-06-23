@@ -168,62 +168,19 @@ class ItemNode extends HTMLElement {
     const eventPosElements = document.elementsFromPoint(eventX, eventY);
 
     // 여러개 선택된 상태에서 폴더로 드롭할 때 예외 처리
-    if (this.classList.contains("multi") && window.currentDragNodes && window.currentDragNodes.length > 1) {
-      let droppedToFolderManager = false;
-      for (const element of eventPosElements) {
-        if (element.tagName.includes("FOLDER-NODE") && element !== this) {
-          // 드롭 대상 폴더가 선택된 노드 그룹에 포함되어 있으면 이동 금지
-          if (window.currentDragNodes.includes(element)) {
-            // 아무 동작도 하지 않음
-            this.style = "";
-            this.parentElement.style.zIndex = 0;
-            this.style.zIndex = 0;
-            window.currentDragNodes = undefined;
-            return;
-          } else {
-            // 선택된 모든 북마크 노드를 폴더로 이동 (폴더 노드는 제외)
-            window.currentDragNodes.forEach((node) => {
-              if (node !== element && !node.classList.contains('folder')) {
-                element.addItem(node.bookMark);
-                node.remove();
-              }
-            });
-            this.style = "";
-            this.parentElement.style.zIndex = 0;
-            this.style.zIndex = 0;
-            window.currentDragNodes = undefined;
-            return;
-          }
-        }
-        // 폴더 매니저에 드롭하는 경우
-        if (element.tagName === "FOLDER-MANAGER") {
-          // 같은 폴더 매니저로 드롭한 경우 아무 동작도 하지 않음
-          if (element === this.parentFolderManager || 
-              (this.bookMark.parentId === "1" && element.id === this.originalParentId)) {
-            this.style = "";
-            this.parentElement.style.zIndex = 0;
-            this.style.zIndex = 0;
-            window.currentDragNodes = undefined;
-            return;
-          }
-          // 여러 노드를 폴더 매니저로 이동
-          window.currentDragNodes.forEach((node) => {
-            element.addItem(node.bookMark);
-            node.remove();
-          });
-          this.style = "";
-          this.parentElement.style.zIndex = 0;
-          this.style.zIndex = 0;
-          window.currentDragNodes = undefined;
-          droppedToFolderManager = true;
-          return;
-        }
-      }
-      // 폴더/폴더매니저가 아닌 경우에는 기존대로 위치만 이동
-      if (!droppedToFolderManager) {
-        this.handleEmptySpaceDrop(e);
-        window.currentDragNodes = undefined;
-      }
+    if (
+      this.classList.contains("multi") &&
+      window.currentDragNodes &&
+      window.currentDragNodes.length > 1 &&
+      (
+        window.currentDragNodes.some(node => node.classList.contains('folder')) ||
+        this.classList.contains('folder')
+      )
+    ) {
+      this.style = "";
+      this.parentElement.style.zIndex = 0;
+      this.style.zIndex = 0;
+      window.currentDragNodes = undefined;
       return;
     }
 
