@@ -1,5 +1,6 @@
 class RectDragger extends HTMLElement {
   Init($parent, anchor) {
+    console.trace("[rectangleDrag] Init", $parent, anchor);
     this.$parent = $parent;
     $parent.appendChild(this);
     this.eventListeners();
@@ -8,8 +9,6 @@ class RectDragger extends HTMLElement {
       anchor = { x: 0, y: 0 };
     }
     this.anchor = anchor;
-
-    // setTimeout(, 1000);
     this.hide();
   }
 
@@ -18,10 +17,17 @@ class RectDragger extends HTMLElement {
   isDragging = false;
 
   onMouseDown = (e) => {
+    console.log("[rectangleDrag] onMouseDown", {
+      clientX: e.clientX,
+      clientY: e.clientY,
+      anchor: this.anchor,
+    });
+    window.isRectSelecting = true;
     this.isDragging = true;
 
     this.startX = e.clientX - this.anchor.x;
     this.startY = e.clientY - this.anchor.y;
+    console.log("[rectangleDrag] startX, startY", this.startX, this.startY);
 
     const dragBox = this;
 
@@ -109,6 +115,7 @@ class RectDragger extends HTMLElement {
   onMouseUp = (e) => {
     if (this.isDragging == false) return;
     this.isDragging = false;
+    window.isRectSelecting = false;
 
     const dragBox = this;
 
@@ -132,9 +139,9 @@ class RectDragger extends HTMLElement {
   };
 
   eventListeners = () => {
-    this.$parent.addEventListener("mousedown", this.onMouseDown);
-    document.addEventListener("mousemove", this.onMouseMove);
-    document.addEventListener("mouseup", this.onMouseUp);
+    this.$parent.addEventListener("pointerdown", this.onMouseDown);
+    document.addEventListener("pointermove", this.onMouseMove);
+    document.addEventListener("pointerup", this.onMouseUp);
   };
 }
 

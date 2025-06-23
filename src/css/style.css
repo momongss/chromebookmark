@@ -13,12 +13,18 @@ a:link {
 html {
   width: 100%;
   height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
 }
 
 body {
   background-size: 100vw 110vh;
   width: 100%;
   height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
 }
 
 canvas {
@@ -192,4 +198,164 @@ rect-dragger {
   border-radius: 6px; /* 둥근 테두리 */
   pointer-events: none; /* 선택 불가능하게 설정 */
   transition: box-shadow 0.2s ease, opacity 0.3s ease; /* 부드러운 애니메이션 */
+}
+
+/* 포스트잇 스타일 */
+.post-it {
+  position: absolute;
+  background: #ffe066;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  padding: 0;
+  cursor: move;
+  z-index: 1000;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-size: 14px;
+  line-height: 1.4;
+  overflow: hidden;
+  resize: both;
+  min-width: 150px;
+  min-height: 150px;
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+  user-select: none;
+}
+
+.post-it:hover {
+  box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+  transform: translateY(-2px);
+}
+
+.post-it-header {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 24px;
+  transform: translateY(-24px);
+  transition: transform 0.2s;
+  background: #ffd43b;
+  z-index: 10;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 8px;
+}
+
+.post-it.active > .post-it-header {
+  transform: translateY(0) !important;
+}
+
+.post-it-content {
+  padding-top: 10px;
+  transition: padding-top 0.2s;
+}
+
+.post-it.active > .post-it-content {
+  padding-top: 40px;
+}
+
+.color-btn
+{
+  margin: 0;
+}
+
+.color-btn, .close-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  font-size: 15px;
+}
+
+.color-icon {
+  font-size: 15px;
+  display: block;
+  margin-left: 2px;
+}
+
+.post-it-header button:last-child {
+  font-size: 20px;
+  margin-right: 0;
+  padding: 0 8px;
+}
+
+.post-it-header button {
+  color: #444;
+}
+
+.post-it-header button:hover {
+  color: #222;
+}
+
+.color-palette {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background: #fffbe6;
+  border: 1px solid #ffe066;
+  border-radius: 4px;
+  padding: 8px;
+  display: none;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 4px;
+  z-index: 1001;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.post-it-context-menu {
+  position: fixed;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 8px 0;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  z-index: 10000;
+  min-width: 150px;
+}
+
+.post-it-context-menu > div {
+  padding: 8px 16px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.2s ease;
+}
+
+.post-it-context-menu > div:hover {
+  background-color: #f5f5f5;
+}
+
+/* 포스트잇 색상 변형 */
+.post-it[data-color="light-yellow"] { background: #fff9c4; }
+.post-it[data-color="pink"] { background: #ffcdd2; }
+.post-it[data-color="purple"] { background: #f8bbd9; }
+.post-it[data-color="violet"] { background: #e1bee7; }
+.post-it[data-color="indigo"] { background: #d1c4e9; }
+.post-it[data-color="blue"] { background: #c5cae9; }
+.post-it[data-color="light-blue"] { background: #bbdefb; }
+.post-it[data-color="cyan"] { background: #b3e5fc; }
+.post-it[data-color="teal"] { background: #b2ebf2; }
+.post-it[data-color="green"] { background: #b2dfdb; }
+
+.close-btn {
+  width: 20px !important;
+  height: 20px !important;
+  font-size: 16px !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  line-height: 1 !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.close-btn:hover {
+  background: none !important;
+  color: inherit !important;
 }

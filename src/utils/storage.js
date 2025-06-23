@@ -14,6 +14,28 @@ export default class Storage {
     return await this.getItem("background-image");
   }
 
+  static async getImages() {
+    return await this.getItem("images") || [];
+  }
+
+  static async setImages(images) {
+    return await this.setItem("images", images);
+  }
+
+  static async addImage(image) {
+    const images = await this.getImages();
+    images.push(image);
+    return await this.setImages(images);
+  }
+
+  static async getPostIts() {
+    return await this.getItem("post-its") || [];
+  }
+
+  static async setPostIts(postIts) {
+    return await this.setItem("post-its", postIts);
+  }
+
   static async getPos(id) {
     return await this.getItem(`mainPos${id}`);
   }

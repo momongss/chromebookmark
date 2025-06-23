@@ -29,6 +29,8 @@
   bottom: 0;
   left: 0;
   right: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 3000;
 }
 
 .menu-wrapper.show {
@@ -37,53 +39,185 @@
 
 .menu {
   display: flex;
-
+  flex-direction: column;
   box-sizing: border-box;
-
-  background-color: rgb(222, 225, 230);
-
-  padding: 30px;
-  border-radius: 20px;
+  background-color: rgb(255, 255, 255);
+  padding: 0;
+  border-radius: 15px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  max-width: 600px;
+  width: 90%;
+  max-height: 80vh;
+  overflow-y: auto;
 }
 
-.menu-wrapper .default-img {
-}
-
-.default-img .img-wrapper {
+.menu-header {
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
-
-  border-radius: 10px;
-  padding: 15px;
+  padding: 20px 25px;
+  border-bottom: 1px solid #e0e0e0;
+  background-color: #f8f9fa;
+  border-radius: 15px 15px 0 0;
 }
 
-.default-img .img-wrapper:hover {
-  background-color: rgb(184, 184, 187);
+.menu-header h3 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  font-size: 24px;
   cursor: pointer;
+  padding: 5px;
+  border-radius: 50%;
+  width: 35px;
+  height: 35px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #666;
+  transition: all 0.2s ease;
 }
 
-.default-img img {
-  width: 400px;
-  height: 200px;
-  border-radius: 7px;
+.close-btn:hover {
+  background-color: #e9ecef;
+  color: #333;
 }
 
-.menu .input-wrapper {
-  height: 25px;
-  padding: 15px;
+.wallpaper-options {
+  padding: 25px;
+}
+
+.default-wallpapers h4,
+.custom-wallpaper h4 {
+  margin: 0 0 15px 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+}
+
+.wallpaper-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 15px;
+  margin-bottom: 25px;
+}
+
+.wallpaper-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px;
+  border: 2px solid transparent;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background-color: #f8f9fa;
+}
+
+.wallpaper-item:hover {
+  border-color: #007bff;
+  background-color: #e3f2fd;
+  transform: translateY(-2px);
+}
+
+.wallpaper-item:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+}
+
+.wallpaper-item img {
+  width: 100%;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: 8px;
+}
+
+.wallpaper-name {
+  font-size: 14px;
+  font-weight: 500;
+  color: #333;
+  text-align: center;
+}
+
+.custom-wallpaper {
+  border-top: 1px solid #e0e0e0;
+  padding-top: 20px;
+}
+
+.file-upload-area {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+}
+
+#wallpaper-upload {
+  display: none;
+}
+
+.upload-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 120px;
+  border: 2px dashed #ccc;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background-color: #f8f9fa;
+}
+
+.upload-btn:hover {
+  border-color: #007bff;
+  background-color: #e3f2fd;
+}
+
+.upload-icon {
+  font-size: 32px;
+  margin-bottom: 8px;
+}
+
+.upload-text {
+  font-size: 14px;
+  color: #666;
+  font-weight: 500;
+}
+
+.upload-info {
+  text-align: center;
+  color: #666;
+  font-size: 12px;
 }
 
 .menu-btn {
   position: absolute;
   bottom: var(--menu-btn-bottom);
   left: var(--menu-btn-left);
-
-  padding: 10px;
-  font-size: 15px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+  font-size: 14px;
   font-weight: 500;
-
   cursor: pointer;
+  background-color: rgba(255, 255, 255, 0.4);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  border-radius: 25px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease;
+  z-index: 3000;
+  border: 1px solid rgba(255, 255, 255, 0.3);
 
   -moz-user-select: none;
   -webkit-user-select: none;
@@ -92,6 +226,346 @@
 }
 
 .menu-btn:hover {
-  background-color: rgba(255, 255, 255, 0.3);
-  border-radius: 5px;
+  background-color: rgba(255, 255, 255, 0.7);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+.menu-btn:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+  background-color: rgba(255, 255, 255, 0.6);
+}
+
+.menu-btn:focus:not(:focus-visible) {
+  box-shadow: none;
+  background-color: rgba(255, 255, 255, 0.4);
+}
+
+.menu-btn:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+  background-color: rgba(255, 255, 255, 0.6);
+}
+
+.menu-btn-text {
+  color: #333;
+  text-shadow: 0 1px 3px rgba(255, 255, 255, 0.9);
+  font-weight: 600;
+}
+
+.menu-btn-icon {
+  font-size: 16px;
+  filter: drop-shadow(0 1px 3px rgba(255, 255, 255, 0.9));
+}
+
+.error-message {
+  animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+  .menu {
+    width: 95%;
+    margin: 20px;
+  }
+  
+  .wallpaper-grid {
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 10px;
+  }
+  
+  .wallpaper-item img {
+    height: 80px;
+  }
+  
+  .menu-btn {
+    padding: 10px 14px;
+    font-size: 13px;
+  }
+}
+
+/* Canva 연동 스타일 */
+.canva-integration {
+  border-top: 1px solid #e0e0e0;
+  padding-top: 20px;
+  margin-bottom: 20px;
+}
+
+.canva-integration h4 {
+  margin: 0 0 15px 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+}
+
+/* 검색 섹션 */
+.search-section {
+  margin-bottom: 20px;
+}
+
+.search-input-wrapper {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+#wallpaper-search {
+  flex: 1;
+  padding: 10px 12px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+#wallpaper-search:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+}
+
+.search-btn {
+  padding: 10px 12px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+
+.search-btn:hover {
+  background-color: #0056b3;
+  transform: translateY(-1px);
+}
+
+/* 카테고리 섹션 */
+.category-section {
+  margin-bottom: 20px;
+}
+
+.category-section h5 {
+  margin: 0 0 12px 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: #555;
+}
+
+.category-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  max-height: 120px;
+  overflow-y: auto;
+}
+
+.category-tab {
+  padding: 6px 12px;
+  background-color: #f8f9fa;
+  border: 1px solid #ddd;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 500;
+  color: #666;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.category-tab:hover {
+  background-color: #e3f2fd;
+  border-color: #007bff;
+  color: #007bff;
+}
+
+.category-tab.active {
+  background-color: #007bff;
+  border-color: #007bff;
+  color: white;
+}
+
+/* Canva 링크 섹션 */
+.canva-link-section {
+  margin-bottom: 20px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.canva-link-section h5 {
+  margin: 0 0 12px 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: #555;
+}
+
+.canva-link-input {
+  display: flex;
+  gap: 10px;
+}
+
+.canva-link-input input {
+  flex: 1;
+  padding: 10px 12px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.canva-link-input input:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+}
+
+.canva-load-btn {
+  padding: 10px 16px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.canva-load-btn:hover {
+  background-color: #0056b3;
+  transform: translateY(-1px);
+}
+
+.canva-load-btn:active {
+  transform: translateY(0);
+}
+
+/* 템플릿 섹션 */
+.templates-section h5 {
+  margin: 0 0 12px 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: #555;
+}
+
+.template-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 12px;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.template-item {
+  display: flex;
+  flex-direction: column;
+  border: 2px solid transparent;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background-color: #f8f9fa;
+  overflow: hidden;
+}
+
+.template-item:hover {
+  border-color: #007bff;
+  background-color: #e3f2fd;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 123, 255, 0.15);
+}
+
+.template-item:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+}
+
+.template-item img {
+  width: 100%;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 6px 6px 0 0;
+}
+
+.template-info {
+  padding: 8px;
+}
+
+.template-name {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 4px;
+  text-align: center;
+}
+
+.template-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px;
+  justify-content: center;
+}
+
+.tag {
+  font-size: 10px;
+  padding: 2px 6px;
+  background-color: #e9ecef;
+  color: #666;
+  border-radius: 10px;
+  white-space: nowrap;
+}
+
+/* 로딩 스피너 */
+.loading-spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top: 2px solid white;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+  .canva-link-input {
+    flex-direction: column;
+  }
+  
+  .template-grid {
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 8px;
+  }
+  
+  .template-item img {
+    height: 60px;
+  }
+  
+  .category-tabs {
+    max-height: 80px;
+  }
+  
+  .category-tab {
+    padding: 4px 8px;
+    font-size: 11px;
+  }
 }

@@ -3,6 +3,8 @@ import FolderApp from "./Folder/FolderApp.js";
 import FolderManager from "./FolderManager.js";
 import RectDragger from "../utils/rectangleDrag.js";
 import Wallpaper from "./Wallpaper/Wallpaper.js";
+import ImageManager from "./Image/ImageManager.js";
+import PostItManager from "./PostIt/PostItManager.js";
 
 import OptionCreate from "./Options/OptionCreate.js";
 
@@ -30,6 +32,11 @@ export default class App {
 
     this.$app = $app;
     this.$wallpaper = new Wallpaper();
+    this.$imageManager = new ImageManager($app);
+    this.$postItManager = new PostItManager($app);
+    
+    // 포스트잇 매니저를 전역으로 설정
+    window.postItManager = this.$postItManager;
 
     const state = await Storage.getState();
 
@@ -42,6 +49,85 @@ export default class App {
     dragger.Init($app);
 
     this.eventListeners();
+  }
+
+  eventListeners() {
+    document.addEventListener("click", async (e) => {
+      document.querySelectorAll(".options").forEach(($el) => {
+        $el.remove();
+      });
+      document.querySelectorAll(".post-it-context-menu").forEach(($el) => {
+        $el.remove();
+      });
+    });
+
+    this.$app.addEventListener("contextmenu", (e) => {
+      e.preventDefault();
+
+      if (this.$nodeOptions) this.$nodeOptions.remove();
+      if (this.$createOptions) this.$createOptions.remove();
+
+      document.querySelectorAll(".options").forEach(($el) => {
+        $el.remove();
+      });
+      document.querySelectorAll(".post-it-context-menu").forEach(($el) => {
+        $el.remove();
+      });
+
+      if (e.target.className.includes("node-wrapper")) {
+        const optionCreate = new OptionCreate({
+          $app: this.$app,
+          $target: e.target,
+          x: e.clientX,
+          y: e.clientY,
+          mode: "app",
+        });
+        this.$createOptions = optionCreate.$createOptions;
+      }
+    });
+
+    // Add drop event listener
+    this.$app.addEventListener('dragover', (e) => {
+      e.preventDefault();
+    });
+
+    this.$app.addEventListener('drop', async (e) => {
+      e.preventDefault();
+      
+      const files = e.dataTransfer.files;
+      if (files.length > 0) {
+        const file = files[0];
+        if (file.type.startsWith('image/')) {
+          const reader = new FileReader();
+          reader.onload = async (event) => {
+            const image = {
+              src: event.target.result,
+              x: e.clientX - this.$app.getBoundingClientRect().left,
+              y: e.clientY - this.$app.getBoundingClientRect().top,
+              width: 200,
+              height: 200
+            };
+            await Storage.addImage(image);
+            this.createImageElement(image);
+          };
+          reader.readAsDataURL(file);
+        }
+      }
+    });
+
+    this.$app.addEventListener("pointerdown", (e) => {
+      // 바탕화면에서만 동작: 노드, 폴더매니저, rect-dragger가 아닌 곳만
+      const tag = e.target.tagName.toLowerCase();
+      const isNode = tag.includes('node');
+      const isManager = tag.includes('folder-manager');
+      const isDragger = tag.includes('rect-dragger');
+      if (!isNode && !isManager && !isDragger) {
+        document.querySelectorAll('.multi').forEach(el => {
+          el.classList.remove('multi');
+          if (el.firstElementChild) el.firstElementChild.classList.remove('selected');
+        });
+      }
+    });
   }
 
   async renderRunned(bookMarkTree, $app) {
@@ -124,36 +210,6 @@ export default class App {
         Storage.setPos(bookMark.id, pos);
       }
     }
-  }
-
-  eventListeners() {
-    document.addEventListener("click", async (e) => {
-      document.querySelectorAll(".options").forEach(($el) => {
-        $el.remove();
-      });
-    });
-
-    this.$app.addEventListener("contextmenu", (e) => {
-      e.preventDefault();
-
-      if (this.$nodeOptions) this.$nodeOptions.remove();
-      if (this.$createOptions) this.$createOptions.remove();
-
-      document.querySelectorAll(".options").forEach(($el) => {
-        $el.remove();
-      });
-
-      if (e.target.className.includes("node-wrapper")) {
-        const optionCreate = new OptionCreate({
-          $app: this.$app,
-          $target: e.target,
-          x: e.clientX,
-          y: e.clientY,
-          mode: "app",
-        });
-        this.$createOptions = optionCreate.$createOptions;
-      }
-    });
   }
 
   renderMainInit(bookMarkTree, $app) {
