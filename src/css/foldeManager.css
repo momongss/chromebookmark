@@ -1,31 +1,97 @@
 .folder-manager .node {
-    color: black;
+    color: #5d4037;
     text-shadow: none;
+    transition: transform 0.15s ease-out, box-shadow 0.15s ease-out;
+    border-radius: 8px;
+    margin: 2px;
 }
 
 .folder-manager .node:hover {
-    background-color: rgba(178, 194, 230, 0.5);
+  background-color: rgba(141, 110, 99, 0.25);
+  box-shadow: 0 2px 8px rgba(141, 110, 99, 0.4);
+  border: 2px solid rgba(141, 110, 99, 0.6);
+  outline: 2px solid rgba(141, 110, 99, 0.7);
+  outline-offset: -2px;
 }
 
 .folder-manager .node:active {
-    background-color: rgb(164, 176, 202);
+    background-color: rgba(141, 110, 99, 0.2);
+    transform: translateY(0);
+    box-shadow: 0 2px 6px rgba(141, 110, 99, 0.3);
+}
+
+.folder-manager .node.selected {
+    background-color: rgba(141, 110, 99, 0.25);
+    box-shadow: 0 2px 8px rgba(141, 110, 99, 0.4);
+    border: 2px solid rgba(141, 110, 99, 0.6);
+    outline: 2px solid rgba(141, 110, 99, 0.7);
+    outline-offset: -2px;
 }
 
 .folder-manager-wrapper {
   display: none;
   position: fixed;
-
   padding-bottom: 1.875rem;
-  background-color: rgba(214, 231, 255, 0.95);
-  border-radius: 0.625rem;
-
+  background: linear-gradient(135deg, #f5f1ed 0%, #e8d5c4 100%);
+  border-radius: 15px;
   top: calc(100vh - 25rem - 2.625rem);
-
-  box-shadow: 0px 0px 6px #3f3f3f;
+  box-shadow: 
+    0 20px 40px rgba(93, 64, 55, 0.15),
+    0 8px 16px rgba(93, 64, 55, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.6);
+  border: 1px solid rgba(188, 170, 164, 0.4);
+  overflow: hidden;
 }
 
 .folder-manager-wrapper.show {
   display: block;
+}
+
+.folder-manager-wrapper.dragging {
+  user-select: none;
+  cursor: grabbing;
+}
+
+.folder-manager-wrapper.dragging * {
+  pointer-events: none;
+}
+
+.folder-manager-wrapper.dragging .folder-manager-header {
+  cursor: grabbing;
+  pointer-events: auto;
+}
+
+.folder-manager-wrapper.dragging .folder-manager {
+  pointer-events: auto;
+}
+
+.folder-manager-wrapper.dragging .folder-manager .node {
+  pointer-events: auto;
+  z-index: 1000;
+  /* transition: opacity 0.1s ease, visibility 0.1s ease; */
+}
+
+.folder-manager-wrapper.dragging .folder-manager .node:hover {
+  background-color: rgba(141, 110, 99, 0.15);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(141, 110, 99, 0.25);
+  transition: background-color 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.folder-manager-wrapper.dragging .folder-manager .node:active {
+  background-color: rgba(141, 110, 99, 0.25);
+  transform: translateY(0);
+  box-shadow: 0 2px 6px rgba(141, 110, 99, 0.35);
+}
+
+.folder-manager-wrapper.dragging .folder-manager .node.selected {
+  background-color: rgba(141, 110, 99, 0.3);
+  box-shadow: 0 2px 8px rgba(141, 110, 99, 0.5);
+  border: 2px solid rgba(141, 110, 99, 0.7);
+  outline: 2px solid rgba(141, 110, 99, 0.9);
+  outline-offset: -2px;
+  opacity: 1 !important;
+  visibility: visible !important;
 }
 
 .folder-manager-header {
@@ -33,24 +99,50 @@
   justify-content: space-between;
   align-items: center;
   position: relative;
-  bottom: 0.125rem;
-  color: black;
-
-  margin: 0.3rem 0.2rem 0.08rem 0.2rem;
+  color: #5d4037;
+  margin: 0;
+  background: linear-gradient(135deg, #a1887f 0%, #8d6e63 100%);
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+  padding: 4px 8px;
+  box-shadow: 
+    0 2px 6px rgba(93, 64, 55, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  font-weight: 600;
+  font-size: 14px;
+  letter-spacing: 0.3px;
+  border-bottom: none;
+  cursor: default;
 }
 
 .folder-manager-header .back-btn {
-  width: 1.875rem;
-  height: 1.875rem;
+  width: 28px;
+  height: 28px;
+  margin-left: 0;
+  margin-right: 0px;
+  border-radius: 40%;
+  background: #EAD9CA;
   display: flex;
   justify-content: center;
   align-items: center;
-  border-radius: 0.438rem;
+  transition: background 0.2s;
+  cursor: pointer;
+  padding: 0;
+  overflow: visible;
+}
+
+.folder-manager-header .back-btn:hover {
+  background: rgba(255,255,255,0.22);
 }
 
 .folder-manager-header .back-btn img {
-  display: none;
-  width: 1rem;
+  width: 15px;
+  height: 15px;
+  display: block;
+  margin: 0;
+  padding: 0;
+  object-fit: contain;
+  filter: grayscale(1) opacity(0.6);
 }
 
 .folder-manager-header .back-btn.backable img {
@@ -58,63 +150,141 @@
 }
 
 .folder-manager-header .back-btn.backable:hover {
-  background-color: rgba(178, 194, 230, 1);
+  background-color: rgba(255, 255, 255, 0.2);
+  transform: scale(1.05);
 }
 
 .folder-manager-header .folder-title {
   display: flex;
   justify-content: center;
   align-items: center;
-
-  font-size: 0.85rem;
-  letter-spacing: 0.1rem;
-  font-weight: 550;
+  font-size: 16px;
+  letter-spacing: 0.2px;
+  font-weight: 600;
   text-align: center;
-  margin-left: 0.25rem;
-  margin-bottom: 1px;
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: #faf6f2;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+image.png {
+  width: 32px;
+  height: 32px;
+  min-width: 32px;
+  min-height: 32px;
+  font-size: 20px;
+  margin-right: 0;
+  margin-left: 8px;
+  border-radius: 40%;
+  background: rgba(255, 255, 255, 0.185);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: background 0.2s;
+  cursor: pointer;
+  color: rgba(250, 246, 242, 0.8);
 }
 
 .folder-manager-header .folder-close {
-  position: relative;
-
-  width: 1.875rem;
-  height: 1.875rem;
-  font-size: 1.25rem;
-
-  text-align: center;
-  line-height: 1.55rem;
-  border-radius: 0.438rem;
+  width: 28px;
+  height: 28px;
+  font-size: 18px;
+  border-radius: 40%;
+  background-color: #EAD9CA;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: background 0.2s;
+  color: rgb(61, 61, 61);
 }
 
-/* .folder-manager-header .folder-close:hover {
-  background-color: rgba(178, 194, 230, 1);
+.folder-manager-header .folder-close:hover {
+  background-color: #e9daca50;
 }
 
-.folder-manager-header .folder-close:active {
-  background-color: rgb(182, 192, 212);
-} */
+.folder-manager-header .folder-close img {
+  width: 10px;
+  height: 10px;
+  display: block;
+  margin: 0;
+  padding: 0;
+  object-fit: contain;
+}
+
+.folder-manager-controls {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin: 0;
+  padding: 8px 20px;
+  background: linear-gradient(135deg, #f8f4f0 0%, #f0e6e0 100%);
+  border-bottom: 1px solid rgba(141, 110, 99, 0.1);
+  box-shadow: 0 2px 8px rgba(93, 64, 55, 0.05);
+}
+
+.folder-manager-controls select {
+  padding: 6px 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(141, 110, 99, 0.2);
+  background: linear-gradient(135deg, #ffffff 0%, #faf6f2 100%);
+  font-size: 13px;
+  color: #5d4037;
+  box-shadow: 
+    0 2px 4px rgba(93, 64, 55, 0.05),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  outline: none;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.folder-manager-controls select:hover {
+  border-color: #8d6e63;
+  box-shadow: 
+    0 4px 8px rgba(141, 110, 99, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+.folder-manager-controls select:focus {
+  border-color: #8d6e63;
+  box-shadow: 
+    0 0 0 3px rgba(141, 110, 99, 0.1),
+    0 4px 8px rgba(141, 110, 99, 0.1);
+}
 
 .folder-manager {
   height: 25rem;
-
   display: grid;
   grid-template-columns: repeat(5, var(--grid-item-width));
   grid-template-rows: repeat(8, var(--grid-item-height));
-  grid-gap: 0.125rem;
-
-  background-color: rgba(234, 246, 255, 0.81);
-
+  grid-gap: 8px;
+  background: linear-gradient(135deg, #faf6f2 0%, #f5f1ed 100%);
   overflow-y: scroll;
-
   position: relative;
+  padding: 16px;
 }
 
 .folder-manager::-webkit-scrollbar {
-  width: 0.625rem;
+  width: 8px;
+}
+
+.folder-manager::-webkit-scrollbar-track {
+  background: rgba(141, 110, 99, 0.05);
+  border-radius: 4px;
 }
 
 .folder-manager::-webkit-scrollbar-thumb {
-  margin-top: 6.25rem;
-  background-color: rgba(150, 156, 169, 1);
-  border-radius: 0.188rem;
+  background: linear-gradient(135deg, #8d6e63 0%, #6d4c41 100%);
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.folder-manager::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(135deg, #6d4c41 0%, #5d4037 100%);
+}
+
+.folder-manager-wrapper.dragging .folder-manager-header {
+  cursor: default !important;
 }

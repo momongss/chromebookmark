@@ -5,12 +5,18 @@ class ItemNode extends HTMLElement {
   bookMark = null;
   data = null;
   isDragging = false;
+  isDraggingHead = false;
   parentFolderManager = null;
   originalParentId = null;
+
+  multSelectHead = null;
 
   constructor() {
     super();
     this.#addEventListeners();
+
+    this.isDragging = false;
+    this.isDraggingHead = false;
   }
 
   #addEventListeners() {
@@ -29,24 +35,16 @@ class ItemNode extends HTMLElement {
     document.removeEventListener("pointerup", this.onMouseUp);
   }
 
-  dragStartPos = {
-    x: 0,
-    y: 0,
-  };
-
-  dragEndPos = {
-    x: 0,
-    y: 0,
-  };
-
   onMouseDown = (e) => {
+    e.stopPropagation();
+    console.log("onMouseDown");
+  }
+
+  onDragStart = (e) => {
     e.preventDefault();
     e.stopPropagation();
 
-    // 드래그 시작 위치 저장
-    this.dragStartPos.x = e.clientX;
-    this.dragStartPos.y = e.clientY;
-
+    console.log("onDragStart");
     if (this.classList.contains("multi")) {
       // 여러개 선택된 경우 현재 선택된 노드들을 전역에 저장
       if (this.dragger && this.dragger.matchingElements) {
@@ -54,17 +52,25 @@ class ItemNode extends HTMLElement {
       } else {
         window.currentDragNodes = [this];
       }
+
+      for (const el of window.currentDragNodes)
+      {
+        el.multSelectHead = this;
+      }
+
+      this.isDraggingHead = true;
+
       this.dragger.matchingElements.forEach((element) => {
-        element.onDragStart(e);
+        element.dragStart(e);
       });
     } else {
       window.currentDragNodes = [this];
-      this.onDragStart(e);
+      this.dragStart(e);
     }
   };
 
-  onDragStart = (e) => {
-    // 드래그 시작 위치에서의 오프셋 저장
+  dragStart = (e) => {
+    // 드래그 시작 위치에서의 오프셋 저장 (원래대로 복구)
     this.offsetX = e.clientX - this.getBoundingClientRect().left;
     this.offsetY = e.clientY - this.getBoundingClientRect().top;
 
@@ -81,16 +87,13 @@ class ItemNode extends HTMLElement {
     this.style.left = `${x}px`;
     this.style.top = `${y}px`;
 
-    this.dragStartPos.x = x;
-    this.dragStartPos.y = y;
-
     this.parentElement.style.zIndex = 10000;
     this.style.zIndex = 10000;
-  };
+  }
 
   onMouseMove = (e) => {
     if (this.isDragging) {
-      // 마우스 위치에서 오프셋을 빼서 새로운 위치 계산
+      // 마우스 위치에서 오프셋을 빼서 새로운 위치 계산 (원래대로 복구)
       const x = e.clientX - this.offsetX;
       const y = e.clientY - this.offsetY;
       this.style.left = `${x}px`;
@@ -109,17 +112,26 @@ class ItemNode extends HTMLElement {
       const eventPosElements = document.elementsFromPoint(centerX, centerY);
 
       if (this.wrapper != null) {
-        this.wrapper.classList.remove("hover");
+        const wrapper = eventPosElements.find((element) => {
+          return element.className.includes("node-wrapper");
+        });
+
+        if (this.wrapper == wrapper) {
+
+        }
+        else {
+          this.wrapper.classList.remove("hover");
+        }
       }
-
-      this.wrapper = eventPosElements.find((element) => {
-        return element.className.includes("node-wrapper");
-      });
-
-      this.wrapper.classList.add("hover");
+      else {
+        this.wrapper = eventPosElements.find((element) => {
+          return element.className.includes("node-wrapper");
+        });
+        this.wrapper.classList.add("hover");
+      }
     }
   };
-
+  
   wrapper;
 
   calculateDistance(point1, point2) {
@@ -133,31 +145,9 @@ class ItemNode extends HTMLElement {
     e.stopPropagation();
     
     if (this.isDragging == false) return;
-
-    // 드래그 종료 위치 저장
-    this.dragEndPos.x = e.clientX;
-    this.dragEndPos.y = e.clientY;
-
-    // 드래그 거리 계산 (시작 위치와 종료 위치의 차이)
-    const distance = this.calculateDistance(
-      { x: this.dragStartPos.x, y: this.dragStartPos.y },
-      { x: this.dragEndPos.x, y: this.dragEndPos.y }
-    );
-
-    // 드래그 거리가 5px 미만이면 클릭으로 처리
-    if (distance < 5) {
-      this.isDragging = false;
-      if (this.wrapper != null) {
-        this.wrapper.classList.remove("hover");
-      }
-      this.style = "";
-      this.parentElement.style.zIndex = 0;
-      this.style.zIndex = 0;
-      window.currentDragNodes = undefined;
-      return;
-    }
-
     this.isDragging = false;
+    this.isDraggingHead = false;
+
     if (this.wrapper != null) {
       this.wrapper.classList.remove("hover");
     }
@@ -167,27 +157,11 @@ class ItemNode extends HTMLElement {
 
     const eventPosElements = document.elementsFromPoint(eventX, eventY);
 
-    // 여러개 선택된 상태에서 폴더로 드롭할 때 예외 처리
-    if (
-      this.classList.contains("multi") &&
-      window.currentDragNodes &&
-      window.currentDragNodes.length > 1 &&
-      (
-        window.currentDragNodes.some(node => node.classList.contains('folder')) ||
-        this.classList.contains('folder')
-      )
-    ) {
-      this.style = "";
-      this.parentElement.style.zIndex = 0;
-      this.style.zIndex = 0;
-      window.currentDragNodes = undefined;
-      return;
-    }
-
     // 기존 단일 드래그 로직
+    let dropped = false;
     for (const element of eventPosElements) {
       // 폴더 노드를 찾은 경우
-      if (element.tagName.includes("FOLDER-NODE") && element !== this) {
+      if (element.tagName.includes("FOLDER-NODE") && element !== this && element !== this.multSelectHead) {
         // 폴더를 드래그하는 경우
         if (this.classList.contains("folder")) {
           // 폴더를 다른 폴더로 이동
@@ -197,13 +171,15 @@ class ItemNode extends HTMLElement {
           this.parentElement.style.zIndex = 0;
           this.style.zIndex = 0;
           window.currentDragNodes = undefined;
-          return;
+          dropped = true;
+          break;
         }
         // 북마크를 드래그하는 경우
         element.addItem(this.bookMark);
         this.remove();
         window.currentDragNodes = undefined;
-        return;
+        dropped = true;
+        break;
       }
       
       if (element.tagName === "FOLDER-MANAGER") {
@@ -214,19 +190,29 @@ class ItemNode extends HTMLElement {
           this.parentElement.style.zIndex = 0;
           this.style.zIndex = 0;
           window.currentDragNodes = undefined;
-          return;
+          dropped = true;
+          break;
         }
         // 다른 폴더 매니저로 이동
         element.addItem(this.bookMark);
         this.remove();
         window.currentDragNodes = undefined;
-        return;
+        dropped = true;
+        break;
       }
     }
 
     // 빈 공간으로 이동
-    this.handleEmptySpaceDrop(e);
+    if (!dropped) {
+      this.handleEmptySpaceDrop(e);
+    }
     window.currentDragNodes = undefined;
+
+    // 드래그가 끝난 후 원래 부모로 복구 (만약 이동이 일어나지 않았다면)
+    if (!dropped && this.bookMark.parentId !== this.originalParentId) {
+      bookmarkManager.moveTree(this.bookMark.id, this.originalParentId);
+      this.bookMark.parentId = this.originalParentId;
+    }
   };
 
   handleEmptySpaceDrop = (e) => {
@@ -284,14 +270,6 @@ class ItemNode extends HTMLElement {
 
   onClick = (event) => {
     console.log('북마크 클릭됨, id:', this.bookMark?.id);
-    this.dragEndPos.x = event.clientX - this.offsetX;
-    this.dragEndPos.y = event.clientY - this.offsetY;
-
-    const distance = this.calculateDistance(this.dragStartPos, this.dragEndPos);
-    if (distance > 10) {
-      event.preventDefault();
-      event.stopPropagation();
-    }
   };
 
   async movePosition(x, y, target) {

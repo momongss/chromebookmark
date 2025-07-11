@@ -1,6 +1,5 @@
 class RectDragger extends HTMLElement {
   Init($parent, anchor) {
-    console.trace("[rectangleDrag] Init", $parent, anchor);
     this.$parent = $parent;
     $parent.appendChild(this);
     this.eventListeners();
@@ -17,17 +16,11 @@ class RectDragger extends HTMLElement {
   isDragging = false;
 
   onMouseDown = (e) => {
-    console.log("[rectangleDrag] onMouseDown", {
-      clientX: e.clientX,
-      clientY: e.clientY,
-      anchor: this.anchor,
-    });
     window.isRectSelecting = true;
     this.isDragging = true;
 
     this.startX = e.clientX - this.anchor.x;
     this.startY = e.clientY - this.anchor.y;
-    console.log("[rectangleDrag] startX, startY", this.startX, this.startY);
 
     const dragBox = this;
 
@@ -118,13 +111,10 @@ class RectDragger extends HTMLElement {
     window.isRectSelecting = false;
 
     const dragBox = this;
-
     dragBox.style.left = `${this.startX}px`;
     dragBox.style.top = `${this.startY}px`;
-
     dragBox.style.width = `${0}px`;
     dragBox.style.height = `${0}px`;
-
     dragBox.style.visibility = "hidden";
 
     this.matchingElements = this.sortElementsByReverseDOMOrder(

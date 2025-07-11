@@ -109,8 +109,10 @@ export default class FolderManager extends HTMLElement {
       initY = e.clientY;
 
       folderX = parseInt(this.style.left.slice(0, this.style.left.length - 2));
-
       folderY = parseInt(this.style.top.slice(0, this.style.top.length - 2));
+      
+      // 드래그 시작 시 클래스 추가
+      this.classList.add("dragging");
     });
 
     let left;
@@ -132,11 +134,11 @@ export default class FolderManager extends HTMLElement {
       this.pos.left = left;
       this.pos.top = top;
 
-      console.log(this.dragger);
-      this.dragger.Init(this.$folderManager, {
-        x: this.pos.left + 2,
-        y: this.pos.top + $header.offsetHeight,
-      });
+      // 드래그 종료 시 클래스 제거
+      this.classList.remove("dragging");
+
+      const rect = this.$folderManager.getBoundingClientRect();
+      this.dragger.Init(this.$folderManager, rect);
     });
   }
 
@@ -158,15 +160,6 @@ export default class FolderManager extends HTMLElement {
     // --- 정렬/배치 UI 추가 ---
     const $controls = document.createElement("div");
     $controls.className = "folder-manager-controls";
-    $controls.style.display = "flex";
-    $controls.style.gap = "8px";
-    $controls.style.alignItems = "center";
-    $controls.style.margin = "0 0 8px 0";
-    $controls.style.padding = "6px 12px";
-    $controls.style.background = "#f7f8fa";
-    $controls.style.borderBottom = "1px solid #e0e0e0";
-    $controls.style.boxShadow = "0 1px 4px 0 rgba(0,0,0,0.03)";
-    $controls.style.borderRadius = "0 0 10px 10px";
 
     // 정렬 기준 드롭다운
     const $sortSelect = document.createElement("select");
@@ -176,53 +169,27 @@ export default class FolderManager extends HTMLElement {
       <option value="custom">사용자 지정순</option>
     `;
     $sortSelect.value = window.folderManagerSortType || "recent";
-    $sortSelect.style.padding = "4px 10px";
-    $sortSelect.style.borderRadius = "6px";
-    $sortSelect.style.border = "1px solid #bfc7d1";
-    $sortSelect.style.background = "#fff";
-    $sortSelect.style.fontSize = "14px";
-    $sortSelect.style.color = "#222";
-    $sortSelect.style.boxShadow = "0 1px 2px 0 rgba(0,0,0,0.03)";
-    $sortSelect.style.outline = "none";
     $controls.appendChild($sortSelect);
 
     // --- 기존 헤더/매니저 UI ---
     const $header = document.createElement("div");
     $header.className = "folder-manager-header";
-    $header.style.display = "flex";
-    $header.style.alignItems = "center";
-    $header.style.justifyContent = "space-between";
-    $header.style.background = "#e9eef6";
-    $header.style.borderTopLeftRadius = "12px";
-    $header.style.borderTopRightRadius = "12px";
-    $header.style.padding = "0px";
-    $header.style.boxShadow = "0 2px 8px 0 rgba(0,0,0,0.04)";
-    $header.style.fontWeight = "bold";
-    $header.style.fontSize = "16px";
-    $header.style.letterSpacing = "0.5px";
-    $header.style.borderBottom = "1.5px solid #dbe3ee";
+
+    const $backBtn = document.createElement("div");
+    $backBtn.className = "back-btn";
+    $backBtn.style.cursor = "pointer";
+    $backBtn.style.marginRight = "8px";
+    $backBtn.innerHTML = `<img src="assets/back-arrow.svg" alt="back"/>`;
+    $header.prepend($backBtn);
 
     const $title = document.createElement("div");
     $title.className = "folder-title";
     $title.textContent = title;
-    $title.style.flex = "1";
-    $title.style.overflow = "hidden";
-    $title.style.textOverflow = "ellipsis";
-    $title.style.whiteSpace = "nowrap";
-    $title.style.fontWeight = "bold";
-    $title.style.fontSize = "16px";
     $header.appendChild($title);
 
     const $closeBtn = document.createElement("div");
     $closeBtn.className = "folder-close";
-    $closeBtn.textContent = "×";
-    $closeBtn.style.fontSize = "18px";
-    $closeBtn.style.cursor = "pointer";
-    $closeBtn.style.marginLeft = "12px";
-    $closeBtn.style.color = "#888";
-    $closeBtn.style.transition = "color 0.2s";
-    // $closeBtn.addEventListener("mouseenter", () => $closeBtn.style.color = "#d32f2f");
-    // $closeBtn.addEventListener("mouseleave", () => $closeBtn.style.color = "#888");
+    $closeBtn.innerHTML = `<img src="assets/close.svg" alt="close"/>`;
     $header.appendChild($closeBtn);
 
     this.appendChild($header);
@@ -283,27 +250,31 @@ export default class FolderManager extends HTMLElement {
 
     this.rightClickHandler();
 
-    // 폴더 매니저 전체 스타일 개선
-    this.style.background = "#f4f7fb";
-    this.style.borderRadius = "16px";
-    this.style.boxShadow = "0 8px 32px 0 rgba(60,80,120,0.13)";
-    this.style.border = "1.5px solid #dbe3ee";
-    this.style.overflow = "hidden";
-
     this.dragger = document.createElement("rect-dragger");
     $folderManager.appendChild(this.dragger);
     // anchor는 폴더매니저의 화면상 위치 + header 높이로 복구
     const rect = $folderManager.getBoundingClientRect();
-    console.log(rect.x, rect.y);
-    this.dragger.Init($folderManager, {
-      x: rect.x,
-      y: rect.y,
-    });
+    this.dragger.Init($folderManager, rect);
 
     $closeBtn.addEventListener("click", (e) => {
       this.remove();
       this.history = [];
       this.onDestroy();
+      console.log("close");
+    });
+
+    $backBtn.addEventListener("pointerdown", (e) => {
+      e.stopPropagation();
+    });
+
+    $backBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      console.log("back");
+      if (this.history.length > 1) {
+        this.history.pop(); // 현재 폴더 id 제거
+        const prev = this.history[this.history.length - 1];
+        this.render({ id: prev.id, mode: "back" });
+      }
     });
   }
 
