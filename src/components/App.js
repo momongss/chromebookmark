@@ -1,5 +1,3 @@
-import FileApp from "./File/FileApp.js";
-import FolderApp from "./Folder/FolderApp.js";
 import FolderManager from "./FolderManager.js";
 import RectDragger from "../utils/rectangleDrag.js";
 import Wallpaper from "./Wallpaper/Wallpaper.js";
@@ -11,6 +9,10 @@ import OptionCreate from "./Options/OptionCreate.js";
 import Storage from "../utils/storage.js";
 
 import { constDatas } from "../utils/const.js";
+import DropHandlerApp from "../utils/dropHandlerApp.js";
+
+import FileNode from "./File/File.js";
+import FolderNode from "./Folder/Folder.js";
 
 export default class App {
   static $dom;
@@ -49,6 +51,8 @@ export default class App {
     dragger.Init($app);
 
     this.eventListeners();
+
+    this.dropHandlerApp = new DropHandlerApp($app);
   }
 
   eventListeners() {
@@ -136,46 +140,34 @@ export default class App {
 
     const posUndefineds = [];
 
-    let zIndex = 0;
     for (let y = 0; y < lenY; y++) {
       for (let x = 0; x < lenX; x++) {
         const $div = document.createElement("div");
         $div.className = `node-wrapper-${x}-${y}`;
-        // $div.style.zIndex = zIndex;
         $app.appendChild($div);
-        // zIndex -= 1;
       }
     }
 
     for (const bookMark of bookMarkTree) {
-      if (bookMark.children == null) {
-        const pos = await Storage.getPos(bookMark.id);
-        if (
-          pos == null ||
-          (pos.constructor === Object && Object.keys(pos).length === 0)
-        ) {
-          posUndefineds.push(bookMark);
-          continue;
+      const pos = await Storage.getPos(bookMark.id);
+      if (pos == null) {
+        posUndefineds.push(bookMark);
+        continue;
+      }
+      else {
+        if (bookMark.children == null) {
+          const fileNode = new FileNode();
+          fileNode.Init({
+            $parent: $app.querySelector(`.node-wrapper-${pos.x}-${pos.y}`),
+            bookMark: bookMark,
+          });
+        } else {
+          const folderNode = new FolderNode();
+          folderNode.Init({
+            $parent: $app.querySelector(`.node-wrapper-${pos.x}-${pos.y}`),
+            bookMark: bookMark,
+          });
         }
-
-        const fileNode = document.createElement("file-node");
-        fileNode.Init_App({
-          $parent: $app.querySelector(`.node-wrapper-${pos.x}-${pos.y}`),
-          bookMark: bookMark,
-        });
-      } else {
-        const pos = await Storage.getPos(bookMark.id);
-        if (pos == null) {
-          posUndefineds.push(bookMark);
-          continue;
-        }
-
-        const folderNode = document.createElement("folder-node");
-        folderNode.Init({
-          $parent: $app.querySelector(`.node-wrapper-${pos.x}-${pos.y}`),
-          bookMark: bookMark,
-          isRoot: true,
-        });
       }
     }
 
@@ -187,8 +179,8 @@ export default class App {
           x: tmp[2],
           y: tmp[3],
         };
-        const fileNode = document.createElement("file-node");
-        fileNode.Init_App({
+        const fileNode = new FileNode();
+        fileNode.Init({
           $parent: $app.querySelector(`.node-wrapper-${pos.x}-${pos.y}`),
           bookMark: bookMark,
         });
@@ -201,11 +193,10 @@ export default class App {
           x: tmp[2],
           y: tmp[3],
         };
-        const folderNode = document.createElement("folder-node");
+        const folderNode = new FolderNode();
         folderNode.Init({
           $parent: $app.querySelector(`.node-wrapper-${pos.x}-${pos.y}`),
           bookMark: bookMark,
-          isRoot: true,
         });
         Storage.setPos(bookMark.id, pos);
       }
@@ -254,8 +245,8 @@ export default class App {
         }
         Storage.setPos(bookMark.id, filePos);
 
-        const fileNode = document.createElement("file-node");
-        fileNode.Init_App({
+        const fileNode = new FileNode();
+        fileNode.Init({
           $parent: $app.querySelector(
             `.node-wrapper-${filePos.x}-${filePos.y}`
           ),
@@ -279,13 +270,12 @@ export default class App {
         }
         Storage.setPos(bookMark.id, folderPos);
 
-        const folderNode = document.createElement("folder-node");
+        const folderNode = new FolderNode();
         folderNode.Init({
           $parent: $app.querySelector(
             `.node-wrapper-${folderPos.x}-${folderPos.y}`
           ),
           bookMark: bookMark,
-          isRoot: true,
         });
 
         folderPos.x++;

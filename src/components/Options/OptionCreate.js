@@ -1,6 +1,3 @@
-import FolderApp from "../Folder/FolderApp.js";
-import FolderMain from "../Folder/FolderMain.js";
-
 import { selectAll } from "../../utils/caret.js";
 import { constDatas } from "../../utils/const.js";
 import Storage from "../../utils/storage.js";

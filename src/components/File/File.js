@@ -2,41 +2,12 @@ import ItemNode from "../Node.js";
 import OptionEdit from "../Options/OptionEdit.js";
 
 export default class FileNode extends ItemNode {
-  isRoot = false;
+  render() {
+    this.innerHTML = "";
 
-  Init(bookMark) {
-    this.bookMark = bookMark;
     this.$node = document.createElement("a");
     this.$node.className = "node file";
     this.appendChild(this.$node);
-    this.render();
-    this.eventListeners();
-  }
-
-  Init_App({ $parent, bookMark }) {
-    this.Init(bookMark);
-    $parent.innerHTML = "";
-    $parent.appendChild(this);
-
-    this.isRoot = true;
-  }
-
-  Init_Manage({ $parent, bookMark }) {
-    this.Init(bookMark);
-    $parent.appendChild(this);
-
-    this.isRoot = false;
-  }
-
-  getFaviconURL(u) {
-    const url = new URL(chrome.runtime.getURL("/_favicon/"));
-    url.searchParams.set("pageUrl", u);
-    url.searchParams.set("size", "32");
-    return url.toString();
-  }
-
-  render() {
-    if (!this.bookMark) return;
 
     this.$node.href = this.bookMark.url;
     this.$node.dataset.id = this.bookMark.id;
@@ -46,9 +17,11 @@ export default class FileNode extends ItemNode {
       faviconURL = "../../assets/youtube.svg";
     }
 
+    this.$node.draggable = false;
+
     this.$node.innerHTML = `
       <div class="file-wrapper">
-        <img src="${faviconURL}"/>
+        <img src="${faviconURL}" draggable="false"/>
         <div class="text">${this.bookMark.title}</div>
       </div>
     `;
@@ -114,6 +87,21 @@ export default class FileNode extends ItemNode {
       });
       this.$nodeOptions = this.optionEdit.$nodeOptions;
     });
+  }
+
+  eventListeners_app() {
+
+  }
+
+  eventListeners_folderManager() {
+
+  }
+
+  getFaviconURL(u) {
+    const url = new URL(chrome.runtime.getURL("/_favicon/"));
+    url.searchParams.set("pageUrl", u);
+    url.searchParams.set("size", "32");
+    return url.toString();
   }
 }
 

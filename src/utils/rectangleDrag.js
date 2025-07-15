@@ -16,6 +16,13 @@ class RectDragger extends HTMLElement {
   isDragging = false;
 
   onMouseDown = (e) => {
+    const elements = document.elementsFromPoint(e.clientX, e.clientY);
+
+    const isNode = elements.some(el => el.classList.contains("node"));
+    if (isNode) {
+      return;
+    }
+
     window.isRectSelecting = true;
     this.isDragging = true;
 
@@ -120,6 +127,80 @@ class RectDragger extends HTMLElement {
     this.matchingElements = this.sortElementsByReverseDOMOrder(
       this.matchingElements
     );
+
+    // 선택된 요소들이 있으면 임시 컨테이너 생성
+    if (this.matchingElements.length > 0) {
+      this.createTemporaryContainer();
+    }
+  };
+
+  createTemporaryContainer = () => {
+    // 임시 컨테이너 생성
+    const tempContainer = document.createElement('div');
+    tempContainer.style.position = 'absolute';
+    tempContainer.style.top = '0';
+    tempContainer.style.left = '0';
+    tempContainer.style.width = '100%';
+    tempContainer.style.height = '100%';
+    tempContainer.style.pointerEvents = 'none';
+    tempContainer.style.zIndex = '9999';
+    tempContainer.draggable = true;
+    tempContainer.className = 'temp-drag-container';
+
+    // 선택된 요소들을 임시 컨테이너로 이동
+    this.matchingElements.forEach(element => {
+      // 원래 위치 저장
+      const rect = element.getBoundingClientRect();
+      const parentRect = this.$parent.getBoundingClientRect();
+      
+      // 절대 위치로 설정
+      element.style.position = 'absolute';
+      element.style.left = `${rect.left - parentRect.left}px`;
+      element.style.top = `${rect.top - parentRect.top}px`;
+      element.style.zIndex = '10000';
+      
+      // 임시 컨테이너에 추가
+      tempContainer.appendChild(element);
+    });
+
+    // 임시 컨테이너를 부모에 추가
+    this.$parent.appendChild(tempContainer);
+
+    // 드래그 이벤트 설정
+    tempContainer.addEventListener('dragstart', (e) => {
+      e.dataTransfer.setData('text/plain', 'multi-drag');
+      window.currentDragNodes = [...this.matchingElements];
+    });
+
+    tempContainer.addEventListener('dragend', (e) => {
+      // 드래그가 끝나면 임시 컨테이너 제거하고 요소들을 원래 위치로 복원
+      this.restoreElements();
+    });
+
+    // 임시 컨테이너 참조 저장
+    this.tempContainer = tempContainer;
+  };
+
+  restoreElements = () => {
+    if (!this.tempContainer) return;
+
+    // 선택된 요소들을 원래 부모로 복원
+    this.matchingElements.forEach(element => {
+      // 절대 위치 제거
+      element.style.position = '';
+      element.style.left = '';
+      element.style.top = '';
+      element.style.zIndex = '';
+      
+      // 원래 부모로 복원
+      this.$parent.appendChild(element);
+    });
+
+    // 임시 컨테이너 제거
+    if (this.tempContainer.parentNode) {
+      this.tempContainer.parentNode.removeChild(this.tempContainer);
+    }
+    this.tempContainer = null;
   };
 
   end = () => {};
@@ -129,7 +210,7 @@ class RectDragger extends HTMLElement {
   };
 
   eventListeners = () => {
-    this.$parent.addEventListener("pointerdown", this.onMouseDown);
+    document.addEventListener("pointerdown", this.onMouseDown);
     document.addEventListener("pointermove", this.onMouseMove);
     document.addEventListener("pointerup", this.onMouseUp);
   };
