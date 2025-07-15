@@ -46,17 +46,18 @@ export default class FolderManager extends HTMLElement {
     // 북마크 이동을 먼저 수행
     bookmarkManager.moveTree(node.id, this.id);
     
+    this.render({ id: this.id, mode: "back" });
     // 현재 드래그 중인 요소가 있는지 확인
-    const draggingElement = document.querySelector('.node[style*="position: fixed"]');
-    if (draggingElement) {
-      // 드래그가 완료될 때까지 render 지연
-      requestAnimationFrame(() => {
-        this.render({ id: this.id, mode: "back" });
-      });
-    } else {
-      // 일반적인 경우 즉시 처리
-      this.render({ id: this.id, mode: "back" });
-    }
+    // const draggingElement = document.querySelector('.node[style*="position: fixed"]');
+    // if (draggingElement) {
+    //   // 드래그가 완료될 때까지 render 지연
+    //   requestAnimationFrame(() => {
+    //     this.render({ id: this.id, mode: "back" });
+    //   });
+    // } else {
+    //   // 일반적인 경우 즉시 처리
+    //   this.render({ id: this.id, mode: "back" });
+    // }
   }
 
   rightClickHandler() {

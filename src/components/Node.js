@@ -37,7 +37,6 @@ class ItemNode extends HTMLElement {
 
   onMouseDown = (e) => {
     e.stopPropagation();
-    console.log("onMouseDown");
   }
 
   onDragStart = (e) => {
@@ -111,23 +110,20 @@ class ItemNode extends HTMLElement {
 
       const eventPosElements = document.elementsFromPoint(centerX, centerY);
 
-      if (this.wrapper != null) {
-        const wrapper = eventPosElements.find((element) => {
-          return element.className.includes("node-wrapper");
-        });
+      // 현재 마우스 위치의 wrapper 찾기
+      const currentWrapper = eventPosElements.find((element) => {
+        return element.className.includes("node-wrapper"); 
+      });
 
-        if (this.wrapper == wrapper) {
-
-        }
-        else {
-          this.wrapper.classList.remove("hover");
-        }
+      // 이전 wrapper가 있고, 현재 wrapper와 다르다면 이전 wrapper의 hover 제거
+      if (this.wrapper && this.wrapper !== currentWrapper) {
+        this.wrapper.classList.remove("hover");
       }
-      else {
-        this.wrapper = eventPosElements.find((element) => {
-          return element.className.includes("node-wrapper");
-        });
-        this.wrapper.classList.add("hover");
+
+      // 현재 wrapper가 있다면 hover 추가하고 저장
+      if (currentWrapper) {
+        currentWrapper.classList.add("hover");
+        this.wrapper = currentWrapper;
       }
     }
   };
@@ -145,6 +141,25 @@ class ItemNode extends HTMLElement {
     e.stopPropagation();
     
     if (this.isDragging == false) return;
+    
+    // 드래그 거리 계산
+    const dragDistance = this.calculateDistance(
+      { x: this.startX, y: this.startY },
+      { x: e.clientX, y: e.clientY }
+    );
+    
+    // 드래그 거리가 5px 이상이면 클릭 이벤트 차단
+    if (dragDistance > 5) {
+      // 클릭 이벤트를 차단하기 위해 일정 시간 동안 클릭 이벤트 무시
+      this.dragEndTime = Date.now();
+      setTimeout(() => {
+        this.dragEndTime = null;
+      }, 100);
+    } else {
+      // 드래그 거리가 짧으면 즉시 초기화
+      this.dragEndTime = null;
+    }
+    
     this.isDragging = false;
     this.isDraggingHead = false;
 
@@ -164,19 +179,27 @@ class ItemNode extends HTMLElement {
       if (element.tagName.includes("FOLDER-NODE") && element !== this && element !== this.multSelectHead) {
         // 폴더를 드래그하는 경우
         if (this.classList.contains("folder")) {
-          // 폴더를 다른 폴더로 이동
-          element.addItem(this.bookMark);
-          this.remove();
-          this.style = "";
-          this.parentElement.style.zIndex = 0;
-          this.style.zIndex = 0;
-          window.currentDragNodes = undefined;
-          dropped = true;
-          break;
+                  // 폴더를 다른 폴더로 이동
+        element.addItem(this.bookMark);
+        this.remove();
+        this.style = "";
+        this.parentElement.style.zIndex = 0;
+        this.style.zIndex = 0;
+        // 드래그 관련 변수 초기화
+        this.dragEndTime = null;
+        this.startX = null;
+        this.startY = null;
+        window.currentDragNodes = undefined;
+        dropped = true;
+        break;
         }
         // 북마크를 드래그하는 경우
         element.addItem(this.bookMark);
         this.remove();
+        // 드래그 관련 변수 초기화
+        this.dragEndTime = null;
+        this.startX = null;
+        this.startY = null;
         window.currentDragNodes = undefined;
         dropped = true;
         break;
@@ -189,6 +212,10 @@ class ItemNode extends HTMLElement {
           this.style = "";
           this.parentElement.style.zIndex = 0;
           this.style.zIndex = 0;
+          // 드래그 관련 변수 초기화
+          this.dragEndTime = null;
+          this.startX = null;
+          this.startY = null;
           window.currentDragNodes = undefined;
           dropped = true;
           break;
@@ -196,6 +223,10 @@ class ItemNode extends HTMLElement {
         // 다른 폴더 매니저로 이동
         element.addItem(this.bookMark);
         this.remove();
+        // 드래그 관련 변수 초기화
+        this.dragEndTime = null;
+        this.startX = null;
+        this.startY = null;
         window.currentDragNodes = undefined;
         dropped = true;
         break;
@@ -254,6 +285,10 @@ class ItemNode extends HTMLElement {
     this.style = "";
     this.parentElement.style.zIndex = 0;
     this.style.zIndex = 0;
+    // 드래그 관련 변수 초기화
+    this.dragEndTime = null;
+    this.startX = null;
+    this.startY = null;
   };
 
   isEmpty = (match, targetWrapper) => {

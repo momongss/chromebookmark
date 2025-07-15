@@ -18,10 +18,24 @@ export default class FolderApp extends Folder {
     }
 
     this.$node.addEventListener("click", (e) => {
-      // this.dragStartPos와 현재 클릭 위치의 거리가 10px 이하이면 폴더 매니저 생성
-      console.log(this.dragStartPos.x, this.dragStartPos.y);
-      if (this.dragStartPos.x - e.clientX > 10 || this.dragStartPos.y - e.clientY > 10) {
+      // 드래그가 끝난 직후라면 클릭 이벤트 무시
+      if (this.dragEndTime && Date.now() - this.dragEndTime < 150) {
+        e.preventDefault();
+        e.stopPropagation();
         return;
+      }
+      
+      // 드래그 거리가 충분한 경우 클릭 이벤트 무시
+      if (this.startX !== null && this.startY !== null) {
+        const distance = this.calculateDistance(
+          { x: this.startX, y: this.startY },
+          { x: e.clientX, y: e.clientY }
+        );
+        if (distance > 5) {
+          e.preventDefault();
+          e.stopPropagation();
+          return;
+        }
       }
 
       const $rect = this.$node.getBoundingClientRect();

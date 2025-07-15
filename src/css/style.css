@@ -90,9 +90,11 @@ button:active {
 
 .node {
   width: var(--grid-item-width);
+  /* height: var(--grid-item-height); */
   position: relative;
-
+  min-height: var(--grid-item-height);
   border-radius: 12%;
+  transition: all 0.15s ease;
 }
 
 .app .node {
@@ -123,7 +125,8 @@ button:active {
 }
 
 .app .node:active {
-  background-color: rgba(255, 255, 255, 0.08);
+  background-color: rgba(255, 255, 255, 0.4);
+  transition: background-color 0.1s ease;
 }
 
 .node .drag-area {
@@ -178,6 +181,8 @@ button:active {
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
+  height: 100%;
 }
 
 .folder img {

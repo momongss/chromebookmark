@@ -21,34 +21,39 @@ export default class Folder extends ItemNode {
   }
 
   #InitSearch(folderManager) {
-    this.addEventListener("click", (e) => {
-      // 드래그 중이거나 드래그 거리가 충분한 경우 클릭 이벤트를 무시
-      if (this.isDragging || (this.dragStartPos && this.dragEndPos && 
-          this.calculateDistance(this.dragStartPos, this.dragEndPos) > 3)) {
-        e.preventDefault();
-        e.stopPropagation();
-        return;
+    this.addEventListener("click", (e) => {      
+      // 드래그 거리가 충분한 경우 클릭 이벤트 무시
+      if (this.startX !== null && this.startY !== null) {
+        const distance = this.calculateDistance(
+          { x: this.startX, y: this.startY },
+          { x: e.clientX, y: e.clientY }
+        );
+        if (distance > 5) {
+          e.preventDefault();
+          e.stopPropagation();
+          return;
+        }
       }
       
       e.preventDefault();
       e.stopPropagation();
       folderManager.id = this.bookMark.id;
       folderManager.render({ id: this.bookMark.id });
+
+
     });
   }
 
   #InitRoot() {
     this.managerCnt = 0;
 
+    this.addEventListener("pointerdown", (e) => {
+      this.style.backgroundColor = "red";
+
+      console.log("pointerdown222 red");
+    });
+
     this.addEventListener("click", (e) => {
-      // 드래그 중이거나 드래그 거리가 충분한 경우 클릭 이벤트를 무시
-      // if (this.isDragging || (this.dragStartPos && this.dragEndPos && 
-      //     this.calculateDistance(this.dragStartPos, this.dragEndPos) > 3)) {
-      //   e.preventDefault();
-      //   e.stopPropagation();
-      //   return;
-      // }
-      
       const $rect = this.$node.getBoundingClientRect();
       const initPos = {
         top: $rect.top + this.managerCnt * 35,
@@ -74,7 +79,7 @@ export default class Folder extends ItemNode {
     this.$node.dataset.id = bookMark.id;
     this.$node.innerHTML = `
           <img id="logo-8f8894ba7a1f5c7a94a170b7dc841190" src="chrome-extension://${chrome.runtime.id}/assets/folder.svg" alt="문서"></img>
-          <div class="text" contenteditable=true>${bookMark.title}</div>
+          <div class="text">${bookMark.title}</div>
         `;
   }
 

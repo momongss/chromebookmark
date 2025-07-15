@@ -29,6 +29,7 @@ export default class OptionEdit {
       const $editTarget = this.findMyNode(e.target);
 
       const $title = $editTarget.querySelector(".text");
+      $title.contentEditable = true;
       $title.classList.add("edit");
       selectAll($title);
       $title.addEventListener("keydown", (e) => {
@@ -38,6 +39,7 @@ export default class OptionEdit {
       });
 
       $title.addEventListener("blur", (e) => {
+        $title.contentEditable = false;
         $title.classList.remove("edit");
         clearSelection();
         chrome.bookmarks.update($editTarget.dataset.id, {
