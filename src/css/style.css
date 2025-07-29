@@ -88,13 +88,8 @@ button:active {
   left: 0.063rem;
 }
 
-.node {
-  width: var(--grid-item-width);
-  /* height: var(--grid-item-height); */
-  position: relative;
-  min-height: var(--grid-item-height);
-  border-radius: 12%;
-  transition: all 0.15s ease;
+.text {
+  cursor: default;
 }
 
 .app .node {
@@ -108,25 +103,31 @@ button:active {
 
 .app > div.hover {
   background-color: rgba(255, 255, 255, 0.226);
+  outline: 1px solid rgba(255, 255, 255, 0.6);
+  outline-offset: -2px;
+  box-shadow: 0 0 1px rgba(255, 255, 255, 0.342);
+}
+
+.node {
+  width: var(--grid-item-width);
+  /* height: var(--grid-item-height); */
+  position: relative;
+  min-height: var(--grid-item-height);
+  border-radius: 12%;
+  transition: all 0.05s ease;
 }
 
 .node.selected {
-  background-color: rgba(255, 255, 255, 0.3); /* hover와 동일한 색상 */
-  outline: 1px solid rgba(255, 255, 255, 0.6); /* 흰색 아웃라인 */
-  outline-offset: -2px; /* 아웃라인이 요소 안쪽으로 약간 들어오게 설정 */
-  box-shadow: 0 0 2px rgba(255, 255, 255, 0.6); /* 외부 빛나는 효과 */
+  background-color: rgba(255, 255, 255, 0.3); /* hover와 동일한 색상 */  
 }
 
 .app .node:hover {
   background-color: rgba(255, 255, 255, 0.144); /* hover와 동일한 색상 */
-  outline: 1px solid rgba(255, 255, 255, 0.6); /* 흰색 아웃라인 */
-  outline-offset: -2px; /* 아웃라인이 요소 안쪽으로 약간 들어오게 설정 */
-  box-shadow: 0 0 1px rgba(255, 255, 255, 0.342); /* 외부 빛나는 효과 */
 }
 
 .app .node:active {
-  background-color: rgba(255, 255, 255, 0.4);
-  transition: background-color 0.1s ease;
+  background-color: rgba(255, 255, 255, 0.075);
+  transition: background-color 0.05s ease;
 }
 
 .node .drag-area {
@@ -175,6 +176,13 @@ button:active {
   margin-top: 0.625rem;
   margin-bottom: 0.438rem;
   width: 1.5rem;
+}
+
+folder-node.hover .folder {
+  background-color: rgba(201, 201, 201, 0.253);
+  outline: 1px solid rgba(255, 255, 255, 0.6);
+  outline-offset: -2px;
+  box-shadow: 0 0 1px rgba(255, 255, 255, 0.342);
 }
 
 .folder {

@@ -63,19 +63,6 @@ export default class Folder extends ItemNode {
 
   eventListeners_folderManager(folderManager) {
     this.addEventListener("click", (e) => {      
-      // 드래그 거리가 충분한 경우 클릭 이벤트 무시
-      if (this.startX !== null && this.startY !== null) {
-        const distance = this.calculateDistance(
-          { x: this.startX, y: this.startY },
-          { x: e.clientX, y: e.clientY }
-        );
-        if (distance > 5) {
-          e.preventDefault();
-          e.stopPropagation();
-          return;
-        }
-      }
-      
       e.preventDefault();
       e.stopPropagation();
       folderManager.id = this.bookMark.id;

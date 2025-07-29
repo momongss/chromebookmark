@@ -152,7 +152,7 @@ class RectDragger extends HTMLElement {
   };
 
   eventListeners = () => {
-    document.addEventListener("pointerdown", this.onMouseDown);
+    this.$parent.addEventListener("pointerdown", this.onMouseDown);
     document.addEventListener("pointermove", this.onMouseMove);
     document.addEventListener("pointerup", this.onMouseUp);
   };

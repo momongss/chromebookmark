@@ -33,6 +33,8 @@ export default class ItemNode extends HTMLElement {
     } else {
       this.eventListeners_app();
     }
+
+    this.draggable = true;
   }
 
   ReInit({ $parent, folderManager }) {
@@ -45,24 +47,21 @@ export default class ItemNode extends HTMLElement {
     if (folderManager) {
       this.eventListeners_folderManager(folderManager);
     } else {
+      const split = $parent.className.split("-");
+      const x = parseInt(split[2], 10);
+      const y = parseInt(split[3], 10);
+      Storage.setPos(this.bookMark.id, { x, y });
+      bookmarkManager.moveTree(this.bookMark.id, "1");
       this.eventListeners_app();
     }
   }
 
   #addEventListeners() {
-    this.addEventListener("pointerdown", this.onMouseDown);
     this.addEventListener("dragstart", this.onDragStart);
-    document.addEventListener("pointerup", this.onMouseUp);
   }
 
   removeEventListeners() {
-    this.removeEventListener("pointerdown", this.onMouseDown);
-    document.removeEventListener("pointerup", this.onMouseUp);
-  }
 
-  onMouseDown = (e) => {
-    e.stopPropagation();
-    this.draggable = true;
   }
 
   onDragStart = (e) => {
@@ -72,11 +71,6 @@ export default class ItemNode extends HTMLElement {
     if (this.bookMark?.id) {
       e.dataTransfer.setData("text/plain", this.bookMark.id);
     }
-  }
-
-  onMouseUp = (e) => {
-    e.stopPropagation();
-    this.draggable = false;
   }
 }
 

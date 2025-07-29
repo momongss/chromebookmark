@@ -5,6 +5,7 @@ import Bookmark from "../utils/bookmark.js";
 import { FolderManagerData } from "../utils/FolderManagerData.js";
 import App from "./App.js";
 import bookmarkManager from "../utils/bookmark.js";
+import DropHandlerApp from "../utils/dropHandlerApp.js";
 
 export default class FolderManager extends HTMLElement {
   Init({ id, initPos, onDestroy }) {
@@ -40,6 +41,8 @@ export default class FolderManager extends HTMLElement {
     this.render({
       id: id,
     });
+
+    this.dropHandlerApp = new DropHandlerApp(this);
   }
 
   addItem(node) {
@@ -47,27 +50,12 @@ export default class FolderManager extends HTMLElement {
     bookmarkManager.moveTree(node.id, this.id);
     
     this.render({ id: this.id, mode: "back" });
-    // 현재 드래그 중인 요소가 있는지 확인
-    // const draggingElement = document.querySelector('.node[style*="position: fixed"]');
-    // if (draggingElement) {
-    //   // 드래그가 완료될 때까지 render 지연
-    //   requestAnimationFrame(() => {
-    //     this.render({ id: this.id, mode: "back" });
-    //   });
-    // } else {
-    //   // 일반적인 경우 즉시 처리
-    //   this.render({ id: this.id, mode: "back" });
-    // }
   }
 
   rightClickHandler() {
     document.addEventListener("click", (e) => {
       if (this.$nodeOptions) this.$nodeOptions.remove();
       if (this.$createOptions) this.$createOptions.remove();
-    });
-
-    this.addEventListener("mousedown", (e) => {
-      e.stopPropagation();
     });
 
     this.addEventListener("click", (e) => {
@@ -114,6 +102,12 @@ export default class FolderManager extends HTMLElement {
       
       // 드래그 시작 시 클래스 추가
       this.classList.add("dragging");
+
+      e.stopPropagation();
+    });
+
+    this.addEventListener("pointerdown", (e) => {
+      e.stopPropagation();
     });
 
     let left;
@@ -148,11 +142,7 @@ export default class FolderManager extends HTMLElement {
     const subTree = await Bookmark.getSubTree(id);
     const title = subTree[0].title;
     const bookMarkTree = subTree[0].children;
-    if (mode !== "back") {
-      this.history.push({
-        id: id,
-      });
-    }
+    
     this.innerHTML = "";
     this.classList.add("show");
     this.style.top = `${this.pos.top}px`;
@@ -175,13 +165,6 @@ export default class FolderManager extends HTMLElement {
     // --- 기존 헤더/매니저 UI ---
     const $header = document.createElement("div");
     $header.className = "folder-manager-header";
-
-    const $backBtn = document.createElement("div");
-    $backBtn.className = "back-btn";
-    $backBtn.style.cursor = "pointer";
-    $backBtn.style.marginRight = "8px";
-    $backBtn.innerHTML = `<img src="assets/back-arrow.svg" alt="back"/>`;
-    $header.prepend($backBtn);
 
     const $title = document.createElement("div");
     $title.className = "folder-title";
@@ -264,19 +247,36 @@ export default class FolderManager extends HTMLElement {
       console.log("close");
     });
 
-    $backBtn.addEventListener("pointerdown", (e) => {
-      e.stopPropagation();
-    });
+    console.log(this.history);
 
-    $backBtn.addEventListener("click", (e) => {
-      e.stopPropagation();
-      console.log("back");
-      if (this.history.length > 1) {
-        this.history.pop(); // 현재 폴더 id 제거
-        const prev = this.history[this.history.length - 1];
-        this.render({ id: prev.id, mode: "back" });
-      }
-    });
+    if (mode !== "back") {
+      this.history.push({
+        id: id,
+      });
+    }
+
+    if (this.history.length > 1) {
+      const $backBtn = document.createElement("div");
+      $backBtn.className = "back-btn";
+      $backBtn.style.cursor = "pointer";
+      $backBtn.style.marginRight = "8px";
+      $backBtn.innerHTML = `<img src="assets/back-arrow.svg" alt="back"/>`;
+      $header.prepend($backBtn);
+
+      $backBtn.addEventListener("pointerdown", (e) => {
+        e.stopPropagation();
+      });
+
+      $backBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        console.log("back");
+        if (this.history.length > 1) {
+          this.history.pop(); // 현재 폴더 id 제거
+          const prev = this.history[this.history.length - 1];
+          this.render({ id: prev.id, mode: "back" });
+        }
+      });
+    }
   }
 
   addFolder($folderManager, bookMark) {
@@ -294,9 +294,10 @@ export default class FolderManager extends HTMLElement {
 
   addFile($folderManager, bookMark) {
     const fileNode = document.createElement("file-node");
-    fileNode.Init_Manage({
+    fileNode.Init({
       $parent: $folderManager,
       bookMark: bookMark,
+      folderManager: this,
     });
     fileNode.parentFolderManager = this;
 

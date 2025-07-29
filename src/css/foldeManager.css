@@ -13,11 +13,7 @@
 }
 
 .folder-manager .node:hover {
-  background-color: rgba(141, 110, 99, 0.25);
-  box-shadow: 0 2px 8px rgba(141, 110, 99, 0.4);
-  border: 2px solid rgba(141, 110, 99, 0.6);
-  outline: 2px solid rgba(141, 110, 99, 0.7);
-  outline-offset: -2px;
+  background-color: rgb(255, 255, 255);
 }
 
 .folder-manager .node:active {
@@ -121,9 +117,9 @@
   color: #5d4037;
   margin: 0;
   background: linear-gradient(135deg, #a1887f 0%, #8d6e63 100%);
-  border-top-left-radius: 20px;
-  border-top-right-radius: 20px;
-  padding: 4px 8px;
+  border-top-left-radius: 15px;
+  border-top-right-radius: 15px;
+  padding: 4px 4px;
   box-shadow: 
     0 2px 6px rgba(93, 64, 55, 0.15),
     inset 0 1px 0 rgba(255, 255, 255, 0.15);
