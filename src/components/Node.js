@@ -9,7 +9,6 @@ export default class ItemNode extends HTMLElement {
   parentFolderManager = null;
   originalParentId = null;
 
-  multSelectHead = null;
   wrapper;
 
   constructor() {
@@ -38,11 +37,31 @@ export default class ItemNode extends HTMLElement {
   }
 
   ReInit({ $parent, folderManager }) {
+    // TempDragger에서 설정된 모든 스타일 정리
+    this.style.position = '';
+    this.style.left = '';
+    this.style.top = '';
+    this.style.zIndex = '';
+    this.style.opacity = '';
+    this.style.transform = '';
+    this.style.filter = '';
+    this.style.boxShadow = '';
+    this.style.transition = '';
+    
+    // 멀티 선택 관련 클래스 정리
+    this.classList.remove('multi');
+    if (this.firstElementChild) {
+      this.firstElementChild.classList.remove('selected');
+    }
+
     $parent.appendChild(this);
 
     this.render();
     this.removeEventListeners();
     this.eventListeners();
+    
+    // 드래그 가능 상태로 복원
+    this.draggable = true;
 
     if (folderManager) {
       this.eventListeners_folderManager(folderManager);

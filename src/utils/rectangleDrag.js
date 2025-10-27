@@ -24,11 +24,18 @@ class RectDragger extends HTMLElement {
   onMouseDown = (e) => {
     const elements = document.elementsFromPoint(e.clientX, e.clientY);
 
-    const isNode = elements.some(el => el.classList.contains("node"));
+    const isNode = elements.some(el => 
+      el.tagName === 'FILE-NODE' || 
+      el.tagName === 'FOLDER-NODE' || 
+      el.tagName === 'ITEM-NODE' ||
+      el.classList.contains("node")
+    );
     if (isNode) {
+      console.log('노드 위에서 클릭 - 드래그 박스 시작 안함');
       return;
     }
 
+    console.log('드래그 박스 시작');
     window.isRectSelecting = true;
     this.isDragging = true;
 
@@ -85,9 +92,7 @@ class RectDragger extends HTMLElement {
     dragBox.style.left = `${Math.min(currentX, this.startX)}px`;
     dragBox.style.top = `${Math.min(currentY, this.startY)}px`;
 
-    const allNode = Array.from(this.$parent.querySelectorAll("*")).filter(
-      (el) => el.tagName.toLowerCase().includes("node")
-    );
+    const allNode = Array.from(this.$parent.querySelectorAll("file-node, folder-node, item-node"));
 
     const boxRect = dragBox.getBoundingClientRect();
 
@@ -104,8 +109,9 @@ class RectDragger extends HTMLElement {
           this.matchingElements.push(element);
           element.firstElementChild.classList.add("selected");
           element.classList.add("multi");
-
           element.dragger = this;
+          
+          console.log(`요소 선택됨: ${element.bookMark?.title || element.tagName}`);
         }
       } else {
         if (this.matchingElements.includes(element)) {
@@ -116,6 +122,8 @@ class RectDragger extends HTMLElement {
         }
       }
     });
+
+    console.log(`현재 선택된 요소 수: ${this.matchingElements.length}`);
   };
 
   onMouseUp = (e) => {
@@ -136,10 +144,13 @@ class RectDragger extends HTMLElement {
 
     // 선택된 요소들이 있으면 TempDragger에 추가
     if (this.matchingElements.length > 0) {
+      console.log(`${this.matchingElements.length}개 요소가 선택됨 - TempDragger에 추가`);
       // 원래 부모 정보 저장
       this.tempDragger.saveOriginalParents(this.matchingElements);
       // 요소들을 TempDragger에 추가
       this.tempDragger.addElements(this.matchingElements);
+    } else {
+      console.log('선택된 요소가 없음');
     }
   };
 
@@ -152,9 +163,16 @@ class RectDragger extends HTMLElement {
   };
 
   eventListeners = () => {
-    this.$parent.addEventListener("pointerdown", this.onMouseDown);
-    document.addEventListener("pointermove", this.onMouseMove);
-    document.addEventListener("pointerup", this.onMouseUp);
+    this.$parent.addEventListener("mousedown", this.onMouseDown);
+    document.addEventListener("mousemove", this.onMouseMove);
+    document.addEventListener("mouseup", this.onMouseUp);
+    
+    // 터치 이벤트도 추가 (모바일 지원)
+    this.$parent.addEventListener("touchstart", this.onMouseDown);
+    document.addEventListener("touchmove", this.onMouseMove);
+    document.addEventListener("touchend", this.onMouseUp);
+    
+    console.log('RectDragger 이벤트 리스너 등록됨');
   };
 }
 

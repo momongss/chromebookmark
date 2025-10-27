@@ -92,7 +92,8 @@ export default class FolderManager extends HTMLElement {
     let folderX, folderY;
 
     $header.addEventListener("pointerdown", (e) => {
-      if (e.target.className === "folder-close") return;
+      // 닫기 버튼(내부 img 포함)을 클릭한 경우 드래그 시작 방지
+      if (e.target.closest('.folder-close')) return;
       dragged = true;
       initX = e.clientX;
       initY = e.clientY;
@@ -171,9 +172,12 @@ export default class FolderManager extends HTMLElement {
     $title.textContent = title;
     $header.appendChild($title);
 
-    const $closeBtn = document.createElement("div");
-    $closeBtn.className = "folder-close";
-    $closeBtn.innerHTML = `<img src="assets/close.svg" alt="close"/>`;
+  const $closeBtn = document.createElement("div");
+  $closeBtn.className = "folder-close";
+  $closeBtn.innerHTML = `<img src="assets/close.svg" alt="close"/>`;
+  // 접근성 및 클릭 영역 개선
+  $closeBtn.setAttribute('role', 'button');
+  $closeBtn.setAttribute('tabindex', '0');
     $header.appendChild($closeBtn);
 
     this.appendChild($header);
@@ -240,11 +244,25 @@ export default class FolderManager extends HTMLElement {
     const rect = $folderManager.getBoundingClientRect();
     this.dragger.Init($folderManager, rect);
 
-    $closeBtn.addEventListener("click", (e) => {
+    // 닫기 버튼 클릭(이미지 클릭 포함) 시 닫기, 드래그 방지
+    const handleClose = (e) => {
+      e.stopPropagation();
       this.remove();
       this.history = [];
       this.onDestroy();
       console.log("close");
+    };
+    $closeBtn.addEventListener("click", handleClose);
+    const $closeImg = $closeBtn.querySelector('img');
+    if ($closeImg) {
+      $closeImg.addEventListener('click', handleClose);
+      $closeImg.addEventListener('pointerdown', (e) => e.stopPropagation());
+    }
+    $closeBtn.addEventListener('pointerdown', (e) => e.stopPropagation());
+    $closeBtn.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        handleClose(e);
+      }
     });
 
     console.log(this.history);

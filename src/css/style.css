@@ -117,6 +117,15 @@ button:active {
   transition: all 0.05s ease;
 }
 
+/* 노드가 정상적으로 배치되도록 보장 */
+.app > div > .node,
+.app > [class*="node-wrapper"] > .node {
+  position: static !important;
+  left: auto !important;
+  top: auto !important;
+  transform: none !important;
+}
+
 .node.selected {
   background-color: rgba(255, 255, 255, 0.3); /* hover와 동일한 색상 */  
 }
@@ -211,6 +220,184 @@ rect-dragger {
   border-radius: 6px; /* 둥근 테두리 */
   pointer-events: none; /* 선택 불가능하게 설정 */
   transition: box-shadow 0.2s ease, opacity 0.3s ease; /* 부드러운 애니메이션 */
+}
+
+/* 드래그 오버 시 기본 호버 효과 (일반 요소에는 테두리 제거) */
+.hover {
+  background-color: rgba(0, 123, 255, 0.08) !important;
+  border: none !important; /* 파란 점선 제거 */
+  border-radius: 8px;
+  transition: all 0.12s ease;
+}
+
+.node-wrapper.hover {
+  background-color: rgba(0, 123, 255, 0.15) !important;
+  border: 2px dashed rgba(0, 123, 255, 0.4) !important;
+  border-radius: 12px;
+}
+
+.node-wrapper.hover-occupied {
+  background-color: rgba(220, 53, 69, 0.2) !important;
+  border: 2px dashed rgba(220, 53, 69, 0.6) !important;
+  border-radius: 12px;
+  position: relative;
+}
+
+.node-wrapper.hover-occupied::after {
+  content: "❌";
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background: rgba(220, 53, 69, 0.9);
+  color: white;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  z-index: 1000;
+}
+
+folder-node.hover,
+file-node.hover {
+  /* 폴더/파일은 외곽선 대신 살짝 확대 + 그림자만 */
+  border: none !important;       /* 파란 점선 제거 보강 */
+  background: transparent !important;
+  transform: scale(1.05);
+  box-shadow: 0 6px 14px rgba(0, 123, 255, 0.25);
+}
+
+folder-manager.hover {
+  border: 3px solid rgba(0, 123, 255, 0.6) !important;
+  box-shadow: 0 0 15px rgba(0, 123, 255, 0.4) !important;
+}
+
+/* TempDragger 스타일 */
+temp-dragger {
+  position: fixed;
+  pointer-events: none;
+  z-index: 9999;
+  transition: all 0.3s ease;
+}
+
+temp-dragger.active {
+  pointer-events: auto;
+  border: 2px dashed rgba(255, 140, 0, 0.6);
+  background: rgba(255, 140, 0, 0.05);
+  border-radius: 8px;
+}
+
+/* TempDragger 자체는 드래그할 수 없고, 자식 노드만 드래그 가능 */
+temp-dragger.active > * {
+  pointer-events: auto;
+  cursor: grab;
+}
+
+temp-dragger.active > *:hover {
+  cursor: grab;
+}
+
+temp-dragger.dragging {
+  border-color: rgba(0, 123, 255, 0.8);
+  background: rgba(0, 123, 255, 0.08);
+  box-shadow: 0 4px 20px rgba(0, 123, 255, 0.3);
+}
+
+temp-dragger.dragging > * {
+  cursor: grabbing;
+}
+
+/* 드래그 미리보기 */
+.drag-preview {
+  animation: slideInRight 0.3s ease-out;
+  transition: all 0.3s ease;
+}
+
+.drag-preview:hover {
+  transform: translateY(-2px);
+}
+
+/* 드래그 오버레이 */
+.drag-overlay {
+  animation: fadeIn 0.3s ease-out;
+}
+
+.drag-overlay.active {
+  background: rgba(0, 123, 255, 0.1) !important;
+  backdrop-filter: blur(2px) !important;
+}
+
+/* 선택된 요소들의 드래그 중 스타일 */
+temp-dragger.dragging .multi {
+  animation: dragPulse 1s ease-in-out infinite;
+  filter: brightness(1.1);
+}
+
+/* 애니메이션 */
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(50px) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes dragPulse {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(0, 123, 255, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 0 4px rgba(0, 123, 255, 0.1);
+  }
+}
+
+/* 성공/실패 상태별 미리보기 스타일 */
+.drag-preview.success {
+  background: linear-gradient(135deg, rgba(40, 167, 69, 0.9), rgba(25, 135, 84, 0.9)) !important;
+  animation: successBounce 0.5s ease-out;
+}
+
+.drag-preview.error {
+  background: linear-gradient(135deg, rgba(220, 53, 69, 0.9), rgba(176, 42, 55, 0.9)) !important;
+  animation: errorShake 0.5s ease-out;
+}
+
+@keyframes successBounce {
+  0%, 20%, 50%, 80%, 100% {
+    transform: translateY(0) scale(1);
+  }
+  40% {
+    transform: translateY(-5px) scale(1.05);
+  }
+  60% {
+    transform: translateY(-2px) scale(1.02);
+  }
+}
+
+@keyframes errorShake {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  10%, 30%, 50%, 70%, 90% {
+    transform: translateX(-3px);
+  }
+  20%, 40%, 60%, 80% {
+    transform: translateX(3px);
+  }
 }
 
 /* 포스트잇 스타일 */

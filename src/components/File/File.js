@@ -17,12 +17,13 @@ export default class FileNode extends ItemNode {
       faviconURL = "../../assets/youtube.svg";
     }
 
-    this.$node.draggable = false;
+    // 내부 $node도 드래그 가능하게 설정 (전체 FileNode와 일치)
+    this.$node.draggable = true;
 
     this.$node.innerHTML = `
-      <div class="file-wrapper">
+      <div class="file-wrapper" draggable="false">
         <img src="${faviconURL}" draggable="false"/>
-        <div class="text">${this.bookMark.title}</div>
+        <div class="text" draggable="false">${this.bookMark.title}</div>
       </div>
     `;
   }
