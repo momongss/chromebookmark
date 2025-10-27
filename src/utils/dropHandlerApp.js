@@ -23,7 +23,6 @@ export default class DropHandlerApp {
         if (draggedElement) {
             // 단일 드래그인 경우 (TempDragger가 활성화되지 않은 경우) 이전 멀티 선택 상태 완전 초기화
             if (!window.isTempDragActive) {
-                console.log('단일 드래그 시작 - 이전 멀티 선택 상태 완전 초기화');
                 
                 // 모든 노드의 선택 상태 제거
                 const allNodes = document.querySelectorAll('file-node, folder-node, item-node');
@@ -69,8 +68,6 @@ export default class DropHandlerApp {
                 // 전역 변수 초기화
                 window.currentDragNodes = null;
                 window.dragStartNode = null;
-                
-                console.log('단일 드래그를 위한 상태 초기화 완료');
             }
             
             // dataTransfer에 드래그된 요소의 정보 저장
@@ -90,7 +87,7 @@ export default class DropHandlerApp {
     onDragOver = (e) => {
         e.preventDefault(); // 드롭을 허용하기 위해 필요
 
-        console.log('드래그 오버 이벤트 발생');
+        
 
         const isMultiDrag = window.isTempDragActive;
         
@@ -153,7 +150,6 @@ export default class DropHandlerApp {
             
             if (hasExistingNodes) {
                 hoverNodeWrapper.classList.add("hover-occupied");
-                console.log(`드롭 위치에 기존 노드가 있음: ${hoverNodeWrapper.className}`);
             } else {
                 hoverNodeWrapper.classList.add("hover");
             }
@@ -176,7 +172,7 @@ export default class DropHandlerApp {
     onDrop = (e) => {
         e.preventDefault();
 
-        console.log('드롭 이벤트 발생');
+        
         
         // FolderManager 내에서 drop이 발생한 경우 이벤트 전파 막기
         if (this.$parent.tagName === "FOLDER-MANAGER") {
@@ -197,7 +193,6 @@ export default class DropHandlerApp {
         if (isMultiDrag) {
             // TempDragger 아래의 실제 요소를 찾기 위해 elementsFromPoint 사용
             const elementsAtPoint = document.elementsFromPoint(e.clientX, e.clientY);
-            console.log("마우스 위치의 모든 요소들:", elementsAtPoint.map(el => `${el.tagName}.${el.className}`));
             
             // 드래그 관련 요소들과 선택된 요소들을 제외하고 실제 드롭 대상 찾기
             const validTarget = elementsAtPoint.find(el => 
@@ -210,9 +205,7 @@ export default class DropHandlerApp {
             
             if (validTarget) {
                 targetElement = validTarget;
-                console.log("유효한 드롭 타겟 발견:", targetElement.tagName, targetElement.className);
             } else {
-                console.log("유효한 드롭 타겟을 찾지 못함, 원본 타겟 사용:", e.target);
             }
         }
         
@@ -237,26 +230,18 @@ export default class DropHandlerApp {
         let dropSuccessful = false;
         if (draggedElements.length > 0 && draggedElements[0]) {
             if (folderNode && !draggedElements.includes(folderNode)) {
-                console.log(`폴더 노드에 드롭 시도: ${folderNode.tagName}`);
                 this.handleDropToFolder(folderNode, draggedElements, isMultiDrag);
                 dropSuccessful = true;
             } else if (nodeWrapper) {
-                console.log(`노드 래퍼에 드롭 시도: ${nodeWrapper.className}`);
                 this.handleDropToNodeWrapper(nodeWrapper, draggedElements, isMultiDrag);
                 dropSuccessful = true;
             } else if (folderManager) {
-                console.log(`폴더 매니저에 드롭 시도: ${folderManager.tagName}`);
                 this.handleDropToFolderManager(folderManager, draggedElements, isMultiDrag);
                 dropSuccessful = true;
             } else {
-                console.log(`유효하지 않은 드롭 위치 - 드롭 취소`);
-                console.log("드롭 가능한 타겟을 찾지 못했습니다:");
-                console.log("- nodeWrapper:", nodeWrapper);
-                console.log("- folderNode:", folderNode);
-                console.log("- folderManager:", folderManager);
+                
             }
         } else {
-            console.log("드래그된 요소가 없거나 유효하지 않음");
         }
 
         // 정리
@@ -264,10 +249,8 @@ export default class DropHandlerApp {
             const tempDragger = document.querySelector('temp-dragger');
             if (tempDragger) {
                 if (dropSuccessful) {
-                    console.log("드롭 성공 - TempDragger에 성공 알림");
                     tempDragger.markDropSuccessful();
                 } else {
-                    console.log("드롭 실패 - TempDragger에서 자동으로 복원됨");
                 }
             }
         }
@@ -276,8 +259,7 @@ export default class DropHandlerApp {
 
     // 노드 래퍼(바탕화면 그리드)에 드롭 처리
     handleDropToNodeWrapper(nodeWrapper, draggedElements, isMultiDrag) {
-        console.log(`노드 래퍼에 드롭 처리 시작: ${nodeWrapper.className}`);
-        console.log("처리할 요소 수:", draggedElements.length);
+        
         
         try {
             if (isMultiDrag) {
@@ -292,13 +274,11 @@ export default class DropHandlerApp {
                 const anchorPlan = plans.find(p => p.element === dragStartNode) || plans[0];
                 const anchorWrapper = this.$parent.querySelector(`.node-wrapper-${anchorPlan.targetX}-${anchorPlan.targetY}`);
                 if (!anchorWrapper) {
-                    console.log(`드래그 시작 노드 배치 실패(타겟 래퍼 없음) → 전체 취소`);
                     draggedElements.forEach(el => el.originalParent && el.ReInit({ $parent: el.originalParent }));
                     return;
                 }
                 const anchorOk = this.placeElementWithCollisionHandling(anchorPlan.element, anchorWrapper, anchorPlan.targetX, anchorPlan.targetY);
                 if (!anchorOk) {
-                    console.log(`드래그 시작 노드 배치 실패 → 전체 취소`);
                     draggedElements.forEach(el => el.originalParent && el.ReInit({ $parent: el.originalParent }));
                     return;
                 }
@@ -331,18 +311,15 @@ export default class DropHandlerApp {
                 }
             } else {
                 // 단일 드래그
-                console.log("단일 드래그 처리");
                 const element = draggedElements[0];
                 const { x: targetX, y: targetY } = this.parseWrapperCoords(nodeWrapper);
                 
                 const success = this.placeElementWithCollisionHandling(element, nodeWrapper, targetX, targetY);
                 if (!success) {
-                    console.log("단일 드래그 취소됨 (충돌로 인한)");
                 } else {
-                    console.log("단일 드래그 성공");
                 }
             }
-            console.log("노드 래퍼 드롭 처리 완료");
+            
         } catch (error) {
             console.error("노드 래퍼 드롭 처리 중 오류:", error);
         }
@@ -350,12 +327,10 @@ export default class DropHandlerApp {
 
     // 폴더 노드에 드롭 처리
     handleDropToFolder(folderNode, draggedElements, isMultiDrag) {
-        console.log(`폴더 노드에 드롭됨: ${folderNode.tagName}`);
-        console.log(`폴더 ID: ${folderNode.bookMark?.id}, 폴더명: ${folderNode.bookMark?.title}`);
+        
         
         draggedElements.forEach(element => {
             if (element !== folderNode && element.bookMark) {
-                console.log(`"${element.bookMark.title}"를 "${folderNode.bookMark.title}" 폴더로 이동`);
                 
                 // 북마크를 폴더 안으로 이동
                 folderNode.addItem(element.bookMark);
@@ -363,14 +338,13 @@ export default class DropHandlerApp {
                 // DOM에서 요소 제거
                 element.remove();
                 
-                console.log(`이동 완료: ${element.bookMark.title} → ${folderNode.bookMark.title}`);
             }
         });
     }
 
     // 폴더 매니저에 드롭 처리
     handleDropToFolderManager(folderManager, draggedElements, isMultiDrag) {
-        console.log(`폴더 매니저에 드롭됨: ${folderManager.tagName}`);
+        
         
         draggedElements.forEach(element => {
             if (element && element.bookMark) {
@@ -382,7 +356,7 @@ export default class DropHandlerApp {
 
     // 충돌 처리와 함께 요소 배치
     placeElementWithCollisionHandling(element, targetWrapper, targetX, targetY) {
-        console.log(`충돌 처리 시작: 타겟 위치 (${targetX}, ${targetY})`);
+        
         
         // 타겟 위치에 이미 다른 노드가 있는지 확인 (자기 자신 제외)
         const isMulti = window.isTempDragActive && Array.isArray(window.currentDragNodes);
@@ -393,12 +367,9 @@ export default class DropHandlerApp {
         );
         
         if (existingNodes.length > 0) {
-            console.log(`타겟 위치에 기존 노드 발견:`, existingNodes.map(n => n.bookMark?.title || n.tagName));
-            console.log(`이동 취소: "${element.bookMark?.title || element.tagName}"를 ${targetWrapper.className}에 배치할 수 없음`);
             
             // 이동을 취소하고 원래 위치로 복원
             if (element.originalParent) {
-                console.log(`"${element.bookMark?.title || element.tagName}"를 원래 위치로 복원`);
                 element.ReInit({ $parent: element.originalParent });
             } else {
                 console.warn(`원래 위치를 찾을 수 없음, 빈 공간으로 이동 시도`);
@@ -426,7 +397,7 @@ export default class DropHandlerApp {
         }
         
         // 새 요소를 타겟 위치에 배치 (충돌 없음)
-        console.log(`새 요소 "${element.bookMark?.title || element.tagName}"를 ${targetWrapper.className}에 배치`);
+        
         element.ReInit({ $parent: targetWrapper });
         return true; // 이동 성공을 나타냄
     }
@@ -518,7 +489,7 @@ export default class DropHandlerApp {
             return { element: el, targetX: x, targetY: y };
         });
 
-        console.log('계산된 멀티 드롭 계획:', plans);
+        
         // 경계 밖은 클램프하지 않고 이후 배치 시 실패 처리(원위치 복귀)
         return plans;
     }
