@@ -63,4 +63,57 @@ function getNodeAtPoint(clientX, clientY, options = {}) {
   return null;
 }
 
-export { getRangedRandom, getNodeAtPoint };
+function isWrapperOccupied(wrapper) {
+  if (!wrapper) return false;
+  return !!wrapper.querySelector('file-node, folder-node, item-node');
+}
+
+function parseWrapperCoords(wrapper) {
+  const m = (wrapper?.className || '').match(/node-wrapper-(\d+)-(\d+)/);
+  if (!m) return null;
+  return { x: parseInt(m[1], 10), y: parseInt(m[2], 10) };
+}
+
+function findNearbyEmptyWrapperAround($app, centerX, centerY, opts = {}) {
+  if (!$app) return null;
+  // Infer bounds from existing wrappers unless provided
+  let { maxCols, maxRows } = opts;
+  if (typeof maxCols !== 'number' || typeof maxRows !== 'number') {
+    let maxX = -1, maxY = -1;
+    const wrappers = $app.querySelectorAll('[class*="node-wrapper-"]');
+    wrappers.forEach(w => {
+      const p = parseWrapperCoords(w);
+      if (p) { maxX = Math.max(maxX, p.x); maxY = Math.max(maxY, p.y); }
+    });
+    maxCols = maxX + 1;
+    maxRows = maxY + 1;
+  }
+  maxCols = Math.max(0, maxCols|0);
+  maxRows = Math.max(0, maxRows|0);
+
+  const inBounds = (x, y) => x >= 0 && x < maxCols && y >= 0 && y < maxRows;
+  const directions = [
+    [1, 0], [0, 1], [-1, 0], [0, -1],
+    [1, 1], [-1, 1], [1, -1], [-1, -1]
+  ];
+  const maxDist = Math.max(maxCols, maxRows);
+  for (let distance = 1; distance <= maxDist; distance++) {
+    for (const [dx, dy] of directions) {
+      const nx = centerX + dx * distance;
+      const ny = centerY + dy * distance;
+      if (!inBounds(nx, ny)) continue;
+      const w = $app.querySelector(`.node-wrapper-${nx}-${ny}`);
+      if (w && !isWrapperOccupied(w)) return w;
+    }
+  }
+  // Fallback: any empty in bounds
+  for (let y = 0; y < maxRows; y++) {
+    for (let x = 0; x < maxCols; x++) {
+      const w = $app.querySelector(`.node-wrapper-${x}-${y}`);
+      if (w && !isWrapperOccupied(w)) return w;
+    }
+  }
+  return null;
+}
+
+export { getRangedRandom, getNodeAtPoint, isWrapperOccupied, parseWrapperCoords, findNearbyEmptyWrapperAround };

@@ -2,6 +2,16 @@ const storage = chrome.storage.local;
 const mainKey = "e352cadab3cc08";
 
 export default class Storage {
+  // User settings (grid/tile) helpers
+  static async getUserSettings() {
+    const settings = await this.getItem("user-settings");
+    return settings || null;
+  }
+
+  static async setUserSettings(settings) {
+    return await this.setItem("user-settings", settings);
+  }
+
   static async removeInfo(id) {
     this.setPos(id, null);
   }

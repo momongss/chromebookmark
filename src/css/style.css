@@ -46,6 +46,7 @@ button:active {
   display: grid;
   grid-template-columns: repeat(20, var(--grid-item-width));
   grid-template-rows: repeat(9, var(--grid-item-height));
+  gap: var(--grid-gap, 0px);
 }
 
 .options {

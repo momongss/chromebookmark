@@ -69,7 +69,10 @@ export default class ItemNode extends HTMLElement {
       const split = $parent.className.split("-");
       const x = parseInt(split[2], 10);
       const y = parseInt(split[3], 10);
+      // Persist user's intentional movement
       Storage.setPos(this.bookMark.id, { x, y });
+      // Update in-memory saved position for resize stability
+      this.savedPos = { x, y };
       bookmarkManager.moveTree(this.bookMark.id, "1");
       this.eventListeners_app();
     }

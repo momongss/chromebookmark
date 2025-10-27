@@ -1,5 +1,6 @@
 import Storage from "./storage.js";
 import Bookmark from "./bookmark.js";
+import { findNearbyEmptyWrapperAround } from "./utils.js";
 
 export default class DropHandlerApp {
     $parent;
@@ -297,7 +298,7 @@ export default class DropHandlerApp {
                         }
                     }
                     if (!targetWrapper) {
-                        targetWrapper = this.findNearbyEmptyWrapperAround(plan.targetX, plan.targetY);
+                        targetWrapper = findNearbyEmptyWrapperAround(this.$parent, plan.targetX, plan.targetY);
                     }
                     if (targetWrapper) {
                         const { x: wrapperX, y: wrapperY } = this.parseWrapperCoords(targetWrapper);
@@ -421,19 +422,7 @@ export default class DropHandlerApp {
             [1, 0], [0, 1], [-1, 0], [0, -1],
             [1, 1], [-1, 1], [1, -1], [-1, -1]
         ];
-        for (let distance = 1; distance <= 5; distance++) {
-            for (const [dx, dy] of directions) {
-                const newX = centerX + dx * distance;
-                const newY = centerY + dy * distance;
-                if (newX >= 0 && newX < 20 && newY >= 0 && newY < 9) {
-                    const wrapper = this.$parent.querySelector(`.node-wrapper-${newX}-${newY}`);
-                    if (wrapper && wrapper.childElementCount === 0) {
-                        return wrapper;
-                    }
-                }
-            }
-        }
-        return null;
+        return null; // moved to utils.js
     }
 
     // 요소의 현재 그리드 위치를 반환

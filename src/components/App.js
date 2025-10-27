@@ -9,6 +9,7 @@ import OptionCreate from "./Options/OptionCreate.js";
 import Storage from "../utils/storage.js";
 
 import { constDatas } from "../utils/const.js";
+import { findNearbyEmptyWrapperAround, isWrapperOccupied, parseWrapperCoords } from "../utils/utils.js";
 import DropHandlerApp from "../utils/dropHandlerApp.js";
 
 import FileNode from "./File/File.js";
@@ -40,6 +41,16 @@ export default class App {
     // 포스트잇 매니저를 전역으로 설정
     window.postItManager = this.$postItManager;
 
+    // Load user grid/tile settings or defaults
+    this.settings = (await Storage.getUserSettings()) || {
+      tileW: 75,  // px
+      tileH: 80,  // px
+      gap: 12     // px
+    };
+
+    // Apply CSS variables and compute grid size
+  this.applyGridStyle($app, this.settings);
+
     const state = await Storage.getState();
 
     state
@@ -54,7 +65,80 @@ export default class App {
     this.initGlobalClickHandler($app);
 
     this.dropHandlerApp = new DropHandlerApp($app);
+
+    // React to resize to keep grid responsive
+    this.onResize = this.onResize.bind(this);
+    window.addEventListener('resize', this.onResize);
   }
+
+  applyGridStyle($app, settings) {
+    // Set CSS variables for tile size and grid gap
+    $app.style.setProperty('--grid-item-width', `${settings.tileW}px`);
+    $app.style.setProperty('--grid-item-height', `${settings.tileH}px`);
+    $app.style.setProperty('--grid-gap', `${settings.gap}px`);
+
+    // Compute columns/rows from available space
+    const { cols, rows } = this.computeGridDims($app, settings);
+    this.gridCols = cols;
+    this.gridRows = rows;
+
+    // Override grid template to dynamic values
+    $app.style.gridTemplateColumns = `repeat(${cols}, var(--grid-item-width))`;
+    $app.style.gridTemplateRows = `repeat(${rows}, var(--grid-item-height))`;
+
+    // Ensure wrappers up to current grid exist
+    this.ensureGridWrappers(cols, rows);
+  }
+
+  computeGridDims($app, settings) {
+    // Use viewport size to avoid 0-size before grid is populated
+    const aw = Math.max(0, window.innerWidth || 0);
+    const ah = Math.max(0, window.innerHeight || 0);
+    const stepX = settings.tileW + settings.gap;
+    const stepY = settings.tileH + settings.gap;
+    const cols = Math.max(3, Math.floor((aw + settings.gap) / stepX));
+    const rows = Math.max(3, Math.floor((ah + settings.gap) / stepY));
+    return { cols, rows };
+  }
+
+  onResize() {
+    // Recompute and, if changed, expand wrappers; do not remove or reflow
+    const prevCols = this.gridCols;
+    const prevRows = this.gridRows;
+    const { cols, rows } = this.computeGridDims(this.$app, this.settings);
+    if (cols === prevCols && rows === prevRows) return;
+    this.gridCols = cols;
+    this.gridRows = rows;
+    this.$app.style.gridTemplateColumns = `repeat(${cols}, var(--grid-item-width))`;
+    this.$app.style.gridTemplateRows = `repeat(${rows}, var(--grid-item-height))`;
+    this.ensureGridWrappers(cols, rows);
+  }
+
+  ensureGridWrappers(cols, rows) {
+    const $app = this.$app;
+    for (let y = 0; y < rows; y++) {
+      for (let x = 0; x < cols; x++) {
+        if (!$app.querySelector(`.node-wrapper-${x}-${y}`)) {
+          const $div = document.createElement('div');
+          $div.className = `node-wrapper-${x}-${y}`;
+          $app.appendChild($div);
+        }
+      }
+    }
+  }
+
+  ensureWrapperExists(x, y) {
+    const sel = `.node-wrapper-${x}-${y}`;
+    let w = this.$app.querySelector(sel);
+    if (!w) {
+      w = document.createElement('div');
+      w.className = `node-wrapper-${x}-${y}`;
+      this.$app.appendChild(w);
+    }
+    return w;
+  }
+
+  // Wrapper utilities moved to utils.js
 
   eventListeners() {
     document.addEventListener("click", async (e) => {
@@ -136,8 +220,8 @@ export default class App {
   }
 
   async renderRunned(bookMarkTree, $app) {
-    const lenX = 20;
-    const lenY = 9;
+    const lenX = this.gridCols || 20;
+    const lenY = this.gridRows || 9;
 
     const posUndefineds = [];
 
@@ -156,18 +240,35 @@ export default class App {
         continue;
       }
       else {
+        let targetWrapper = this.ensureWrapperExists(pos.x, pos.y);
+        // Avoid double-placement: if occupied, use nearest empty wrapper
+        if (isWrapperOccupied(targetWrapper)) {
+          const alt = findNearbyEmptyWrapperAround(this.$app, pos.x, pos.y, { maxCols: this.gridCols, maxRows: this.gridRows });
+          if (alt) {
+            targetWrapper = alt;
+            const altPos = parseWrapperCoords(alt);
+            if (altPos) {
+              // Persist resolved placement
+              Storage.setPos(bookMark.id, { x: altPos.x, y: altPos.y });
+            }
+          }
+        }
         if (bookMark.children == null) {
           const fileNode = new FileNode();
           fileNode.Init({
-            $parent: $app.querySelector(`.node-wrapper-${pos.x}-${pos.y}`),
+            $parent: targetWrapper,
             bookMark: bookMark,
           });
+          const finalPos = parseWrapperCoords(targetWrapper) || pos;
+          fileNode.savedPos = { x: finalPos.x, y: finalPos.y };
         } else {
           const folderNode = new FolderNode();
           folderNode.Init({
-            $parent: $app.querySelector(`.node-wrapper-${pos.x}-${pos.y}`),
+            $parent: targetWrapper,
             bookMark: bookMark,
           });
+          const finalPos = parseWrapperCoords(targetWrapper) || pos;
+          folderNode.savedPos = { x: finalPos.x, y: finalPos.y };
         }
       }
     }
@@ -205,16 +306,14 @@ export default class App {
   }
 
   renderMainInit(bookMarkTree, $app) {
-    const lenX = 20;
-    const lenY = 9;
+  const lenX = this.gridCols || 20;
+  const lenY = this.gridRows || 9;
 
     let zIndex = 1000;
     for (let y = 0; y < lenY; y++) {
       for (let x = 0; x < lenX; x++) {
-        const $div = document.createElement("div");
-        $div.className = `node-wrapper-${x}-${y}`;
-        $div.style.zIndex = zIndex;
-        $app.appendChild($div);
+        const w = this.ensureWrapperExists(x, y);
+        w.style.zIndex = zIndex;
         zIndex -= 1;
       }
     }
@@ -244,13 +343,22 @@ export default class App {
           filePos.x = parseInt(tmp[2]);
           filePos.y = parseInt(tmp[3]);
         }
+        // Ensure no duplicate in initial layout
+        let target = this.$app.querySelector(`.node-wrapper-${filePos.x}-${filePos.y}`);
+        if (isWrapperOccupied(target)) {
+          const alt = findNearbyEmptyWrapperAround(this.$app, filePos.x, filePos.y, { maxCols: this.gridCols, maxRows: this.gridRows });
+          if (alt) {
+            const altPos = parseWrapperCoords(alt);
+            if (altPos) {
+              filePos.x = altPos.x; filePos.y = altPos.y;
+            }
+          }
+        }
         Storage.setPos(bookMark.id, filePos);
 
         const fileNode = new FileNode();
         fileNode.Init({
-          $parent: $app.querySelector(
-            `.node-wrapper-${filePos.x}-${filePos.y}`
-          ),
+          $parent: this.ensureWrapperExists(filePos.x, filePos.y),
           bookMark: bookMark,
         });
 
@@ -269,13 +377,22 @@ export default class App {
           folderPos.x = parseInt(tmp[2]);
           folderPos.y = parseInt(tmp[3]);
         }
+        // Ensure no duplicate in initial layout
+        let targetF = this.$app.querySelector(`.node-wrapper-${folderPos.x}-${folderPos.y}`);
+        if (isWrapperOccupied(targetF)) {
+          const altF = findNearbyEmptyWrapperAround(this.$app, folderPos.x, folderPos.y, { maxCols: this.gridCols, maxRows: this.gridRows });
+          if (altF) {
+            const altPosF = parseWrapperCoords(altF);
+            if (altPosF) {
+              folderPos.x = altPosF.x; folderPos.y = altPosF.y;
+            }
+          }
+        }
         Storage.setPos(bookMark.id, folderPos);
 
         const folderNode = new FolderNode();
         folderNode.Init({
-          $parent: $app.querySelector(
-            `.node-wrapper-${folderPos.x}-${folderPos.y}`
-          ),
+          $parent: this.ensureWrapperExists(folderPos.x, folderPos.y),
           bookMark: bookMark,
         });
 
