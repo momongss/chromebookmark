@@ -6,6 +6,10 @@ export default class PostItManager {
     this.postIts = [];
     this.loadPostIts();
     this.setupContextMenu();
+
+    // 화면 크기 변경에 대응: 리사이즈 시 포스트잇을 화면 안으로 클램프
+    this._onResize = this._debounce(() => this.clampAllToViewportRenderOnly(), 120);
+    window.addEventListener('resize', this._onResize);
   }
 
   async loadPostIts() {
@@ -209,7 +213,8 @@ export default class PostItManager {
     document.addEventListener('mouseup', () => {
       if (isDragging) {
         isDragging = false;
-        
+        // 위치 저장 전에 화면 안으로 클램프
+        this._clampElementToViewport(postItElement, postIt);
         // 위치 저장
         postIt.x = parseInt(postItElement.style.left);
         postIt.y = parseInt(postItElement.style.top);
@@ -258,7 +263,8 @@ export default class PostItManager {
     document.addEventListener('mouseup', () => {
       if (isResizing) {
         isResizing = false;
-        // 크기 저장
+        // 크기/위치 화면 안으로 클램프 후 저장
+        this._clampElementToViewport(postItElement, postIt, { clampSize: true });
         postIt.width = parseInt(postItElement.style.width);
         postIt.height = parseInt(postItElement.style.height);
         this.savePostIt(postIt);
@@ -325,7 +331,11 @@ export default class PostItManager {
         this.savePostIt(postIt);
       }
     });
-    observer.observe(postItElement, { attributes: true, attributeFilter: ['style'] });
+    // 더 이상 스타일 변경 관찰로 저장하지 않음 (사용자 동작만 저장)
+    // observer.observe(postItElement, { attributes: true, attributeFilter: ['style'] });
+
+    // 초기 로드 시 화면을 벗어나 있으면 렌더링만 안으로 이동(저장은 하지 않음)
+    this._clampElementToViewport(postItElement, postIt, { clampSize: true, mutate: false });
 
     this.$app.appendChild(postItElement);
   }
@@ -437,6 +447,94 @@ export default class PostItManager {
       setTimeout(() => {
         document.addEventListener('click', closeMenu);
       }, 0);
+    });
+  }
+
+  // =====================
+  // Helper utilities
+  // =====================
+  _debounce(fn, ms) {
+    let t;
+    return (...args) => {
+      clearTimeout(t);
+      t = setTimeout(() => fn.apply(this, args), ms);
+    };
+  }
+
+  _viewportSize() {
+    // 스크롤이 없도록 설계된 새 탭 페이지 기준
+    const w = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0);
+    const h = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0);
+    return { w, h };
+  }
+
+  _clamp(val, min, max) {
+    return Math.min(Math.max(val, min), max);
+  }
+
+  // 포스트잇을 화면 내부로 강제 이동/리사이즈. 변동이 있으면 true 반환
+  _clampElementToViewport(el, data, opts = {}) {
+    const { clampSize = true, mutate = true } = opts;
+    const margin = 8; // 화면 여백
+    const { w: vw, h: vh } = this._viewportSize();
+
+    // 현재 사이즈 계산
+    const styleW = parseInt(el.style.width) || el.offsetWidth || 200;
+    const styleH = parseInt(el.style.height) || el.offsetHeight || 200;
+
+    let newW = styleW;
+    let newH = styleH;
+    if (clampSize) {
+      const maxW = Math.max(50, vw - margin * 2);
+      const maxH = Math.max(50, vh - margin * 2);
+      // 최소값은 150, 단 화면이 너무 작으면 50까지 허용
+      newW = this._clamp(styleW, Math.min(150, maxW), maxW);
+      newH = this._clamp(styleH, Math.min(150, maxH), maxH);
+    }
+
+    // 위치 계산
+    const left = parseInt(el.style.left) || 0;
+    const top = parseInt(el.style.top) || 0;
+    const maxLeft = Math.max(margin, vw - (newW) - margin);
+    const maxTop = Math.max(margin, vh - (newH) - margin);
+    const newLeft = this._clamp(left, margin, maxLeft);
+    const newTop = this._clamp(top, margin, maxTop);
+
+    let changed = false;
+    if (clampSize && (newW !== styleW || newH !== styleH)) {
+      el.style.width = `${newW}px`;
+      el.style.height = `${newH}px`;
+      if (data && mutate) {
+        data.width = newW;
+        data.height = newH;
+      }
+      changed = true;
+    }
+    if (newLeft !== left || newTop !== top) {
+      el.style.left = `${newLeft}px`;
+      el.style.top = `${newTop}px`;
+      if (data && mutate) {
+        data.x = newLeft;
+        data.y = newTop;
+      }
+      changed = true;
+    }
+    return changed;
+  }
+
+  // 리사이즈 시 모든 포스트잇을 화면 안으로 이동시키되, 저장은 하지 않음
+  clampAllToViewportRenderOnly() {
+    const elements = Array.from(document.querySelectorAll('.post-it'));
+    elements.forEach((el) => {
+      const id = el.dataset.postItId;
+      const data = this.postIts.find(p => p.id === id);
+      if (!data) return;
+      // 저장된 원본 위치/크기를 다시 적용한 뒤, 화면에 맞게 렌더링만 보정
+      if (typeof data.x === 'number') el.style.left = `${data.x}px`;
+      if (typeof data.y === 'number') el.style.top = `${data.y}px`;
+      if (typeof data.width === 'number') el.style.width = `${data.width}px`;
+      if (typeof data.height === 'number') el.style.height = `${data.height}px`;
+      this._clampElementToViewport(el, data, { clampSize: true, mutate: false });
     });
   }
 } 
