@@ -10,6 +10,10 @@ export default class PostItManager {
     // 화면 크기 변경에 대응: 리사이즈 시 포스트잇을 화면 안으로 클램프
     this._onResize = this._debounce(() => this.clampAllToViewportRenderOnly(), 120);
     window.addEventListener('resize', this._onResize);
+
+    // ResizeObserver 저장 억제용 플래그/카운터 및 디바운서 저장소
+    this._suppressResizeSave = 0;
+    this._resizeTimers = new Map();
   }
 
   async loadPostIts() {
@@ -222,56 +226,27 @@ export default class PostItManager {
       }
     });
 
-    // 리사이즈 기능
-    let isResizing = false;
-    let startWidth, startHeight;
-
-    const resizeHandle = document.createElement('div');
-    resizeHandle.style.cssText = `
-      position: absolute;
-      bottom: 0;
-      right: 0;
-      width: 10px;
-      height: 10px;
-      background: rgba(0,0,0,0.1);
-      cursor: se-resize;
-      border-radius: 0 0 8px 0;
-    `;
-
-    resizeHandle.addEventListener('mousedown', (e) => {
-      isResizing = true;
-      startX = e.clientX;
-      startY = e.clientY;
-      startWidth = parseInt(postItElement.style.width);
-      startHeight = parseInt(postItElement.style.height);
-      e.stopPropagation();
-    });
-
-    document.addEventListener('mousemove', (e) => {
-      if (!isResizing) return;
-      
-      const dx = e.clientX - startX;
-      const dy = e.clientY - startY;
-      
-      const newWidth = Math.max(150, startWidth + dx);
-      const newHeight = Math.max(150, startHeight + dy);
-      
-      postItElement.style.width = `${newWidth}px`;
-      postItElement.style.height = `${newHeight}px`;
-    });
-
-    document.addEventListener('mouseup', () => {
-      if (isResizing) {
-        isResizing = false;
-        // 크기/위치 화면 안으로 클램프 후 저장
-        this._clampElementToViewport(postItElement, postIt, { clampSize: true });
-        postIt.width = parseInt(postItElement.style.width);
-        postIt.height = parseInt(postItElement.style.height);
-        this.savePostIt(postIt);
+    // ResizeObserver: 사용자가 네이티브 리사이즈 핸들로 크기를 변경했을 때 저장
+    const resizeObserver = new ResizeObserver((entries) => {
+      if (this._suppressResizeSave > 0) return; // 렌더링 보정 중에는 저장 금지
+      for (const entry of entries) {
+        const id = postIt.id;
+        // 디바운스: 빠른 연속 이벤트 중 마지막만 처리
+        clearTimeout(this._resizeTimers.get(id));
+        this._resizeTimers.set(id, setTimeout(() => {
+          // 현재 크기 계산
+          const width = Math.max(50, Math.round(entry.contentRect.width));
+          const height = Math.max(50, Math.round(entry.contentRect.height));
+          // 요소 스타일에 반영되어 있을 것이므로, 뷰포트에 맞게 최종 클램프 + 데이터 저장
+          postIt.width = width;
+          postIt.height = height;
+          // 위치/사이즈를 뷰포트 내로 보정하면서 데이터도 함께 갱신
+          this._clampElementToViewport(postItElement, postIt, { clampSize: true, mutate: true });
+          this.savePostIt(postIt);
+        }, 120));
       }
     });
-
-    postItElement.appendChild(resizeHandle);
+    resizeObserver.observe(postItElement);
 
     // 내용 변경 시 저장
     content.addEventListener('input', () => {
@@ -322,20 +297,12 @@ export default class PostItManager {
     postItElement.addEventListener('pointerdown', (e) => { e.stopPropagation(); });
     postItElement.addEventListener('touchstart', (e) => { e.stopPropagation(); });
 
-    const observer = new MutationObserver(() => {
-      const width = parseInt(postItElement.style.width);
-      const height = parseInt(postItElement.style.height);
-      if (width !== postIt.width || height !== postIt.height) {
-        postIt.width = width;
-        postIt.height = height;
-        this.savePostIt(postIt);
-      }
-    });
-    // 더 이상 스타일 변경 관찰로 저장하지 않음 (사용자 동작만 저장)
-    // observer.observe(postItElement, { attributes: true, attributeFilter: ['style'] });
+    // MutationObserver는 사용하지 않음 (ResizeObserver로 대체)
 
     // 초기 로드 시 화면을 벗어나 있으면 렌더링만 안으로 이동(저장은 하지 않음)
-    this._clampElementToViewport(postItElement, postIt, { clampSize: true, mutate: false });
+    this._withResizeSaveSuppressed(() => {
+      this._clampElementToViewport(postItElement, postIt, { clampSize: true, mutate: false });
+    });
 
     this.$app.appendChild(postItElement);
   }
@@ -525,16 +492,27 @@ export default class PostItManager {
   // 리사이즈 시 모든 포스트잇을 화면 안으로 이동시키되, 저장은 하지 않음
   clampAllToViewportRenderOnly() {
     const elements = Array.from(document.querySelectorAll('.post-it'));
-    elements.forEach((el) => {
-      const id = el.dataset.postItId;
-      const data = this.postIts.find(p => p.id === id);
-      if (!data) return;
-      // 저장된 원본 위치/크기를 다시 적용한 뒤, 화면에 맞게 렌더링만 보정
-      if (typeof data.x === 'number') el.style.left = `${data.x}px`;
-      if (typeof data.y === 'number') el.style.top = `${data.y}px`;
-      if (typeof data.width === 'number') el.style.width = `${data.width}px`;
-      if (typeof data.height === 'number') el.style.height = `${data.height}px`;
-      this._clampElementToViewport(el, data, { clampSize: true, mutate: false });
+    this._withResizeSaveSuppressed(() => {
+      elements.forEach((el) => {
+        const id = el.dataset.postItId;
+        const data = this.postIts.find(p => p.id === id);
+        if (!data) return;
+        // 저장된 원본 위치/크기를 다시 적용한 뒤, 화면에 맞게 렌더링만 보정
+        if (typeof data.x === 'number') el.style.left = `${data.x}px`;
+        if (typeof data.y === 'number') el.style.top = `${data.y}px`;
+        if (typeof data.width === 'number') el.style.width = `${data.width}px`;
+        if (typeof data.height === 'number') el.style.height = `${data.height}px`;
+        this._clampElementToViewport(el, data, { clampSize: true, mutate: false });
+      });
     });
+  }
+
+  _withResizeSaveSuppressed(fn) {
+    this._suppressResizeSave++;
+    try { fn(); }
+    finally {
+      // 다음 프레임까지 유지해 ResizeObserver 연계 이벤트도 무시
+      requestAnimationFrame(() => { this._suppressResizeSave = Math.max(0, this._suppressResizeSave - 1); });
+    }
   }
 } 

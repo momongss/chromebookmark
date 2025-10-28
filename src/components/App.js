@@ -75,7 +75,8 @@ export default class App {
     // Set CSS variables for tile size and grid gap
     $app.style.setProperty('--grid-item-width', `${settings.tileW}px`);
     $app.style.setProperty('--grid-item-height', `${settings.tileH}px`);
-    $app.style.setProperty('--grid-gap', `${settings.gap}px`);
+    // 북마크 그리드 spacing 제거 요구사항에 따라 gap은 항상 0 처리
+    $app.style.gap = '0px';
 
     // Compute columns/rows from available space
     const { cols, rows } = this.computeGridDims($app, settings);
@@ -94,10 +95,10 @@ export default class App {
     // Use viewport size to avoid 0-size before grid is populated
     const aw = Math.max(0, window.innerWidth || 0);
     const ah = Math.max(0, window.innerHeight || 0);
-    const stepX = settings.tileW + settings.gap;
-    const stepY = settings.tileH + settings.gap;
-    const cols = Math.max(3, Math.floor((aw + settings.gap) / stepX));
-    const rows = Math.max(3, Math.floor((ah + settings.gap) / stepY));
+    const stepX = settings.tileW; // gap 제거
+    const stepY = settings.tileH; // gap 제거
+    const cols = Math.max(3, Math.floor(aw / stepX));
+    const rows = Math.max(3, Math.floor(ah / stepY));
     return { cols, rows };
   }
 
@@ -109,8 +110,9 @@ export default class App {
     if (cols === prevCols && rows === prevRows) return;
     this.gridCols = cols;
     this.gridRows = rows;
-    this.$app.style.gridTemplateColumns = `repeat(${cols}, var(--grid-item-width))`;
-    this.$app.style.gridTemplateRows = `repeat(${rows}, var(--grid-item-height))`;
+  this.$app.style.gridTemplateColumns = `repeat(${cols}, var(--grid-item-width))`;
+  this.$app.style.gridTemplateRows = `repeat(${rows}, var(--grid-item-height))`;
+  this.$app.style.gap = '0px';
     this.ensureGridWrappers(cols, rows);
   }
 

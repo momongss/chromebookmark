@@ -32,8 +32,12 @@ export default class OptionCreate {
         bookMark: bookMark,
       });
 
-      const $text = newFolder.$node.querySelector(".text");
-      selectAll($text);
+  const $text = newFolder.$node.querySelector(".text");
+  // 즉시 이름 편집 가능하도록 설정
+  $text.contentEditable = true;
+  $text.classList.add('edit');
+  $text.focus();
+  selectAll($text);
       $text.addEventListener("keydown", (e) => {
         if (e.key === "Enter") {
           $text.blur();
@@ -41,19 +45,33 @@ export default class OptionCreate {
       });
 
       $text.addEventListener("blur", (e) => {
+        // 편집 종료 상태 복원
+        $text.contentEditable = false;
+        $text.classList.remove('edit');
         const parentId = $target.dataset.id
           ? $target.dataset.id
           : constDatas.rootId;
+        const title = ($text.textContent || $text.innerText || '').trim() || '새 폴더';
 
         chrome.bookmarks.create(
           {
-            title: $text.innerHTML,
+            title: title,
             parentId: parentId,
           },
           (created) => {
-            Storage.setPos(created.id, pos);
-
-            newFolder.render({ id: created.id, title: $text.innerHTML });
+            try {
+              // 위치 저장
+              Storage.setPos(created.id, pos);
+              // 생성된 정보로 노드 데이터 갱신 후 재렌더
+              newFolder.bookMark = created;
+              newFolder.render();
+              // 텍스트 표시 갱신
+              const t = newFolder.$node.querySelector('.text');
+              if (t) t.textContent = title;
+              // 새로 생성된 폴더 요소에 포커스를 두지 않고 메뉴만 닫음
+            } catch (err) {
+              console.error('폴더 생성 후 렌더링 실패:', err);
+            }
           }
         );
       });

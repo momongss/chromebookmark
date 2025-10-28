@@ -46,7 +46,7 @@ button:active {
   display: grid;
   grid-template-columns: repeat(20, var(--grid-item-width));
   grid-template-rows: repeat(9, var(--grid-item-height));
-  gap: var(--grid-gap, 0px);
+  gap: 0px; /* 북마크 그리드 spacing 제거 */
 }
 
 .options {

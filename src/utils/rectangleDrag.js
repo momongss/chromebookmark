@@ -31,11 +31,9 @@ class RectDragger extends HTMLElement {
       el.classList.contains("node")
     );
     if (isNode) {
-      console.log('노드 위에서 클릭 - 드래그 박스 시작 안함');
       return;
     }
 
-    console.log('드래그 박스 시작');
     window.isRectSelecting = true;
     this.isDragging = true;
 
@@ -110,8 +108,6 @@ class RectDragger extends HTMLElement {
           element.firstElementChild.classList.add("selected");
           element.classList.add("multi");
           element.dragger = this;
-          
-          console.log(`요소 선택됨: ${element.bookMark?.title || element.tagName}`);
         }
       } else {
         if (this.matchingElements.includes(element)) {
@@ -122,8 +118,6 @@ class RectDragger extends HTMLElement {
         }
       }
     });
-
-    console.log(`현재 선택된 요소 수: ${this.matchingElements.length}`);
   };
 
   onMouseUp = (e) => {
@@ -144,13 +138,11 @@ class RectDragger extends HTMLElement {
 
     // 선택된 요소들이 있으면 TempDragger에 추가
     if (this.matchingElements.length > 0) {
-      console.log(`${this.matchingElements.length}개 요소가 선택됨 - TempDragger에 추가`);
       // 원래 부모 정보 저장
       this.tempDragger.saveOriginalParents(this.matchingElements);
       // 요소들을 TempDragger에 추가
       this.tempDragger.addElements(this.matchingElements);
     } else {
-      console.log('선택된 요소가 없음');
     }
   };
 
@@ -171,8 +163,6 @@ class RectDragger extends HTMLElement {
     this.$parent.addEventListener("touchstart", this.onMouseDown);
     document.addEventListener("touchmove", this.onMouseMove);
     document.addEventListener("touchend", this.onMouseUp);
-    
-    console.log('RectDragger 이벤트 리스너 등록됨');
   };
 }
 

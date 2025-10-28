@@ -1,5 +1,6 @@
 import bookmarkManager from "../../utils/bookmark.js";
 import { selectAll, clearSelection } from "../../utils/caret.js";
+import { constDatas } from "../../utils/const.js";
 
 export default class OptionEdit {
   constructor({ $target, x, y }) {
@@ -42,9 +43,14 @@ export default class OptionEdit {
         $title.contentEditable = false;
         $title.classList.remove("edit");
         clearSelection();
-        chrome.bookmarks.update($editTarget.dataset.id, {
-          title: $title.innerHTML,
-        });
+        const id = $editTarget.dataset.id;
+        // 루트 폴더(0,1,2,3 또는 환경의 루트 ID)는 수정 불가
+        const rootIds = new Set(["0", "1", "2", "3", String(constDatas.rootId || "")] );
+        if (rootIds.has(id)) {
+          console.warn('루트 폴더는 이름을 변경할 수 없습니다.');
+          return;
+        }
+        chrome.bookmarks.update(id, { title: $title.textContent || '' });
       });
       this.$nodeOptions.remove();
     });

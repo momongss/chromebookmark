@@ -43,6 +43,9 @@ export default class FolderManager extends HTMLElement {
     });
 
     this.dropHandlerApp = new DropHandlerApp(this);
+
+    // 포인터 이벤트가 바탕화면으로 전파되어 선택/드래그가 시작되는 문제 방지
+    this._installStopPropagation();
   }
 
   addItem(node) {
@@ -167,6 +170,14 @@ export default class FolderManager extends HTMLElement {
     const $header = document.createElement("div");
     $header.className = "folder-manager-header";
 
+  // 항상 백 버튼 자리 확보(필요 없을 때는 숨김 처리로 공간 유지)
+  const $backBtn = document.createElement("div");
+  $backBtn.className = "back-btn";
+  $backBtn.style.cursor = "pointer";
+  $backBtn.style.marginRight = "8px";
+  $backBtn.innerHTML = `<img src="assets/back-arrow.svg" alt="back"/>`;
+  $header.appendChild($backBtn);
+
     const $title = document.createElement("div");
     $title.className = "folder-title";
     $title.textContent = title;
@@ -190,6 +201,9 @@ export default class FolderManager extends HTMLElement {
     $folderManager.dataset.id = this.id;
 
     this.appendChild($folderManager);
+
+  // 내부 영역에서도 포인터 이벤트 전파 차단
+  this._installStopPropagation($folderManager);
 
     // 정렬/배치 상태 저장 및 이벤트
     $sortSelect.addEventListener("change", (e) => {
@@ -273,28 +287,35 @@ export default class FolderManager extends HTMLElement {
       });
     }
 
+    // 백 버튼 동작/표시 토글: history가 1보다 클 때만 보이고 동작함
     if (this.history.length > 1) {
-      const $backBtn = document.createElement("div");
-      $backBtn.className = "back-btn";
-      $backBtn.style.cursor = "pointer";
-      $backBtn.style.marginRight = "8px";
-      $backBtn.innerHTML = `<img src="assets/back-arrow.svg" alt="back"/>`;
-      $header.prepend($backBtn);
-
+      $backBtn.style.visibility = 'visible';
       $backBtn.addEventListener("pointerdown", (e) => {
         e.stopPropagation();
       });
-
       $backBtn.addEventListener("click", (e) => {
         e.stopPropagation();
         console.log("back");
         if (this.history.length > 1) {
-          this.history.pop(); // 현재 폴더 id 제거
+          this.history.pop();
           const prev = this.history[this.history.length - 1];
           this.render({ id: prev.id, mode: "back" });
         }
       });
+    } else {
+      // 공간 유지용으로 숨김 처리
+      $backBtn.style.visibility = 'hidden';
+      $backBtn.style.pointerEvents = 'none';
     }
+  }
+
+  // 바탕화면(RectDragger/App)로 포인터 이벤트가 전파되지 않도록 캡처 단계에서 차단
+  _installStopPropagation(target = this) {
+    const stop = (e) => { e.stopPropagation(); };
+    // 버블 단계에서만 전파 차단하여, 타깃/캡처 단계의 내부 핸들러(특히 헤더 드래그)가 정상 동작하도록 함
+    ['pointerdown', 'mousedown', 'touchstart', 'dragstart'].forEach((type) => {
+      target.addEventListener(type, stop, { capture: false });
+    });
   }
 
   addFolder($folderManager, bookMark) {

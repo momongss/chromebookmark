@@ -1,9 +1,10 @@
 .folder-manager .node {
-    color: #5d4037;
+  color: #2b4c65; /* 조금 더 연한 딥블루 텍스트 */
     text-shadow: none;
-    transition: all 0.15s ease;
+  /* 드래그 시 지연 방지를 위해 기본 전환 제거 */
+  transition: none;
     border-radius: 8px;
-    margin: 2px;
+  margin: 0; /* 그리드 아이템 사이 간격 제거 */
     /* height: var(--grid-item-height); */
     min-height: var(--grid-item-height);
     display: flex;
@@ -13,45 +14,45 @@
 }
 
 .folder-manager .node:hover {
-  background-color: rgb(255, 255, 255);
+  background-color: rgba(255, 255, 255, 0.92);
 }
 
 .folder-manager .node:active {
-    background-color: rgba(141, 110, 99, 0.5);
-    transform: scale(0.95);
-    box-shadow: 
-        0 0 0 2px rgba(141, 110, 99, 0.8),
-        0 4px 8px rgba(93, 64, 55, 0.4);
-    transition: all 0.1s ease;
+    background-color: rgba(179, 229, 252, 0.35); /* 파스텔 블루 */
+  transform: scale(0.98);
+  box-shadow:
+        0 0 0 2px rgba(179, 229, 252, 0.55),
+        0 4px 8px rgba(30, 78, 131, 0.12);
+  transition: none;
 }
 
 .folder-manager .node:active .text {
-    text-shadow: 
-        0 0 6px rgba(141, 110, 99, 0.8),
-        0 0 3px rgba(141, 110, 99, 0.6);
-    font-weight: 600;
+  text-shadow:
+    0 0 6px rgba(179, 229, 252, 0.6),
+    0 0 3px rgba(179, 229, 252, 0.4);
+  font-weight: 600;
 }
 
 .folder-manager .node.selected {
-    background-color: rgba(141, 110, 99, 0.25);
-    box-shadow: 0 2px 8px rgba(141, 110, 99, 0.4);
-    border: 2px solid rgba(141, 110, 99, 0.6);
-    outline: 2px solid rgba(141, 110, 99, 0.7);
-    outline-offset: -2px;
+  background-color: rgba(179, 229, 252, 0.22);
+  box-shadow: 0 2px 6px rgba(30, 78, 131, 0.12);
+  border: 1px solid rgba(144, 202, 249, 0.6);
+  outline: 1px solid rgba(144, 202, 249, 0.6);
+  outline-offset: -2px;
 }
 
 .folder-manager-wrapper {
   display: none;
   position: fixed;
   padding-bottom: 1.875rem;
-  background: linear-gradient(135deg, #f5f1ed 0%, #e8d5c4 100%);
+  background: linear-gradient(135deg, #f7fbff 0%, #edf6ff 100%); /* 더 연한 파스텔 배경 */
   border-radius: 15px;
   top: calc(100vh - 25rem - 2.625rem);
   box-shadow: 
-    0 20px 40px rgba(93, 64, 55, 0.15),
-    0 8px 16px rgba(93, 64, 55, 0.08),
+    0 20px 40px rgba(33, 150, 243, 0.08),
+    0 8px 16px rgba(33, 150, 243, 0.05),
     inset 0 1px 0 rgba(255, 255, 255, 0.6);
-  border: 1px solid rgba(188, 170, 164, 0.4);
+  border: 1px solid rgba(179, 229, 252, 0.8);
   overflow: hidden;
 }
 
@@ -66,6 +67,9 @@
 
 .folder-manager-wrapper.dragging * {
   pointer-events: none;
+  /* 드래그 중에는 모든 전환/애니메이션 비활성화로 지연 제거 */
+  transition: none !important;
+  animation: none !important;
 }
 
 .folder-manager-wrapper.dragging .folder-manager-header {
@@ -84,26 +88,26 @@
 }
 
 .folder-manager-wrapper.dragging .folder-manager .node:hover {
-  background-color: rgba(141, 110, 99, 0.15);
+  background-color: rgba(179, 229, 252, 0.2);
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(141, 110, 99, 0.25);
-  transition: background-color 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
+  box-shadow: 0 4px 10px rgba(30, 78, 131, 0.16);
+  transition: none;
 }
 
 .folder-manager-wrapper.dragging .folder-manager .node:active {
-  background-color: rgba(141, 110, 99, 0.6);
+  background-color: rgba(179, 229, 252, 0.45);
   transform: scale(0.95);
   box-shadow: 
-      0 0 0 2px rgba(141, 110, 99, 0.9),
-      0 4px 8px rgba(93, 64, 55, 0.5);
-  transition: all 0.1s ease;
+      0 0 0 2px rgba(144, 202, 249, 0.75),
+      0 4px 8px rgba(25, 118, 210, 0.25);
+  transition: none;
 }
 
 .folder-manager-wrapper.dragging .folder-manager .node.selected {
-  background-color: rgba(141, 110, 99, 0.3);
-  box-shadow: 0 2px 8px rgba(141, 110, 99, 0.5);
-  border: 2px solid rgba(141, 110, 99, 0.7);
-  outline: 2px solid rgba(141, 110, 99, 0.9);
+  background-color: rgba(179, 229, 252, 0.28);
+  box-shadow: 0 2px 8px rgba(30, 78, 131, 0.22);
+  border: 1px solid rgba(144, 202, 249, 0.75);
+  outline: 1px solid rgba(144, 202, 249, 0.8);
   outline-offset: -2px;
   opacity: 1 !important;
   visibility: visible !important;
@@ -114,14 +118,14 @@
   justify-content: space-between;
   align-items: center;
   position: relative;
-  color: #5d4037;
+  color: #22577a; /* 헤더 텍스트도 조금 더 연하게 */
   margin: 0;
-  background: linear-gradient(135deg, #a1887f 0%, #8d6e63 100%);
+  background: linear-gradient(135deg, #cfe8ff 0%, #b3e5fc 100%);
   border-top-left-radius: 15px;
   border-top-right-radius: 15px;
-  padding: 4px 4px;
+  padding: 4px 8px; /* 조금 더 컴팩트하게 */
   box-shadow: 
-    0 2px 6px rgba(93, 64, 55, 0.15),
+    0 2px 6px rgba(25, 118, 210, 0.08),
     inset 0 1px 0 rgba(255, 255, 255, 0.15);
   font-weight: 600;
   font-size: 14px;
@@ -131,12 +135,12 @@
 }
 
 .folder-manager-header .back-btn {
-  width: 28px;
-  height: 28px;
+  width: 24px; /* 약간 축소 */
+  height: 24px;
   margin-left: 0;
   margin-right: 0px;
   border-radius: 40%;
-  background: #EAD9CA;
+  background: #f1f8ff;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -147,12 +151,12 @@
 }
 
 .folder-manager-header .back-btn:hover {
-  background: rgba(255,255,255,0.22);
+  background: rgba(255,255,255,0.5);
 }
 
 .folder-manager-header .back-btn img {
-  width: 15px;
-  height: 15px;
+  width: 14px; /* 아이콘도 살짝 축소 */
+  height: 14px;
   display: block;
   margin: 0;
   padding: 0;
@@ -173,7 +177,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 16px;
+  font-size: 15px; /* 제목 폰트 살짝 축소 */
   letter-spacing: 0.2px;
   font-weight: 600;
   text-align: center;
@@ -181,8 +185,8 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  color: #faf6f2;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  color: #1e3a5f;
+  text-shadow: 0 1px 2px rgba(10, 78, 140, 0.12);
 }
 
 image.png {
@@ -204,25 +208,25 @@ image.png {
 }
 
 .folder-manager-header .folder-close {
-  width: 28px;
-  height: 28px;
+  width: 24px; /* 약간 축소 */
+  height: 24px;
   font-size: 18px;
   border-radius: 40%;
-  background-color: #EAD9CA;
+  background-color: #f1f8ff;
   display: flex;
   justify-content: center;
   align-items: center;
   transition: background 0.2s;
-  color: rgb(61, 61, 61);
+  color: #2b4c65;
 }
 
 .folder-manager-header .folder-close:hover {
-  background-color: #e9daca50;
+  background-color: rgba(255,255,255,0.6);
 }
 
 .folder-manager-header .folder-close img {
-  width: 10px;
-  height: 10px;
+  width: 9px; /* 아이콘도 살짝 축소 */
+  height: 9px;
   display: block;
   margin: 0;
   padding: 0;
@@ -231,42 +235,39 @@ image.png {
 
 .folder-manager-controls {
   display: flex;
-  gap: 12px;
+  gap: 8px;
   align-items: center;
   margin: 0;
-  padding: 8px 20px;
-  background: linear-gradient(135deg, #f8f4f0 0%, #f0e6e0 100%);
-  border-bottom: 1px solid rgba(141, 110, 99, 0.1);
-  box-shadow: 0 2px 8px rgba(93, 64, 55, 0.05);
+  padding: 4px 10px; /* 영역 크기 축소 */
+  background: linear-gradient(135deg, #f7fbff 0%, #edf6ff 100%);
+  border-bottom: 1px solid rgba(179, 229, 252, 0.6);
+  box-shadow: 0 1px 4px rgba(25, 118, 210, 0.06);
 }
 
 .folder-manager-controls select {
-  padding: 6px 12px;
+  padding: 4px 8px; /* 컴팩트 */
   border-radius: 8px;
-  border: 1px solid rgba(141, 110, 99, 0.2);
-  background: linear-gradient(135deg, #ffffff 0%, #faf6f2 100%);
-  font-size: 13px;
-  color: #5d4037;
-  box-shadow: 
-    0 2px 4px rgba(93, 64, 55, 0.05),
-    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(179, 229, 252, 0.9);
+  background: #ffffff;
+  font-size: 12px;
+  color: #2b4c65;
+  box-shadow:
+    0 1px 2px rgba(25, 118, 210, 0.05);
   outline: none;
-  transition: all 0.2s ease;
+  transition: all 0.15s ease;
   cursor: pointer;
 }
 
 .folder-manager-controls select:hover {
-  border-color: #8d6e63;
-  box-shadow: 
-    0 4px 8px rgba(141, 110, 99, 0.1),
-    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  border-color: #cfe8ff;
+  box-shadow:
+    0 2px 6px rgba(25, 118, 210, 0.08);
 }
 
 .folder-manager-controls select:focus {
-  border-color: #8d6e63;
-  box-shadow: 
-    0 0 0 3px rgba(141, 110, 99, 0.1),
-    0 4px 8px rgba(141, 110, 99, 0.1);
+  border-color: #b3e5fc;
+  box-shadow:
+    0 0 0 3px rgba(179, 229, 252, 0.35);
 }
 
 .folder-manager {
@@ -274,8 +275,8 @@ image.png {
   display: grid;
   grid-template-columns: repeat(5, var(--grid-item-width));
   grid-template-rows: repeat(8, var(--grid-item-height));
-  grid-gap: 8px;
-  background: linear-gradient(135deg, #faf6f2 0%, #f5f1ed 100%);
+  grid-gap: 0px; /* 아이템 간 spacing 제거 */
+  background: linear-gradient(135deg, #f9fcff 0%, #f2f8ff 100%);
   overflow-y: scroll;
   position: relative;
   padding: 16px;
@@ -286,18 +287,18 @@ image.png {
 }
 
 .folder-manager::-webkit-scrollbar-track {
-  background: rgba(141, 110, 99, 0.05);
+  background: rgba(179, 229, 252, 0.22);
   border-radius: 4px;
 }
 
 .folder-manager::-webkit-scrollbar-thumb {
-  background: linear-gradient(135deg, #8d6e63 0%, #6d4c41 100%);
+  background: linear-gradient(135deg, #b3e5fc 0%, #90caf9 100%);
   border-radius: 4px;
   transition: all 0.2s ease;
 }
 
 .folder-manager::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(135deg, #6d4c41 0%, #5d4037 100%);
+  background: linear-gradient(135deg, #a5d8ff 0%, #81c5f7 100%);
 }
 
 .folder-manager-wrapper.dragging .folder-manager-header {
