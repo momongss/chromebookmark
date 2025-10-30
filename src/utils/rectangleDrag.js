@@ -21,7 +21,48 @@ class RectDragger extends HTMLElement {
 
   isDragging = false;
 
+  clearAllSelections() {
+    // 모든 노드의 선택 상태 제거
+    const allNodes = document.querySelectorAll('file-node, folder-node, item-node');
+    allNodes.forEach(node => {
+      node.classList.remove('multi');
+      if (node.firstElementChild) {
+        node.firstElementChild.classList.remove('selected');
+      }
+      // 모든 임시 스타일 제거
+      node.style.opacity = '';
+      node.style.transform = '';
+      node.style.filter = '';
+      node.style.boxShadow = '';
+      node.style.position = '';
+      node.style.left = '';
+      node.style.top = '';
+      node.style.zIndex = '';
+      node.style.transition = '';
+      
+      // RectDragger 참조 제거
+      if (node.dragger) {
+        node.dragger = null;
+      }
+    });
+    
+    this.matchingElements = [];
+    
+    // TempDragger도 완전히 비활성화
+    if (this.tempDragger) {
+      this.tempDragger.disable();
+      this.tempDragger.selectedElements = null;
+    }
+    
+    // 전역 변수 초기화
+    window.currentDragNodes = null;
+    window.dragStartNode = null;
+    window.isTempDragActive = false;
+  }
+
   onMouseDown = (e) => {
+    this.clearAllSelections();
+
     const elements = document.elementsFromPoint(e.clientX, e.clientY);
 
     const isNode = elements.some(el => 
@@ -155,14 +196,9 @@ class RectDragger extends HTMLElement {
   };
 
   eventListeners = () => {
-    this.$parent.addEventListener("mousedown", this.onMouseDown);
-    document.addEventListener("mousemove", this.onMouseMove);
-    document.addEventListener("mouseup", this.onMouseUp);
-    
-    // 터치 이벤트도 추가 (모바일 지원)
-    this.$parent.addEventListener("touchstart", this.onMouseDown);
-    document.addEventListener("touchmove", this.onMouseMove);
-    document.addEventListener("touchend", this.onMouseUp);
+    this.$parent.addEventListener("pointerdown", this.onMouseDown);
+    document.addEventListener("pointermove", this.onMouseMove);
+    document.addEventListener("pointerup", this.onMouseUp);
   };
 }
 

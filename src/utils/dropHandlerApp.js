@@ -7,6 +7,8 @@ export default class DropHandlerApp {
 
     constructor($app) {
         this.$parent = $app;
+        // 멀티 드래그 드롭 미리보기(각 노드 위치 표시) 관리용
+        this.multiHoverWrappers = new Set();
 
         this.eventListeners();
     }
@@ -88,20 +90,11 @@ export default class DropHandlerApp {
     onDragOver = (e) => {
         e.preventDefault(); // 드롭을 허용하기 위해 필요
 
-        
-
         const isMultiDrag = window.isTempDragActive;
+        const isInFolderManager = this.$parent.tagName === 'FOLDER-MANAGER';
         
         // 멀티 드래그의 경우 TempDragger를 무시하고 마우스 위치의 실제 요소를 찾음
         let targetElement = e.target;
-        if (isMultiDrag && targetElement.tagName === 'TEMP-DRAGGER') {
-            const elementsAtPoint = document.elementsFromPoint(e.clientX, e.clientY);
-            targetElement = elementsAtPoint.find(el => 
-                el.tagName !== 'TEMP-DRAGGER' && 
-                !el.classList.contains('drag-preview') &&
-                !el.classList.contains('drag-overlay')
-            ) || e.target;
-        }
 
         const folderNode = targetElement.closest('folder-node');
         const folderManager = targetElement.closest('folder-manager');
@@ -125,6 +118,47 @@ export default class DropHandlerApp {
             }
         }
         
+        // 멀티 드래그일 때: 바탕화면(App)에서 각 노드가 드롭될 예상 위치 표시
+        if (isMultiDrag && !isInFolderManager) {
+            // 현재 포인터 위치의 래퍼 좌표를 얻음
+            let baseWrapper = null;
+            if (hoverNodeWrapper) baseWrapper = hoverNodeWrapper;
+            else {
+                const parent = targetElement.closest('[class*="node-wrapper"]');
+                if (parent && parent.className.includes('node-wrapper')) baseWrapper = parent;
+            }
+
+            if (baseWrapper && Array.isArray(window.currentDragNodes) && window.currentDragNodes.length) {
+                // 기존 표시 초기화
+                this.clearMultiHover();
+                const { x: dropX, y: dropY } = this.parseWrapperCoords(baseWrapper);
+                const anchor = window.dragStartNode || window.currentDragNodes[0];
+                const plans = this.computeAnchoredTargets(window.currentDragNodes, anchor, dropX, dropY);
+
+                // 각 계획된 좌표에 미리보기 클래스 부여
+                plans.forEach(plan => {
+                    const preferred = this.$parent.querySelector(`.node-wrapper-${plan.targetX}-${plan.targetY}`);
+                    if (!preferred) return;
+                    // 점유 상태 확인(선택된 노드는 무시)
+                    const children = Array.from(preferred.children).filter(c => c.tagName && (c.tagName.includes('NODE') || c.tagName.includes('node')));
+                    const occupiedByOthers = children.some(c => !window.currentDragNodes.includes(c));
+
+                    // 앵커 강조 우선
+                    if (plan.element === anchor) {
+                        preferred.classList.add('multi-target-anchor');
+                    }
+                    preferred.classList.add(occupiedByOthers ? 'multi-target-occupied' : 'multi-target');
+                    this.multiHoverWrappers.add(preferred);
+                });
+            } else {
+                // 기본 래퍼가 없으면 기존 표시 제거
+                this.clearMultiHover();
+            }
+        } else {
+            // 멀티가 아니거나 폴더 매니저면 표시 제거
+            this.clearMultiHover();
+        }
+
         // 폴더가 우선적으로 시각적으로 강조되도록 처리 순서 변경
         if (folderNode) {
             // 멀티 드래그 시 드래그 중인 폴더에는 호버 효과 주지 않음
@@ -167,6 +201,8 @@ export default class DropHandlerApp {
                 this.curHoverObj.classList.remove("hover", "hover-occupied");
                 this.curHoverObj = null;
             }
+            // 포인터가 유효 대상이 아닐 때 멀티 미리보기도 정리
+            this.clearMultiHover();
         }
     }
 
@@ -184,6 +220,8 @@ export default class DropHandlerApp {
             this.curHoverObj.classList.remove("hover", "hover-occupied");
             this.curHoverObj = null;
         }
+        // 멀티 드롭 미리보기 정리
+        this.clearMultiHover();
         
         // 멀티 드래그인지 확인
         const isMultiDrag = window.isTempDragActive && window.currentDragNodes;
@@ -256,6 +294,15 @@ export default class DropHandlerApp {
             }
         }
         window.currentDraggedElement = null;
+    }
+
+    // 멀티 드래그 드롭 위치 표시 정리
+    clearMultiHover() {
+        if (!this.multiHoverWrappers || this.multiHoverWrappers.size === 0) return;
+        this.multiHoverWrappers.forEach(w => {
+            w.classList.remove('multi-target', 'multi-target-occupied', 'multi-target-anchor');
+        });
+        this.multiHoverWrappers.clear();
     }
 
     // 노드 래퍼(바탕화면 그리드)에 드롭 처리

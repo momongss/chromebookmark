@@ -261,6 +261,44 @@ rect-dragger {
   z-index: 1000;
 }
 
+/* 멀티 드래그: 각 노드의 예상 드롭 위치 표시 */
+.node-wrapper.multi-target {
+  /* 단일 드래그의 .node-wrapper.hover 스타일을 그대로 반영 */
+  background-color: rgba(0, 123, 255, 0.15) !important;
+  border: 2px dashed rgba(0, 123, 255, 0.4) !important;
+  border-radius: 12px;
+}
+
+.node-wrapper.multi-target-occupied {
+  /* 단일 드래그의 .node-wrapper.hover-occupied 스타일을 그대로 반영 */
+  background-color: rgba(220, 53, 69, 0.2) !important;
+  border: 2px dashed rgba(220, 53, 69, 0.6) !important;
+  border-radius: 12px;
+  position: relative;
+}
+
+.node-wrapper.multi-target-anchor {
+  box-shadow: inset 0 0 0 3px rgba(0, 123, 255, 0.6);
+}
+
+/* 단일 드래그의 X 배지와 동일한 표시 */
+.node-wrapper.multi-target-occupied::after {
+  content: "❌";
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background: rgba(220, 53, 69, 0.9);
+  color: white;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  z-index: 1000;
+}
+
 folder-node.hover,
 file-node.hover {
   /* 폴더/파일은 외곽선 대신 살짝 확대 + 그림자만 */

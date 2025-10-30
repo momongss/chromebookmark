@@ -411,80 +411,18 @@ export default class App {
 
   // 전역 클릭 이벤트로 선택 상태 초기화
   initGlobalClickHandler($app) {
-    document.addEventListener('click', (e) => {
-      // 노드나 드래그 관련 요소를 클릭한 경우가 아니라면
-      const clickedNode = e.target.closest('file-node, folder-node, item-node, temp-dragger, rect-dragger');
-      
-      // 멀티 선택 상태가 활성화된 경우 빈 공간 클릭으로 해제하지 않음
-      const hasMultiSelection = document.querySelectorAll('.multi').length > 0;
-      const isTempDragActive = window.isTempDragActive;
-      
-      // 멀티 선택이 없고 드래그도 활성화되지 않은 상태에서만 처리
-      if (!clickedNode && !window.isRectSelecting && !hasMultiSelection && !isTempDragActive) {
-        console.log('빈 공간 클릭 - 선택 상태 없으므로 처리 안함');
-        // 아무것도 하지 않음 (선택 상태가 없으므로)
-      }
-    });
-
     // Escape 키로 멀티 선택 해제
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape') {
         const hasMultiSelection = document.querySelectorAll('.multi').length > 0;
         if (hasMultiSelection) {
           console.log('Escape 키 - 멀티 선택 상태 해제');
-          this.clearAllSelections();
+
+          const rectDragger = document.querySelector('rect-dragger');
+          rectDragger.clearAllSelections();
         }
       }
     });
-  }
-
-  // 모든 선택 상태 초기화 (공통 메서드)
-  clearAllSelections() {
-    // 모든 노드의 선택 상태 제거
-    const allNodes = document.querySelectorAll('file-node, folder-node, item-node');
-    allNodes.forEach(node => {
-      node.classList.remove('multi');
-      if (node.firstElementChild) {
-        node.firstElementChild.classList.remove('selected');
-      }
-      // 모든 임시 스타일 제거
-      node.style.opacity = '';
-      node.style.transform = '';
-      node.style.filter = '';
-      node.style.boxShadow = '';
-      node.style.position = '';
-      node.style.left = '';
-      node.style.top = '';
-      node.style.zIndex = '';
-      node.style.transition = '';
-      
-      // RectDragger 참조 제거
-      if (node.dragger) {
-        node.dragger = null;
-      }
-    });
-    
-    // 모든 RectDragger의 선택 상태 초기화
-    const rectDraggers = document.querySelectorAll('rect-dragger');
-    rectDraggers.forEach(dragger => {
-      if (dragger.matchingElements) {
-        dragger.matchingElements = [];
-      }
-    });
-    
-    // TempDragger도 완전히 비활성화
-    const tempDraggers = document.querySelectorAll('temp-dragger');
-    tempDraggers.forEach(tempDragger => {
-      if (tempDragger.disable) {
-        tempDragger.disable();
-      }
-      tempDragger.selectedElements = null;
-    });
-    
-    // 전역 변수 초기화
-    window.currentDragNodes = null;
-    window.dragStartNode = null;
-    window.isTempDragActive = false;
   }
 
   getBookMarkList() {

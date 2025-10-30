@@ -121,7 +121,6 @@ class TempDragger extends HTMLElement {
 
     elements.forEach((element, index) => {
       // 요소를 원래 위치에 그대로 두고 시각적 효과와 드래그 가능 설정
-  // 애니메이션/시각효과 스타일 미적용
       
       // 각 요소에 TempDragger 전용 이벤트 리스너 함수 생성 및 저장
       element._tempDragStartHandler = (e) => this.onDragStart(e);
