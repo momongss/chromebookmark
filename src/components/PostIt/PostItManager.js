@@ -144,11 +144,12 @@ export default class PostItManager {
         const closePalette = (ev) => {
           if (!colorPalette.contains(ev.target) && ev.target !== colorBtn) {
             colorPalette.style.display = 'none';
-            document.removeEventListener('mousedown', closePalette);
+            document.removeEventListener('click', closePalette);
           }
         };
         setTimeout(() => {
-          document.addEventListener('mousedown', closePalette);
+          // mousedown 전파 차단과 무관하게 동작하도록 click 사용
+          document.addEventListener('click', closePalette);
         }, 0);
       }
     });
@@ -293,9 +294,16 @@ export default class PostItManager {
     content.addEventListener('focus', activate);
     document.addEventListener('mousedown', deactivateAll);
 
-    // 기존 stopPropagation 유지
-    postItElement.addEventListener('pointerdown', (e) => { e.stopPropagation(); });
-    postItElement.addEventListener('touchstart', (e) => { e.stopPropagation(); });
+  // 기존 stopPropagation 강화: 바탕화면(RectDragger)로의 전파 방지
+  // - pointerdown: 포인터 이벤트 체계 차단
+  // - mousedown: RectDragger가 사용하는 기본 마우스 다운도 차단
+  // - touchstart: 터치 환경 차단
+  // - dragstart: 예외적 브라우저 드래그 이벤트 차단
+  const stop = (e) => { e.stopPropagation(); };
+  postItElement.addEventListener('pointerdown', stop, { capture: false });
+  postItElement.addEventListener('mousedown', stop, { capture: false });
+  postItElement.addEventListener('touchstart', stop, { capture: false });
+  postItElement.addEventListener('dragstart', stop, { capture: false });
 
     // MutationObserver는 사용하지 않음 (ResizeObserver로 대체)
 
