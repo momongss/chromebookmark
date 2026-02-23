@@ -1,4 +1,5 @@
 import FolderManager from "./FolderManager.js";
+import SearchBar from "./Search/SearchBar.js";
 import RectDragger from "../utils/rectangleDrag.js";
 import Wallpaper from "./Wallpaper/Wallpaper.js";
 import ImageManager from "./Image/ImageManager.js";
@@ -69,6 +70,105 @@ export default class App {
     // React to resize to keep grid responsive
     this.onResize = this.onResize.bind(this);
     window.addEventListener('resize', this.onResize);
+
+    // 검색바 초기화 및 단축키 바인딩 (Ctrl+F)
+    this.searchBar = new SearchBar(this);
+    window.searchBar = this.searchBar; // optional global
+    document.addEventListener('keydown', (e) => {
+      // 입력 중 Ctrl+F도 허용: 기본 찾기 방지 후 검색바 표시
+      if ((e.ctrlKey || e.metaKey) && (e.key === 'f' || e.key === 'F')) {
+        e.preventDefault();
+        this.searchBar.show();
+      }
+      if (e.key === 'Escape' && this.searchBar?.isOpen()) {
+        e.stopPropagation();
+        this.searchBar.hide();
+      }
+    });
+
+    // 우측 상단 고정 툴바 (검색, 포스트잇 생성)
+    this._createRightToolbar();
+  }
+
+  _createRightToolbar() {
+    const $bar = document.createElement('div');
+    $bar.className = 'right-toolbar';
+    $bar.style.cssText = [
+      'position:fixed',
+      'top:12px',
+      'right:12px',
+      'display:flex',
+      'flex-direction:column',
+      'gap:8px',
+      'z-index:11000',
+      'align-items:flex-end'
+    ].join(';');
+
+    const mkBtn = (label, title) => {
+      const btn = document.createElement('button');
+      btn.textContent = label;
+      btn.title = title;
+      btn.style.cssText = [
+        'width:36px','height:36px',
+        'border-radius:999px',
+        // Glassmorphism base
+        'border:1px solid rgba(255,255,255,0.28)',
+        'background: rgba(255,255,255,0.12)',
+        '-webkit-backdrop-filter: blur(8px) saturate(140%)',
+        'backdrop-filter: blur(8px) saturate(140%)',
+        'box-shadow: 0 6px 16px rgba(0,0,0,0.12), inset 0 1px 0 rgba(255,255,255,0.25)',
+  'cursor:pointer',
+  'font-size:16px',
+        'display:flex','align-items:center','justify-content:center',
+        'transition:transform 0.1s ease, box-shadow 0.2s ease, background 0.2s ease, border-color 0.2s ease'
+      ].join(';');
+      btn.addEventListener('mouseenter', () => {
+        btn.style.boxShadow = '0 10px 22px rgba(0,0,0,0.18), inset 0 1px 0 rgba(255,255,255,0.35)';
+        btn.style.background = 'rgba(255,255,255,0.18)';
+        btn.style.borderColor = 'rgba(255,255,255,0.38)';
+      });
+      btn.addEventListener('mouseleave', () => {
+        btn.style.boxShadow = '0 6px 16px rgba(0,0,0,0.12), inset 0 1px 0 rgba(255,255,255,0.25)';
+        btn.style.background = 'rgba(255,255,255,0.12)';
+        btn.style.borderColor = 'rgba(255,255,255,0.28)';
+      });
+      btn.addEventListener('mousedown', () => {
+        btn.style.transform = 'scale(0.96)';
+        btn.style.boxShadow = '0 4px 12px rgba(0,0,0,0.16), inset 0 1px 0 rgba(255,255,255,0.2)';
+        btn.style.background = 'rgba(255,255,255,0.16)';
+      });
+      btn.addEventListener('mouseup', () => {
+        btn.style.transform = 'scale(1)';
+        btn.style.boxShadow = '0 10px 22px rgba(0,0,0,0.18), inset 0 1px 0 rgba(255,255,255,0.35)';
+        btn.style.background = 'rgba(255,255,255,0.18)';
+      });
+      return btn;
+    };
+
+    const $searchBtn = mkBtn('🔎', '검색 열기/닫기 (Ctrl+F)');
+    $searchBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (!this.searchBar) return;
+      if (this.searchBar.isOpen()) this.searchBar.hide();
+      else this.searchBar.show();
+    });
+
+    const $noteBtn = mkBtn('', '포스트잇 생성');
+    // 아이콘: assets/postiit-icon.svg
+    $noteBtn.innerHTML = '<img src="assets/postit-icon.svg" alt="포스트잇 생성" style="width:18px;height:18px;display:block;pointer-events:none;" />';
+    $noteBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      // 버튼 아래, 오른쪽 벽에서 약간 떨어진 위치에 생성
+      const x = Math.max(16, window.innerWidth - 240);
+      const y = 70; // 상단에 겹치지 않게
+      if (window.postItManager?.createPostIt) {
+        window.postItManager.createPostIt(x, y);
+      }
+    });
+
+    $bar.appendChild($searchBtn);
+    $bar.appendChild($noteBtn);
+    document.body.appendChild($bar);
   }
 
   applyGridStyle($app, settings) {

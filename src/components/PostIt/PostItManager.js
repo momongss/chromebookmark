@@ -4,6 +4,8 @@ export default class PostItManager {
   constructor($app) {
     this.$app = $app;
     this.postIts = [];
+    // 포스트잇 z-index 순서 관리용 카운터(클릭 시 맨 앞으로)
+    this._zTop = 1000;
     this.loadPostIts();
     this.setupContextMenu();
 
@@ -20,6 +22,9 @@ export default class PostItManager {
     try {
       const savedPostIts = await Storage.getPostIts();
       this.postIts = savedPostIts || [];
+      // _zTop 초기화: 저장된 z의 최대값으로 설정
+      const maxZ = this.postIts.reduce((m, p) => (typeof p.z === 'number' ? Math.max(m, p.z) : m), 1000);
+      this._zTop = Math.max(this._zTop || 1000, maxZ);
       this.postIts.forEach(postIt => {
         this.createPostItElement(postIt);
       });
@@ -41,8 +46,7 @@ export default class PostItManager {
       background: ${postIt.color || '#fff9c4'};
       border-radius: 8px;
       box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-      padding: 0;
-      cursor: move;
+      padding: 5px;
       z-index: 1000;
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       font-size: 14px;
@@ -53,19 +57,33 @@ export default class PostItManager {
       min-height: 150px;
       user-select: none;
     `;
+    // 저장된 z 순서 적용(없으면 생성하며 저장)
+    let z = postIt.z;
+    if (typeof z !== 'number') {
+      this._zTop = Math.max(this._zTop || 1000, 1000) + 1;
+      z = this._zTop;
+      postIt.z = z;
+      // 최초 마이그레이션: z가 없던 데이터는 즉시 저장
+      this.savePostIt(postIt);
+    } else {
+      this._zTop = Math.max(this._zTop, z);
+    }
+    postItElement.style.zIndex = String(z);
 
     // 포스트잇 헤더 (드래그 영역, 색상 변경, 삭제 버튼)
     const header = document.createElement('div');
     header.className = 'post-it-header';
+    const headerBg = this._deriveHeaderColor(postIt.color || '#fff9c4');
     header.style.cssText = `
       position: absolute;
       top: 0;
       left: 0;
       right: 0;
-      height: 40px;
+      height: 30px;
       transform: translateY(-32px);
       transition: transform 0.2s;
-      background: #ffd43b;
+      background: ${headerBg};
+      cursor: move;
       z-index: 10;
       display: flex;
       flex-direction: row;
@@ -111,7 +129,8 @@ export default class PostItManager {
 
     const colors = [
       '#fff9c4', '#ffcdd2', '#f8bbd9', '#e1bee7', '#d1c4e9',
-      '#c5cae9', '#bbdefb', '#b3e5fc', '#b2ebf2', '#b2dfdb'
+      '#c5cae9', '#bbdefb', '#b3e5fc', '#b2ebf2', '#b2dfdb',
+      '#2f2f2f'
     ];
 
     colors.forEach(color => {
@@ -129,6 +148,14 @@ export default class PostItManager {
       colorOption.addEventListener('click', () => {
         postItElement.style.background = color;
         postIt.color = color;
+        // 헤더 색상도 본문 색상에 맞게 조정
+        header.style.background = this._deriveHeaderColor(color);
+        // 회색(#2f2f2f)일 때 본문 글자색을 흰색으로
+        if ((color || '').toLowerCase() === '#2f2f2f') {
+          content.style.color = '#ffffff';
+        } else {
+          content.style.color = '';
+        }
         this.savePostIt(postIt);
         colorPalette.style.display = 'none';
       });
@@ -187,6 +214,10 @@ export default class PostItManager {
       overflow: auto;
       user-select: text;
     `;
+    // 초기 로드 시 회색 배경인 경우 본문 글자색 흰색 적용
+    if ((postIt.color || '').toLowerCase() === '#2f2f2f') {
+      content.style.color = '#ffffff';
+    }
 
     postItElement.appendChild(header);
     postItElement.appendChild(content);
@@ -195,17 +226,20 @@ export default class PostItManager {
     let isDragging = false;
     let startX, startY, initialLeft, initialTop;
 
-    header.addEventListener('mousedown', (e) => {
+    // 헤더 포인터다운 시 맨 앞으로
+    header.addEventListener('pointerdown', () => {
+      bringToFront();
+    });
+
+    header.addEventListener('pointerdown', (e) => {
       isDragging = true;
       startX = e.clientX;
       startY = e.clientY;
       initialLeft = parseInt(postItElement.style.left);
       initialTop = parseInt(postItElement.style.top);
-      
-      e.preventDefault();
     });
 
-    document.addEventListener('mousemove', (e) => {
+    document.addEventListener('pointermove', (e) => {
       if (!isDragging) return;
       
       const dx = e.clientX - startX;
@@ -215,7 +249,7 @@ export default class PostItManager {
       postItElement.style.top = `${initialTop + dy}px`;
     });
 
-    document.addEventListener('mouseup', () => {
+    document.addEventListener('pointerup', () => {
       if (isDragging) {
         isDragging = false;
         // 위치 저장 전에 화면 안으로 클램프
@@ -277,10 +311,18 @@ export default class PostItManager {
       }
     });
 
-    // 포스트잇 활성화/비활성화
+    // 포스트잇 활성화/비활성화 및 z-index 올리기
+    const bringToFront = () => {
+      this._zTop = (this._zTop || 1000) + 1;
+      postIt.z = this._zTop;
+      postItElement.style.zIndex = String(this._zTop);
+      this.savePostIt(postIt);
+    };
     function activate() {
       document.querySelectorAll('.post-it.active').forEach(el => el.classList.remove('active'));
       postItElement.classList.add('active');
+      // 클릭 시 항상 맨 앞으로
+      bringToFront();
     }
     function deactivateAll(e) {
       if (!postItElement.contains(e.target)) {
@@ -294,16 +336,11 @@ export default class PostItManager {
     content.addEventListener('focus', activate);
     document.addEventListener('mousedown', deactivateAll);
 
-  // 기존 stopPropagation 강화: 바탕화면(RectDragger)로의 전파 방지
-  // - pointerdown: 포인터 이벤트 체계 차단
-  // - mousedown: RectDragger가 사용하는 기본 마우스 다운도 차단
-  // - touchstart: 터치 환경 차단
-  // - dragstart: 예외적 브라우저 드래그 이벤트 차단
-  const stop = (e) => { e.stopPropagation(); };
-  postItElement.addEventListener('pointerdown', stop, { capture: false });
-  postItElement.addEventListener('mousedown', stop, { capture: false });
-  postItElement.addEventListener('touchstart', stop, { capture: false });
-  postItElement.addEventListener('dragstart', stop, { capture: false });
+    const stop = (e) => { e.stopPropagation(); };
+    postItElement.addEventListener('pointerdown', stop, { capture: false });
+    postItElement.addEventListener('mousedown', stop, { capture: false });
+    postItElement.addEventListener('touchstart', stop, { capture: false });
+    postItElement.addEventListener('dragstart', stop, { capture: false });
 
     // MutationObserver는 사용하지 않음 (ResizeObserver로 대체)
 
@@ -324,7 +361,8 @@ export default class PostItManager {
       height: 200,
       color: '#fff9c4',
       content: '메모를 입력하세요...',
-      createdAt: new Date().toISOString()
+      createdAt: new Date().toISOString(),
+      z: (this._zTop = (this._zTop || 1000) + 1)
     };
 
     this.postIts.push(newPostIt);
@@ -385,11 +423,18 @@ export default class PostItManager {
       `;
 
       const createPostItOption = document.createElement('div');
-      createPostItOption.textContent = '📝 포스트잇 생성';
+      createPostItOption.innerHTML = `
+        <span style="display:inline-flex;width:16px;height:16px;margin-right:8px;align-items:center;justify-content:center;">
+          <img src="assets/postit-icon.svg" alt="" style="width:16px;height:16px;display:block;"/>
+        </span>
+        <span>포스트잇 생성</span>
+      `;
       createPostItOption.style.cssText = `
         padding: 8px 16px;
         cursor: pointer;
         font-size: 14px;
+        display: flex;
+        align-items: center;
         transition: background-color 0.2s ease;
       `;
 
@@ -522,5 +567,56 @@ export default class PostItManager {
       // 다음 프레임까지 유지해 ResizeObserver 연계 이벤트도 무시
       requestAnimationFrame(() => { this._suppressResizeSave = Math.max(0, this._suppressResizeSave - 1); });
     }
+  }
+
+  // =====================
+  // Color helpers for header derivation
+  // =====================
+  _deriveHeaderColor(baseHex) {
+    try {
+      const { r, g, b } = this._hexToRgb(baseHex);
+      const brightness = this._perceivedBrightness(r, g, b);
+      // 밝은 메모 → 헤더를 약간 어둡게, 어두운 메모 → 헤더를 약간 밝게
+      const delta = brightness > 170 ? -20 : +20;
+      const { r: rr, g: gg, b: bb } = this._adjustBrightness({ r, g, b }, delta);
+      return this._rgbToHex(rr, gg, bb);
+    } catch {
+      return baseHex;
+    }
+  }
+
+  _hexToRgb(hex) {
+    let c = hex.replace('#', '');
+    if (c.length === 3) {
+      c = c.split('').map(ch => ch + ch).join('');
+    }
+    const num = parseInt(c, 16);
+    return {
+      r: (num >> 16) & 255,
+      g: (num >> 8) & 255,
+      b: num & 255
+    };
+  }
+
+  _rgbToHex(r, g, b) {
+    const toHex = (v) => v.toString(16).padStart(2, '0');
+    return '#' + toHex(Math.max(0, Math.min(255, r))) + toHex(Math.max(0, Math.min(255, g))) + toHex(Math.max(0, Math.min(255, b)));
+  }
+
+  _adjustBrightness({ r, g, b }, delta) {
+    return {
+      r: Math.max(0, Math.min(255, r + delta)),
+      g: Math.max(0, Math.min(255, g + delta)),
+      b: Math.max(0, Math.min(255, b + delta))
+    };
+  }
+
+  _perceivedBrightness(r, g, b) {
+    // W3C 가이드: https://www.w3.org/TR/AERT/#color-contrast
+    return Math.sqrt(
+      0.299 * (r * r) +
+      0.587 * (g * g) +
+      0.114 * (b * b)
+    );
   }
 } 

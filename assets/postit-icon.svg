@@ -1,0 +1,18 @@
+<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <!-- 통통한 노란색 포스트잇 -->
+  <g id="yellow-postit">
+    <!-- 그림자 -->
+    <rect x="37" y="26" width="140" height="140" fill="#000" opacity="0.1" rx="8" transform="rotate(-3 107 96)"/>
+    <!-- 메인 -->
+    <rect x="32" y="20" width="140" height="140" fill="#FFD93D" stroke="#333" stroke-width="3" rx="8" transform="rotate(-3 102 90)"/>
+    <!-- 접힌 모서리 -->
+    <path d="M 167 155 L 167 130 Q 167 122 159 122 L 140 122 Q 135 122 135 130 L 135 155 Z" fill="#FFC107" stroke="#333" stroke-width="3" transform="rotate(-3 151 138)"/>
+    <!-- 체크마크들 -->
+    <path d="M 60 60 L 68 68 L 85 50" stroke="#333" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M 60 90 L 68 98 L 85 80" stroke="#333" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M 60 120 L 68 128 L 85 110" stroke="#333" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+    <!-- 반짝이 -->
+    <circle cx="140" cy="50" r="3" fill="#FFF" opacity="0.7"/>
+    <circle cx="150" cy="65" r="2" fill="#FFF" opacity="0.7"/>
+  </g>
+</svg>

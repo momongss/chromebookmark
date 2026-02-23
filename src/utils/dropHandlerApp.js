@@ -118,32 +118,88 @@ export default class DropHandlerApp {
             }
         }
         
-        // 멀티 드래그일 때: 바탕화면(App)에서 각 노드가 드롭될 예상 위치 표시
+        // 폴더가 우선적으로 시각적으로 강조되도록: 분기 처리로 위임
+        if (folderNode) {
+            this.handleDragOverFolderNode(folderNode, isMultiDrag);
+            return;
+        }
+        if (hoverNodeWrapper) {
+            this.handleDragOverWrapper(targetElement, hoverNodeWrapper, isMultiDrag, isInFolderManager);
+            return;
+        }
+        if (folderManager) {
+            this.handleDragOverFolderManager(folderManager);
+            return;
+        }
+
+        // 기타 영역: 상태 정리
+        if (this.curHoverObj) {
+            this.curHoverObj.classList.remove("hover", "hover-occupied");
+            this.curHoverObj = null;
+        }
+        this.clearMultiHover();
+    }
+
+    // 폴더 노드 위 드래그오버 처리
+    handleDragOverFolderNode(folderNode, isMultiDrag) {
+        // 멀티 드래그 시 드래그 중인 폴더에는 호버 효과 주지 않음
+        if (isMultiDrag && window.currentDragNodes && window.currentDragNodes.includes(folderNode)) {
+            return;
+        }
+        this.clearMultiHover();
+        folderNode.classList.add("hover");
+        if (this.curHoverObj && this.curHoverObj != folderNode) {
+            this.curHoverObj.classList.remove("hover", "hover-occupied");
+        }
+        this.curHoverObj = folderNode;
+    }
+
+    // 폴더 매니저 위 드래그오버 처리
+    handleDragOverFolderManager(folderManager) {
+        this.clearMultiHover();
+        folderManager.classList.add("hover");
+        if (this.curHoverObj && this.curHoverObj != folderManager) {
+            this.curHoverObj.classList.remove("hover", "hover-occupied");
+        }
+        this.curHoverObj = folderManager;
+    }
+
+    // 바탕 그리드 래퍼 위 드래그오버 처리 + 멀티 미리보기
+    handleDragOverWrapper(targetElement, hoverNodeWrapper, isMultiDrag, isInFolderManager) {
+        // 기존 호버/미리보기 정리
+        if (this.curHoverObj && this.curHoverObj != hoverNodeWrapper) {
+            this.curHoverObj.classList.remove("hover", "hover-occupied");
+        }
+
+        // 점유 여부 표시
+        const hasExistingNodes = Array.from(hoverNodeWrapper.children).some(child =>
+            child.tagName && (child.tagName.includes('NODE') || child.tagName.includes('node')) &&
+            (!isMultiDrag || !window.currentDragNodes.includes(child))
+        );
+        if (hasExistingNodes) {
+            hoverNodeWrapper.classList.add("hover-occupied");
+        } else {
+            hoverNodeWrapper.classList.add("hover");
+        }
+        this.curHoverObj = hoverNodeWrapper;
+
+        // 멀티 드래그 미리보기 (App에서만)
         if (isMultiDrag && !isInFolderManager) {
-            // 현재 포인터 위치의 래퍼 좌표를 얻음
-            let baseWrapper = null;
-            if (hoverNodeWrapper) baseWrapper = hoverNodeWrapper;
-            else {
+            let baseWrapper = hoverNodeWrapper;
+            if (!baseWrapper) {
                 const parent = targetElement.closest('[class*="node-wrapper"]');
                 if (parent && parent.className.includes('node-wrapper')) baseWrapper = parent;
             }
-
             if (baseWrapper && Array.isArray(window.currentDragNodes) && window.currentDragNodes.length) {
-                // 기존 표시 초기화
                 this.clearMultiHover();
                 const { x: dropX, y: dropY } = this.parseWrapperCoords(baseWrapper);
                 const anchor = window.dragStartNode || window.currentDragNodes[0];
                 const plans = this.computeAnchoredTargets(window.currentDragNodes, anchor, dropX, dropY);
-
-                // 각 계획된 좌표에 미리보기 클래스 부여
                 plans.forEach(plan => {
                     const preferred = this.$parent.querySelector(`.node-wrapper-${plan.targetX}-${plan.targetY}`);
                     if (!preferred) return;
-                    // 점유 상태 확인(선택된 노드는 무시)
                     const children = Array.from(preferred.children).filter(c => c.tagName && (c.tagName.includes('NODE') || c.tagName.includes('node')));
                     const occupiedByOthers = children.some(c => !window.currentDragNodes.includes(c));
-
-                    // 앵커 강조 우선
                     if (plan.element === anchor) {
                         preferred.classList.add('multi-target-anchor');
                     }
@@ -151,57 +207,9 @@ export default class DropHandlerApp {
                     this.multiHoverWrappers.add(preferred);
                 });
             } else {
-                // 기본 래퍼가 없으면 기존 표시 제거
                 this.clearMultiHover();
             }
         } else {
-            // 멀티가 아니거나 폴더 매니저면 표시 제거
-            this.clearMultiHover();
-        }
-
-        // 폴더가 우선적으로 시각적으로 강조되도록 처리 순서 변경
-        if (folderNode) {
-            // 멀티 드래그 시 드래그 중인 폴더에는 호버 효과 주지 않음
-            if (isMultiDrag && window.currentDragNodes && window.currentDragNodes.includes(folderNode)) {
-                return;
-            }
-            
-            folderNode.classList.add("hover");
-            if (this.curHoverObj && this.curHoverObj != folderNode) {
-                this.curHoverObj.classList.remove("hover");
-            }
-            this.curHoverObj = folderNode;
-        } else if (hoverNodeWrapper) {
-            // 기존 호버 효과 제거
-            if (this.curHoverObj && this.curHoverObj != hoverNodeWrapper) {
-                this.curHoverObj.classList.remove("hover", "hover-occupied");
-            }
-            
-            // 타겟 위치에 기존 노드가 있는지 확인
-            const hasExistingNodes = Array.from(hoverNodeWrapper.children).some(child => 
-                child.tagName && (child.tagName.includes('NODE') || child.tagName.includes('node')) &&
-                (!isMultiDrag || !window.currentDragNodes.includes(child))
-            );
-            
-            if (hasExistingNodes) {
-                hoverNodeWrapper.classList.add("hover-occupied");
-            } else {
-                hoverNodeWrapper.classList.add("hover");
-            }
-            
-            this.curHoverObj = hoverNodeWrapper;
-        } else if (folderManager) {
-            folderManager.classList.add("hover");
-            if (this.curHoverObj && this.curHoverObj != folderManager) {
-                this.curHoverObj.classList.remove("hover");
-            }
-            this.curHoverObj = folderManager;
-        } else {
-            if (this.curHoverObj) {
-                this.curHoverObj.classList.remove("hover", "hover-occupied");
-                this.curHoverObj = null;
-            }
-            // 포인터가 유효 대상이 아닐 때 멀티 미리보기도 정리
             this.clearMultiHover();
         }
     }
