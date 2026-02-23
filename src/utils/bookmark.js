@@ -21,13 +21,13 @@ class BookmarkManager {
         url: node.url,
       },
     });
-    chrome.bookmarks.remove(id, () => null);
+    await chrome.bookmarks.remove(id);
   }
 
   async removeTree(treeId) {
     const tree = await this.getSubTree(treeId);
     this.history.push({ type: "remove", nodeInfo: tree[0] });
-    chrome.bookmarks.removeTree(treeId, () => {});
+    await chrome.bookmarks.removeTree(treeId);
   }
 
   moveTree(id, destId) {

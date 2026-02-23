@@ -1,11 +1,15 @@
 import Storage from "../../utils/storage.js";
+import ZIndexManager from "../../utils/ZIndexManager.js";
 
 export default class PostItManager {
   constructor($app) {
     this.$app = $app;
     this.postIts = [];
-    // 포스트잇 z-index 순서 관리용 카운터(클릭 시 맨 앞으로)
-    this._zTop = 1000;
+    // 포스트잇 z-index 순서 관리용 카운터는 ZIndexManager로 위임
+    // 옵션: 헤더 항상 보이기 (추후 변경 가능)
+    this.options = {
+      alwaysShowHeader: true,
+    };
     this.loadPostIts();
     this.setupContextMenu();
 
@@ -22,9 +26,8 @@ export default class PostItManager {
     try {
       const savedPostIts = await Storage.getPostIts();
       this.postIts = savedPostIts || [];
-      // _zTop 초기화: 저장된 z의 최대값으로 설정
       const maxZ = this.postIts.reduce((m, p) => (typeof p.z === 'number' ? Math.max(m, p.z) : m), 1000);
-      this._zTop = Math.max(this._zTop || 1000, maxZ);
+      ZIndexManager.setMax(maxZ);
       this.postIts.forEach(postIt => {
         this.createPostItElement(postIt);
       });
@@ -55,18 +58,20 @@ export default class PostItManager {
       resize: both;
       min-width: 150px;
       min-height: 150px;
+      min-width: 150px;
+      min-height: 150px;
       user-select: none;
+      transition: box-shadow 0.2s ease, transform 0.2s ease;
     `;
     // 저장된 z 순서 적용(없으면 생성하며 저장)
     let z = postIt.z;
     if (typeof z !== 'number') {
-      this._zTop = Math.max(this._zTop || 1000, 1000) + 1;
-      z = this._zTop;
+      z = ZIndexManager.getNextIndex();
       postIt.z = z;
       // 최초 마이그레이션: z가 없던 데이터는 즉시 저장
       this.savePostIt(postIt);
     } else {
-      this._zTop = Math.max(this._zTop, z);
+      ZIndexManager.setMax(z);
     }
     postItElement.style.zIndex = String(z);
 
@@ -87,9 +92,32 @@ export default class PostItManager {
       z-index: 10;
       display: flex;
       flex-direction: row;
-      justify-content: space-between;
+      justify-content: flex-start;
       align-items: center;
       padding: 0 8px;
+    `;
+
+    // 접기/펼치기 버튼
+    const collapseBtn = document.createElement('button');
+    collapseBtn.className = 'collapse-btn';
+    // 접힘(true) -> 펼치기(▼), 펼쳐짐(false) -> 접기(▲)
+    collapseBtn.innerHTML = postIt.isCollapsed ? '▼' : '▲';
+    collapseBtn.title = postIt.isCollapsed ? '펼치기' : '접기';
+
+    // 스타일은 CSS(style.css)로 이동하거나 여기서 최소한만
+    collapseBtn.style.cssText = `
+       width: 20px;
+       height: 20px;
+       display: flex;
+       align-items: center;
+       justify-content: center;
+       background: transparent;
+       border: none;
+       cursor: pointer;
+       font-size: 14px;
+       margin-right: 4px;
+       padding: 0;
+       color: #555;
     `;
 
     // 색상 변경 버튼
@@ -101,6 +129,7 @@ export default class PostItManager {
     const closeBtn = document.createElement('button');
     closeBtn.className = 'close-btn';
     closeBtn.textContent = '×';
+    // closeBtn.style.marginLeft = 'auto'; // (삭제: 제목이 flex:1로 밀어냄)
     closeBtn.addEventListener('click', async (e) => {
       e.stopPropagation();
       const confirmed = confirm('이 포스트잇을 삭제하시겠습니까?');
@@ -108,6 +137,36 @@ export default class PostItManager {
         await this.deletePostIt(postIt.id);
         postItElement.remove();
       }
+    });
+
+    // 제목 입력 (중앙)
+    const titleInput = document.createElement('input');
+    titleInput.className = 'post-it-title';
+    titleInput.type = 'text';
+    titleInput.value = postIt.title || '';
+    // titleInput.placeholder = '제목'; // (삭제: 비워두기 요청 반영)
+    titleInput.style.cssText = `
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      width: auto;
+      max-width: calc(100% - 120px); /* 좌우 버튼 영역 침범 방지 */
+      background: transparent;
+      border: none;
+      outline: none;
+      text-align: center;
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: bold;
+      color: inherit; /* 버튼과 동일한 기본 색상 */
+      margin: 0;
+      padding: 0;
+    `;
+    // 제목 변경 시 저장 (드래그 방지 리스너 제거됨)
+    titleInput.addEventListener('input', () => {
+      postIt.title = titleInput.value;
+      this.savePostIt(postIt);
     });
 
     // 색상 팔레트
@@ -153,8 +212,10 @@ export default class PostItManager {
         // 회색(#2f2f2f)일 때 본문 글자색을 흰색으로
         if ((color || '').toLowerCase() === '#2f2f2f') {
           content.style.color = '#ffffff';
+          titleInput.style.color = '#ffffff'; // 제목도 흰색
         } else {
           content.style.color = '';
+          titleInput.style.color = '';
         }
         this.savePostIt(postIt);
         colorPalette.style.display = 'none';
@@ -192,7 +253,9 @@ export default class PostItManager {
       e.stopPropagation();
     });
 
+    header.appendChild(collapseBtn);
     header.appendChild(colorBtn);
+    header.appendChild(titleInput); // 중간에 제목
     header.appendChild(closeBtn);
     header.appendChild(colorPalette);
 
@@ -217,10 +280,63 @@ export default class PostItManager {
     // 초기 로드 시 회색 배경인 경우 본문 글자색 흰색 적용
     if ((postIt.color || '').toLowerCase() === '#2f2f2f') {
       content.style.color = '#ffffff';
+      titleInput.style.color = '#ffffff';
     }
 
     postItElement.appendChild(header);
     postItElement.appendChild(content);
+
+    // 접기/펼치기 동작
+    const toggleCollapse = () => {
+      // 1. 애니메이션을 위한 트랜지션 활성화
+      postItElement.style.transition = 'height 0.3s ease, min-height 0.3s ease, box-shadow 0.2s ease, transform 0.2s ease';
+
+      postIt.isCollapsed = !postIt.isCollapsed;
+      // 아이콘 업데이트
+      collapseBtn.innerHTML = postIt.isCollapsed ? '▼' : '▲';
+      collapseBtn.title = postIt.isCollapsed ? '펼치기' : '접기';
+
+      updateCollapseState();
+      this.savePostIt(postIt);
+
+      // 2. 애니메이션 종료 후 트랜지션 제거 (리사이즈 성능을 위해)
+      // transitionend 이벤트는 여러 속성에 대해 발생하므로 한 번만 처리되도록 주의하거나 타임아웃 사용
+      const cleanup = () => {
+        postItElement.style.transition = 'box-shadow 0.2s ease, transform 0.2s ease';
+      };
+
+      // 혹시 transitionend가 발생하지 않을 경우를 대비해 setTimeout 병행
+      /** 
+       * 주의: transitionend만 믿으면 화면이 가려져 있거나 할 때 발생 안 할 수 있음. 
+       * 안전하게 300ms + buffer 후에 복구.
+       */
+      setTimeout(cleanup, 350);
+    };
+
+    const updateCollapseState = () => {
+      if (postIt.isCollapsed) {
+        // content.style.display = 'none'; // 인위적 숨김 제거
+        postItElement.style.minHeight = '30px'; // 최소 높이 해제
+        postItElement.style.height = '30px';
+        postItElement.style.resize = 'none';
+      } else {
+        // content.style.display = 'block';
+        postItElement.style.minHeight = '150px'; // 최소 높이 복구
+        postItElement.style.height = `${postIt.height || 200}px`;
+        postItElement.style.resize = 'both';
+      }
+    };
+
+    // 초기 상태 적용
+    updateCollapseState();
+
+    collapseBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      toggleCollapse();
+    });
+
+    // 옵션에 따른 헤더 표시 방식 적용
+    this._applyHeaderVisibility(header, content);
 
     // 드래그 기능 (헤더에서만)
     let isDragging = false;
@@ -241,10 +357,10 @@ export default class PostItManager {
 
     document.addEventListener('pointermove', (e) => {
       if (!isDragging) return;
-      
+
       const dx = e.clientX - startX;
       const dy = e.clientY - startY;
-      
+
       postItElement.style.left = `${initialLeft + dx}px`;
       postItElement.style.top = `${initialTop + dy}px`;
     });
@@ -273,8 +389,14 @@ export default class PostItManager {
           const width = Math.max(50, Math.round(entry.contentRect.width));
           const height = Math.max(50, Math.round(entry.contentRect.height));
           // 요소 스타일에 반영되어 있을 것이므로, 뷰포트에 맞게 최종 클램프 + 데이터 저장
-          postIt.width = width;
-          postIt.height = height;
+
+          if (!postIt.isCollapsed) {
+            postIt.width = width;
+            postIt.height = height;
+          } else {
+            // 접힌 상태에서는 width만 저장 (height는 고정이므로 저장 안 함)
+            postIt.width = width;
+          }
           // 위치/사이즈를 뷰포트 내로 보정하면서 데이터도 함께 갱신
           this._clampElementToViewport(postItElement, postIt, { clampSize: true, mutate: true });
           this.savePostIt(postIt);
@@ -313,9 +435,9 @@ export default class PostItManager {
 
     // 포스트잇 활성화/비활성화 및 z-index 올리기
     const bringToFront = () => {
-      this._zTop = (this._zTop || 1000) + 1;
-      postIt.z = this._zTop;
-      postItElement.style.zIndex = String(this._zTop);
+      const nextZ = ZIndexManager.getNextIndex();
+      postIt.z = nextZ;
+      postItElement.style.zIndex = String(nextZ);
       this.savePostIt(postIt);
     };
     function activate() {
@@ -352,6 +474,32 @@ export default class PostItManager {
     this.$app.appendChild(postItElement);
   }
 
+  // 옵션에 따라 헤더 표시/숨김 적용 및 본문 패딩 조정
+  _applyHeaderVisibility(headerEl, contentEl) {
+    const visible = !!this.options?.alwaysShowHeader;
+    if (!headerEl || !contentEl) return;
+    if (visible) {
+      headerEl.style.transform = 'translateY(0)';
+      // 헤더가 본문을 가리지 않도록 상단 패딩 확보
+      if (!contentEl.style.paddingTop) contentEl.style.paddingTop = '32px';
+    } else {
+      headerEl.style.transform = 'translateY(-32px)';
+      // 기존 동작으로 복귀: 패딩 해제
+      contentEl.style.paddingTop = '';
+    }
+  }
+
+  // 공개 옵션 설정 API: 기존 포스트잇에도 즉시 반영
+  setAlwaysShowHeader(flag) {
+    this.options.alwaysShowHeader = !!flag;
+    const items = Array.from(document.querySelectorAll('.post-it'));
+    items.forEach(el => {
+      const header = el.querySelector('.post-it-header');
+      const content = el.querySelector('.post-it-content');
+      if (header && content) this._applyHeaderVisibility(header, content);
+    });
+  }
+
   async createPostIt(x, y) {
     const newPostIt = {
       id: Date.now().toString(),
@@ -362,7 +510,9 @@ export default class PostItManager {
       color: '#fff9c4',
       content: '메모를 입력하세요...',
       createdAt: new Date().toISOString(),
-      z: (this._zTop = (this._zTop || 1000) + 1)
+      z: ZIndexManager.getNextIndex(),
+      isCollapsed: false,
+      title: ''
     };
 
     this.postIts.push(newPostIt);
@@ -463,7 +613,7 @@ export default class PostItManager {
         contextMenu.remove();
         document.removeEventListener('click', closeMenu);
       };
-      
+
       setTimeout(() => {
         document.addEventListener('click', closeMenu);
       }, 0);
@@ -497,6 +647,7 @@ export default class PostItManager {
     const { clampSize = true, mutate = true } = opts;
     const margin = 8; // 화면 여백
     const { w: vw, h: vh } = this._viewportSize();
+    const isCollapsed = data && data.isCollapsed;
 
     // 현재 사이즈 계산
     const styleW = parseInt(el.style.width) || el.offsetWidth || 200;
@@ -507,9 +658,15 @@ export default class PostItManager {
     if (clampSize) {
       const maxW = Math.max(50, vw - margin * 2);
       const maxH = Math.max(50, vh - margin * 2);
-      // 최소값은 150, 단 화면이 너무 작으면 50까지 허용
+
+      // 최소값 설정: 접힌 상태면 30, 아니면 150
+      const minDimensionStart = isCollapsed ? 30 : 150;
+
       newW = this._clamp(styleW, Math.min(150, maxW), maxW);
-      newH = this._clamp(styleH, Math.min(150, maxH), maxH);
+      // 높이는 접혔으면 그대로(혹은 30), 아니면 클램핑
+      // 접힌 상태라고 해도 화면 밖으로 나가면 안되므로 maxH 체크는 필요
+      // 단 minH 체크는 30으로
+      newH = this._clamp(styleH, Math.min(minDimensionStart, maxH), maxH);
     }
 
     // 위치 계산
@@ -526,7 +683,10 @@ export default class PostItManager {
       el.style.height = `${newH}px`;
       if (data && mutate) {
         data.width = newW;
-        data.height = newH;
+        // 접힌 상태면 높이 저장을 하지 않음 (원래 높이 보존)
+        if (!isCollapsed) {
+          data.height = newH;
+        }
       }
       changed = true;
     }
@@ -554,7 +714,14 @@ export default class PostItManager {
         if (typeof data.x === 'number') el.style.left = `${data.x}px`;
         if (typeof data.y === 'number') el.style.top = `${data.y}px`;
         if (typeof data.width === 'number') el.style.width = `${data.width}px`;
-        if (typeof data.height === 'number') el.style.height = `${data.height}px`;
+
+        // 높이 복원: 접힌 상태면 30, 아니면 원래 높이
+        if (data.isCollapsed) {
+          el.style.height = '30px';
+        } else if (typeof data.height === 'number') {
+          el.style.height = `${data.height}px`;
+        }
+
         this._clampElementToViewport(el, data, { clampSize: true, mutate: false });
       });
     });

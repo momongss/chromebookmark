@@ -35,10 +35,10 @@ export default class App {
     this.history = [];
 
     this.$app = $app;
-    this.$wallpaper = new Wallpaper();
+    this.$wallpaper = new Wallpaper({ embeddedButton: true });
     this.$imageManager = new ImageManager($app);
     this.$postItManager = new PostItManager($app);
-    
+
     // 포스트잇 매니저를 전역으로 설정
     window.postItManager = this.$postItManager;
 
@@ -50,7 +50,7 @@ export default class App {
     };
 
     // Apply CSS variables and compute grid size
-  this.applyGridStyle($app, this.settings);
+    this.applyGridStyle($app, this.settings);
 
     const state = await Storage.getState();
 
@@ -67,9 +67,9 @@ export default class App {
 
     this.dropHandlerApp = new DropHandlerApp($app);
 
-    // React to resize to keep grid responsive
-    this.onResize = this.onResize.bind(this);
-    window.addEventListener('resize', this.onResize);
+    // React to resize to keep grid responsive -> Disabled per user request
+    // this.onResize = this.onResize.bind(this);
+    // window.addEventListener('resize', this.onResize);
 
     // 검색바 초기화 및 단축키 바인딩 (Ctrl+F)
     this.searchBar = new SearchBar(this);
@@ -109,7 +109,7 @@ export default class App {
       btn.textContent = label;
       btn.title = title;
       btn.style.cssText = [
-        'width:36px','height:36px',
+        'width:36px', 'height:36px',
         'border-radius:999px',
         // Glassmorphism base
         'border:1px solid rgba(255,255,255,0.28)',
@@ -117,9 +117,9 @@ export default class App {
         '-webkit-backdrop-filter: blur(8px) saturate(140%)',
         'backdrop-filter: blur(8px) saturate(140%)',
         'box-shadow: 0 6px 16px rgba(0,0,0,0.12), inset 0 1px 0 rgba(255,255,255,0.25)',
-  'cursor:pointer',
-  'font-size:16px',
-        'display:flex','align-items:center','justify-content:center',
+        'cursor:pointer',
+        'font-size:16px',
+        'display:flex', 'align-items:center', 'justify-content:center',
         'transition:transform 0.1s ease, box-shadow 0.2s ease, background 0.2s ease, border-color 0.2s ease'
       ].join(';');
       btn.addEventListener('mouseenter', () => {
@@ -168,6 +168,15 @@ export default class App {
 
     $bar.appendChild($searchBtn);
     $bar.appendChild($noteBtn);
+
+    // 배경화면 설정 버튼 (임베드 모드)
+    const $wallpaperBtn = mkBtn('', '배경화면 설정');
+    $wallpaperBtn.innerHTML = '<img src="assets/wallpaper-icon.svg" alt="배경화면" style="width:18px;height:18px;display:block;pointer-events:none;" />';
+    $wallpaperBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (this.$wallpaper) this.$wallpaper.toggleMenu();
+    });
+    $bar.appendChild($wallpaperBtn);
     document.body.appendChild($bar);
   }
 
@@ -193,12 +202,17 @@ export default class App {
 
   computeGridDims($app, settings) {
     // Use viewport size to avoid 0-size before grid is populated
-    const aw = Math.max(0, window.innerWidth || 0);
-    const ah = Math.max(0, window.innerHeight || 0);
-    const stepX = settings.tileW; // gap 제거
-    const stepY = settings.tileH; // gap 제거
-    const cols = Math.max(3, Math.floor(aw / stepX));
-    const rows = Math.max(3, Math.floor(ah / stepY));
+    // const aw = Math.max(0, window.innerWidth || 0);
+    // const ah = Math.max(0, window.innerHeight || 0);
+    // const stepX = settings.tileW; // gap 제거
+    // const stepY = settings.tileH; // gap 제거
+    // const cols = Math.max(3, Math.floor(aw / stepX));
+    // const rows = Math.max(3, Math.floor(ah / stepY));
+
+    // Fixed grid size (20x9) as per user request to stop responsive changes
+    const cols = 20;
+    const rows = 9;
+
     return { cols, rows };
   }
 
@@ -210,9 +224,9 @@ export default class App {
     if (cols === prevCols && rows === prevRows) return;
     this.gridCols = cols;
     this.gridRows = rows;
-  this.$app.style.gridTemplateColumns = `repeat(${cols}, var(--grid-item-width))`;
-  this.$app.style.gridTemplateRows = `repeat(${rows}, var(--grid-item-height))`;
-  this.$app.style.gap = '0px';
+    this.$app.style.gridTemplateColumns = `repeat(${cols}, var(--grid-item-width))`;
+    this.$app.style.gridTemplateRows = `repeat(${rows}, var(--grid-item-height))`;
+    this.$app.style.gap = '0px';
     this.ensureGridWrappers(cols, rows);
   }
 
@@ -284,7 +298,7 @@ export default class App {
 
     this.$app.addEventListener('drop', async (e) => {
       e.preventDefault();
-      
+
       const files = e.dataTransfer.files;
       if (files.length > 0) {
         const file = files[0];
@@ -408,8 +422,8 @@ export default class App {
   }
 
   renderMainInit(bookMarkTree, $app) {
-  const lenX = this.gridCols || 20;
-  const lenY = this.gridRows || 9;
+    const lenX = this.gridCols || 20;
+    const lenY = this.gridRows || 9;
 
     let zIndex = 1000;
     for (let y = 0; y < lenY; y++) {

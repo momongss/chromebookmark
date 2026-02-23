@@ -597,3 +597,44 @@ temp-dragger.dragging .multi {
   background: none !important;
   color: inherit !important;
 }
+
+.post-it-header .close-btn {
+  margin-left: auto !important;
+}
+
+/* ==============================
+   Post-it content scrollbar UI
+   ============================== */
+.post-it-content::-webkit-scrollbar {
+  width: 7px; /* 오른쪽에 더 붙어 보이도록 얇게 조정 */
+  height: 7px;
+}
+
+/* Firefox */
+.post-it-content {
+  scrollbar-width: thin; /* FF 전용 */
+  scrollbar-color: rgba(0, 0, 0, 0.35) transparent;
+}
+
+.post-it-content::-webkit-scrollbar-track {
+  background: transparent; /* 노트 컬러와 자연스럽게 어울리도록 */
+  border-radius: 8px;
+}
+
+.post-it-content::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.25);
+  border-radius: 7px;
+  border: none; /* 내부 여백 제거로 오른쪽 벽에 더 밀착 */
+}
+
+.post-it-content:hover::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.35);
+}
+
+.post-it-content::-webkit-scrollbar-thumb:active {
+  background-color: rgba(0, 0, 0, 0.45);
+}
+
+.post-it-content::-webkit-scrollbar-corner {
+  background: transparent;
+}

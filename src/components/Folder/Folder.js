@@ -18,57 +18,73 @@ export default class Folder extends ItemNode {
   }
 
   eventListeners() {
-    document.addEventListener("click", (e) => {
-      if (this.$nodeOptions) this.$nodeOptions.remove();
-    });
+    this.removeEventListeners();
 
-    this.addEventListener("contextmenu", (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-      document.querySelectorAll(".options").forEach(($el) => {
-        $el.remove();
-      });
-      this.optionEdit = new OptionEdit({
-        $target: this.$node,
-        x: e.clientX,
-        y: e.clientY,
-      });
-      this.$nodeOptions = this.optionEdit.$nodeOptions;
-      if (e.target.parentElement === this.$node) {
-      }
-    });
+    this.addEventListener("contextmenu", this._handleContextMenu);
+    document.addEventListener("click", this._handleDocumentClick);
   }
+
+  removeEventListeners() {
+    this.removeEventListener("contextmenu", this._handleContextMenu);
+    document.removeEventListener("click", this._handleDocumentClick);
+    this.removeEventListener("click", this._handleClickApp);
+    this.removeEventListener("click", this._handleClickFolderManager);
+  }
+
+  _handleDocumentClick = (e) => {
+    if (this.$nodeOptions) this.$nodeOptions.remove();
+  };
+
+  _handleContextMenu = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    document.querySelectorAll(".options").forEach(($el) => {
+      $el.remove();
+    });
+    this.optionEdit = new OptionEdit({
+      $target: this.$node,
+      x: e.clientX,
+      y: e.clientY,
+    });
+    this.$nodeOptions = this.optionEdit.$nodeOptions;
+    if (e.target.parentElement === this.$node) {
+    }
+  };
 
   eventListeners_app() {
     this.managerCnt = 0;
-
-    this.addEventListener("click", (e) => {
-      const $rect = this.$node.getBoundingClientRect();
-      const initPos = {
-        top: $rect.top + this.managerCnt * 35,
-        left: $rect.x + this.managerCnt * 35,
-      };
-      this.managerCnt++;
-      const folderManager = document.createElement("folder-manager");
-  
-      folderManager.Init({
-        id: this.bookMark.id,
-        initPos: initPos,
-        onDestroy: () => {
-          this.managerCnt--;
-        },
-      });
-    });
+    this.addEventListener("click", this._handleClickApp);
   }
+
+  _handleClickApp = (e) => {
+    const $rect = this.$node.getBoundingClientRect();
+    const initPos = {
+      top: $rect.top + this.managerCnt * 35,
+      left: $rect.x + this.managerCnt * 35,
+    };
+    this.managerCnt++;
+    const folderManager = document.createElement("folder-manager");
+
+    folderManager.Init({
+      id: this.bookMark.id,
+      initPos: initPos,
+      onDestroy: () => {
+        this.managerCnt--;
+      },
+    });
+  };
 
   eventListeners_folderManager(folderManager) {
-    this.addEventListener("click", (e) => {      
-      e.preventDefault();
-      e.stopPropagation();
-      folderManager.id = this.bookMark.id;
-      folderManager.render({ id: this.bookMark.id });
-    });
+    this._currentFolderManager = folderManager;
+    this.addEventListener("click", this._handleClickFolderManager);
   }
+
+  _handleClickFolderManager = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    this._currentFolderManager.id = this.bookMark.id;
+    this._currentFolderManager.render({ id: this.bookMark.id });
+  };
 
   addItem(bookMark) {
     bookmarkManager.moveTree(bookMark.id, this.bookMark.id);

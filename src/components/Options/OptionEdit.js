@@ -24,10 +24,26 @@ export default class OptionEdit {
   }
 
   eventListers() {
+    this.$nodeOptions.addEventListener("pointerdown", (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+
+      console.log("Pointer down on options menu, preventing event propagation.");
+    });
+
+    this.$nodeOptions.addEventListener("mousedown", (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+
+      console.log("Pointer down on options menu, preventing event propagation.");
+    });
+
     this.$edit.addEventListener("click", async (e) => {
       e.preventDefault();
       e.stopPropagation();
       const $editTarget = this.findMyNode(e.target);
+
+      console.log("Editing folder with ID:", $editTarget.dataset.id);
 
       const $title = $editTarget.querySelector(".text");
       $title.contentEditable = true;
@@ -60,6 +76,12 @@ export default class OptionEdit {
       e.stopPropagation();
       const $folder = this.$nodeOptions.parentElement;
       if ($folder && $folder.classList.contains("node")) {
+        // 삭제 전에 커스텀 엘리먼트와 FolderManager 참조를 미리 획득
+        const $customElement = $folder.parentElement;
+        const folderManager = $customElement?.parentFolderManager;
+
+        console.log("Attempting to delete folder with ID:", $folder.dataset.id);
+
         const subTree = await bookmarkManager.getSubTree($folder.dataset.id);
         if (subTree[0].children != null && subTree[0].children.length > 0) {
           const msg = chrome.i18n.getMessage("remove");
@@ -67,12 +89,14 @@ export default class OptionEdit {
           const answer = confirm(msg ? msg : "really delete folder?");
 
           if (answer) {
-            bookmarkManager.removeTree($folder.dataset.id);
-            $folder.remove();
+            await bookmarkManager.removeTree($folder.dataset.id);
+            if ($customElement) $customElement.remove();
           }
         } else {
-          bookmarkManager.remove($folder.dataset.id);
-          $folder.remove();
+          console.log("Deleting folder with ID:", $folder.dataset.id);
+
+          await bookmarkManager.remove($folder.dataset.id);
+          if ($customElement) $customElement.remove();
         }
       }
       this.$nodeOptions.remove();

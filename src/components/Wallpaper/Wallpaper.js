@@ -1,7 +1,8 @@
 import Storage from "../../utils/storage.js";
 
 export default class Wallpaper {
-  constructor() {
+  constructor(options = {}) {
+    this.options = options;
     this.backgroundElement = null;
     this.menuElement = null;
     this.menuBtnElement = null;
@@ -24,7 +25,10 @@ export default class Wallpaper {
 
   async _constructor() {
     await this.createBackgroundElement();
-    this.createMenuButton();
+    // 임베드 모드가 아니면 독립 버튼 생성
+    if (!this.options.embeddedButton) {
+      this.createMenuButton();
+    }
     this.createMenu();
     this.setupEventListeners();
     this.render();
@@ -112,14 +116,16 @@ export default class Wallpaper {
   }
 
   setupEventListeners() {
-    // 메뉴 버튼 클릭
-    this.menuBtnElement.addEventListener('click', () => this.toggleMenu());
-    this.menuBtnElement.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' || e.key === ' ') {
-        e.preventDefault();
-        this.toggleMenu();
-      }
-    });
+    // 독립 버튼이 존재할 때만 버튼 관련 리스너 등록
+    if (this.menuBtnElement) {
+      this.menuBtnElement.addEventListener('click', () => this.toggleMenu());
+      this.menuBtnElement.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          this.toggleMenu();
+        }
+      });
+    }
 
     // 메뉴 외부 클릭 시 닫기
     this.menuElement.addEventListener('click', (e) => {
@@ -165,7 +171,10 @@ export default class Wallpaper {
 
   closeMenu() {
     this.menuElement.classList.remove('show');
-    this.menuBtnElement.focus();
+    // 임베드 모드에서는 포커스 복귀 생략
+    if (this.menuBtnElement) {
+      this.menuBtnElement.focus();
+    }
   }
 
   async selectWallpaper(item) {

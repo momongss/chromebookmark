@@ -3,6 +3,7 @@ import OptionCreate from "./Options/OptionCreate.js";
 import Bookmark from "../utils/bookmark.js";
 
 import { FolderManagerData } from "../utils/FolderManagerData.js";
+import ZIndexManager from "../utils/ZIndexManager.js";
 import App from "./App.js";
 import bookmarkManager from "../utils/bookmark.js";
 import DropHandlerApp from "../utils/dropHandlerApp.js";
@@ -11,14 +12,13 @@ export default class FolderManager extends HTMLElement {
   Init({ id, initPos, onDestroy }) {
     this.className = `folder-manager-wrapper`;
 
-    FolderManagerData.zindex++;
-    this.style.zIndex = FolderManagerData.zindex;
+    // ZIndexManager를 통해 최상위 z-index 할당
+    this.style.zIndex = ZIndexManager.getNextIndex();
     FolderManagerData.$prevManager = this;
 
     this.addEventListener("mousedown", (e) => {
-      if (FolderManagerData.$prevManager === this) return;
-      FolderManagerData.zindex++;
-      this.style.zIndex = FolderManagerData.zindex;
+      // 항상 최신 z-index 할당 (PostIt 등이 그 사이에 최상위가 되었을 수 있음)
+      this.style.zIndex = ZIndexManager.getNextIndex();
       FolderManagerData.$prevManager = this;
     });
 
@@ -51,7 +51,7 @@ export default class FolderManager extends HTMLElement {
   addItem(node) {
     // 북마크 이동을 먼저 수행
     bookmarkManager.moveTree(node.id, this.id);
-    
+
     this.render({ id: this.id, mode: "back" });
   }
 
@@ -103,7 +103,7 @@ export default class FolderManager extends HTMLElement {
 
       folderX = parseInt(this.style.left.slice(0, this.style.left.length - 2));
       folderY = parseInt(this.style.top.slice(0, this.style.top.length - 2));
-      
+
       // 드래그 시작 시 클래스 추가
       this.classList.add("dragging");
 
@@ -146,7 +146,7 @@ export default class FolderManager extends HTMLElement {
     const subTree = await Bookmark.getSubTree(id);
     const title = subTree[0].title;
     const bookMarkTree = subTree[0].children;
-    
+
     this.innerHTML = "";
     this.classList.add("show");
     this.style.top = `${this.pos.top}px`;
@@ -170,25 +170,25 @@ export default class FolderManager extends HTMLElement {
     const $header = document.createElement("div");
     $header.className = "folder-manager-header";
 
-  // 항상 백 버튼 자리 확보(필요 없을 때는 숨김 처리로 공간 유지)
-  const $backBtn = document.createElement("div");
-  $backBtn.className = "back-btn";
-  $backBtn.style.cursor = "pointer";
-  $backBtn.style.marginRight = "8px";
-  $backBtn.innerHTML = `<img src="assets/back-arrow.svg" alt="back"/>`;
-  $header.appendChild($backBtn);
+    // 항상 백 버튼 자리 확보(필요 없을 때는 숨김 처리로 공간 유지)
+    const $backBtn = document.createElement("div");
+    $backBtn.className = "back-btn";
+    $backBtn.style.cursor = "pointer";
+    $backBtn.style.marginRight = "8px";
+    $backBtn.innerHTML = `<img src="assets/back-arrow.svg" alt="back"/>`;
+    $header.appendChild($backBtn);
 
     const $title = document.createElement("div");
     $title.className = "folder-title";
     $title.textContent = title;
     $header.appendChild($title);
 
-  const $closeBtn = document.createElement("div");
-  $closeBtn.className = "folder-close";
-  $closeBtn.innerHTML = `<img src="assets/close.svg" alt="close"/>`;
-  // 접근성 및 클릭 영역 개선
-  $closeBtn.setAttribute('role', 'button');
-  $closeBtn.setAttribute('tabindex', '0');
+    const $closeBtn = document.createElement("div");
+    $closeBtn.className = "folder-close";
+    $closeBtn.innerHTML = `<img src="assets/close.svg" alt="close"/>`;
+    // 접근성 및 클릭 영역 개선
+    $closeBtn.setAttribute('role', 'button');
+    $closeBtn.setAttribute('tabindex', '0');
     $header.appendChild($closeBtn);
 
     this.appendChild($header);
@@ -202,8 +202,8 @@ export default class FolderManager extends HTMLElement {
 
     this.appendChild($folderManager);
 
-  // 내부 영역에서도 포인터 이벤트 전파 차단
-  this._installStopPropagation($folderManager);
+    // 내부 영역에서도 포인터 이벤트 전파 차단
+    this._installStopPropagation($folderManager);
 
     // 정렬/배치 상태 저장 및 이벤트
     $sortSelect.addEventListener("change", (e) => {
