@@ -61,16 +61,35 @@ class RectDragger extends HTMLElement {
   }
 
   onMouseDown = (e) => {
-    this.clearAllSelections();
+    // 우클릭(button === 2)은 무시
+    if (e.button !== 0) return;
 
     const elements = document.elementsFromPoint(e.clientX, e.clientY);
 
+    // $parent 내부의 노드만 검사 (뒤쪽 레이어의 노드 무시)
     const isNode = elements.some(el => 
-      el.tagName === 'FILE-NODE' || 
-      el.tagName === 'FOLDER-NODE' || 
-      el.tagName === 'ITEM-NODE' ||
-      el.classList.contains("node")
+      this.$parent.contains(el) && (
+        el.tagName === 'FILE-NODE' || 
+        el.tagName === 'FOLDER-NODE' || 
+        el.tagName === 'ITEM-NODE' ||
+        el.classList.contains("node")
+      )
     );
+
+    // 멀티 선택된 노드를 클릭한 경우 선택을 유지(드래그/우클릭 가능하도록)
+    if (isNode) {
+      const clickedNode = elements.find(el =>
+        this.$parent.contains(el) && (
+          el.tagName === 'FILE-NODE' || el.tagName === 'FOLDER-NODE' || el.tagName === 'ITEM-NODE'
+        )
+      );
+      if (clickedNode && clickedNode.classList.contains('multi')) {
+        return; // 선택 유지, rectangle drag 시작 안 함
+      }
+    }
+
+    this.clearAllSelections();
+
     if (isNode) {
       return;
     }
@@ -82,8 +101,6 @@ class RectDragger extends HTMLElement {
     this.startY = e.clientY - this.anchor.y;
 
     const dragBox = this;
-
-    dragBox.style.visibility = "visible";
 
     dragBox.style.left = `${this.startX}px`;
     dragBox.style.top = `${this.startY}px`;
@@ -125,6 +142,7 @@ class RectDragger extends HTMLElement {
 
     const dragBox = this;
 
+    dragBox.style.visibility = "visible";
     dragBox.style.width = `${width}px`;
     dragBox.style.height = `${height}px`;
 

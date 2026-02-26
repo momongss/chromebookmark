@@ -1,5 +1,6 @@
 import Storage from "../../utils/storage.js";
 import ZIndexManager from "../../utils/ZIndexManager.js";
+import bookmarkManager from "../../utils/bookmark.js";
 
 export default class PostItManager {
   constructor($app) {
@@ -558,19 +559,86 @@ export default class PostItManager {
       document.querySelectorAll('.options').forEach(el => el.remove());
       document.querySelectorAll('.post-it-context-menu').forEach(el => el.remove());
 
+      e.preventDefault();
+
+      // 멀티 선택된 노드가 있는지 확인
+      const multiSelectedNodes = document.querySelectorAll('file-node.multi, folder-node.multi, item-node.multi');
+
       // 포스트잇 컨텍스트 메뉴 생성
       const contextMenu = document.createElement('div');
       contextMenu.className = 'post-it-context-menu';
       contextMenu.style.cssText = `
         position: fixed;
-        background: white;
-        border: 1px solid #ddd;
-        border-radius: 4px;
-        padding: 8px 0;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        z-index: 10000;
-        min-width: 150px;
+        background: rgba(30, 30, 40, 0.6);
+        backdrop-filter: blur(20px) saturate(1.4);
+        -webkit-backdrop-filter: blur(20px) saturate(1.4);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: 12px;
+        padding: 6px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        z-index: 100000;
+        min-width: 160px;
       `;
+
+      if (multiSelectedNodes.length > 0) {
+        // 멀티 선택 상태: 삭제 옵션 표시
+        const deleteOption = document.createElement('div');
+        deleteOption.innerHTML = `
+          <span style="display:inline-flex;width:16px;height:16px;margin-right:8px;align-items:center;justify-content:center;">
+            <img src="chrome-extension://${chrome.runtime.id}/assets/delete.svg" alt="" style="width:16px;height:16px;display:block;filter:brightness(0) invert(1) opacity(0.85);"/>
+          </span>
+          <span>${multiSelectedNodes.length}개 항목 삭제</span>
+        `;
+        deleteOption.style.cssText = `
+          padding: 8px 14px;
+          cursor: pointer;
+          font-size: 13px;
+          display: flex;
+          align-items: center;
+          border-radius: 8px;
+          transition: background 0.15s ease;
+          color: #ff6b6b;
+        `;
+
+        deleteOption.addEventListener('mouseenter', () => {
+          deleteOption.style.background = 'rgba(255, 107, 107, 0.15)';
+        });
+
+        deleteOption.addEventListener('mouseleave', () => {
+          deleteOption.style.background = 'transparent';
+        });
+
+        deleteOption.addEventListener('click', async () => {
+          const msg = chrome.i18n.getMessage("remove");
+          const confirmed = confirm(msg || `${multiSelectedNodes.length}개 항목을 삭제하시겠습니까?`);
+          if (confirmed) {
+            for (const node of Array.from(multiSelectedNodes)) {
+              if (node.bookMark?.id) {
+                try {
+                  const subTree = await bookmarkManager.getSubTree(node.bookMark.id);
+                  if (subTree[0].children != null && subTree[0].children.length > 0) {
+                    await bookmarkManager.removeTree(node.bookMark.id);
+                  } else {
+                    await bookmarkManager.remove(node.bookMark.id);
+                  }
+                } catch (err) {
+                  console.error('북마크 삭제 실패:', node.bookMark.id, err);
+                }
+                node.remove();
+              }
+            }
+            // 선택 상태 초기화
+            const tempDragger = document.querySelector('temp-dragger');
+            if (tempDragger?.clearAllSelections) {
+              tempDragger.clearAllSelections();
+            }
+          }
+          contextMenu.remove();
+        });
+
+        contextMenu.appendChild(deleteOption);
+      } else {
+        // 일반 상태: 포스트잇 생성 옵션 표시
 
       const createPostItOption = document.createElement('div');
       createPostItOption.innerHTML = `
@@ -580,20 +648,22 @@ export default class PostItManager {
         <span>포스트잇 생성</span>
       `;
       createPostItOption.style.cssText = `
-        padding: 8px 16px;
+        padding: 8px 14px;
         cursor: pointer;
-        font-size: 14px;
+        font-size: 13px;
         display: flex;
         align-items: center;
-        transition: background-color 0.2s ease;
+        border-radius: 8px;
+        transition: background 0.15s ease;
+        color: rgba(255, 255, 255, 0.9);
       `;
 
       createPostItOption.addEventListener('mouseenter', () => {
-        createPostItOption.style.backgroundColor = '#f5f5f5';
+        createPostItOption.style.background = 'rgba(255, 255, 255, 0.15)';
       });
 
       createPostItOption.addEventListener('mouseleave', () => {
-        createPostItOption.style.backgroundColor = 'transparent';
+        createPostItOption.style.background = 'transparent';
       });
 
       createPostItOption.addEventListener('click', () => {
@@ -602,6 +672,8 @@ export default class PostItManager {
       });
 
       contextMenu.appendChild(createPostItOption);
+      } // end if-else (multiSelectedNodes)
+
       document.body.appendChild(contextMenu);
 
       // 메뉴 위치 설정

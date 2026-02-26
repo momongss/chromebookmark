@@ -20,9 +20,9 @@ class TempDragger extends HTMLElement {
     this.draggable = false;
     this.className = 'temp-dragger';
     this.style.backgroundColor = 'rgba(107, 83, 83, 0)'; // 투명 배경
-    // 임시 디버깅용 플래그 기본 활성화
+    // 임시 디버깅용 플래그 기본 비활성화
     if (window.DEBUG_TEMP_DRAGGER === undefined) {
-      window.DEBUG_TEMP_DRAGGER = true;
+      window.DEBUG_TEMP_DRAGGER = false;
     }
     
     // 드래그 이벤트 리스너 추가
@@ -39,8 +39,8 @@ class TempDragger extends HTMLElement {
     this.style.top = `${bounds.top}px`;
     this.style.width = `${bounds.width}px`;
     this.style.height = `${bounds.height}px`;
-    this.style.pointerEvents = 'auto';
-    this.draggable = true;
+    this.style.pointerEvents = 'none';
+    this.draggable = false;
     this.isEnabled = true;
     
     // 경계 박스 정보 저장
@@ -110,9 +110,9 @@ class TempDragger extends HTMLElement {
       this.enable(elements);
     }
 
-    // TempDragger 자체도 드래그 가능하게 설정
-    this.draggable = true;
-    this.style.pointerEvents = 'auto';
+    // TempDragger 자체는 pointer-events: none 유지 (빈 영역 클릭이 바탕화면으로 전달되도록)
+    // 개별 선택 노드의 dragstart 핸들러가 TempDragger의 onDragStart를 대신 호출함
+    this.draggable = false;
 
     // 원래 부모와 위치 정보 저장
     this.saveOriginalParents(elements);
@@ -273,6 +273,19 @@ class TempDragger extends HTMLElement {
           element.originalPosition = {
             x: parseInt(pos[2]),
             y: parseInt(pos[3])
+          };
+        }
+      } else if (parent && parent.className.includes('folder-manager')) {
+        // FolderManager 내부 노드: DOM 순서 기반으로 가상 그리드 좌표 부여
+        const siblings = Array.from(parent.children).filter(c =>
+          c.tagName && (c.tagName === 'FILE-NODE' || c.tagName === 'FOLDER-NODE' || c.tagName === 'ITEM-NODE')
+        );
+        const index = siblings.indexOf(element);
+        if (index >= 0) {
+          const COLUMNS = 5; // FolderManager grid-template-columns: repeat(5, ...)
+          element.originalPosition = {
+            x: index % COLUMNS,
+            y: Math.floor(index / COLUMNS)
           };
         }
       }

@@ -17,35 +17,36 @@ export default class SearchBar {
       'position:fixed',
       'left:0','right:0','top:0',
       'display:flex',
-      'align-items:center',
+      'align-items:flex-start',
       'pointer-events:none',
       'transform: translateY(-100%)',
-      'transition: transform 0.15s ease',
+      'transition: transform 0.2s ease',
       'z-index:12000',
-      'background: rgba(255, 255, 255, 0)',
-      'padding: 10px 12px'
+      'padding: 12px 16px'
     ].join(';');
 
     const $container = document.createElement('div');
     $container.style.cssText = [
-      'width:900px',
+      'width:640px',
       'margin:0 auto',
       'display:flex',
       'flex-direction:column',
-      'justify-content:center',
       'pointer-events:auto',
-      'padding:0px 10px',
-      'height:56px',
-      'background:#ffffff',
-      'border-radius:10px'
+      'padding:6px',
+      'background:rgba(245, 245, 250, 0.82)',
+      'backdrop-filter:blur(28px) saturate(1.6)',
+      '-webkit-backdrop-filter:blur(28px) saturate(1.6)',
+      'border-radius:18px',
+      'border:1.5px solid rgba(255,255,255,0.5)',
+      'box-shadow:0 0 0 1px rgba(0,0,0,0.04), 0 12px 40px rgba(0,0,0,0.12), 0 0 80px rgba(130,100,255,0.06)'
     ].join(';');
 
     const $row = document.createElement('div');
-    $row.style.cssText = 'display:flex;align-items:center;gap:8px';
+    $row.style.cssText = 'display:flex;align-items:center;gap:10px';
 
     const $icon = document.createElement('span');
     $icon.textContent = '🔎';
-    $icon.style.cssText = 'font-size:18px';
+    $icon.style.cssText = 'font-size:18px;opacity:0.45;flex-shrink:0';
 
     this.$input = document.createElement('input');
     this.$input.type = 'text';
@@ -53,14 +54,26 @@ export default class SearchBar {
     this.$input.className = 'bookmark-search-input';
     this.$input.style.cssText = [
       'flex:1',
-      'padding:10px 12px',
-      'font-size:14px',
-      'border-radius:8px',
-      'backdrop-filter: blur(4px)',
-      'border:1px solid #d0d7de',
+      'margin:0',
+      'padding:12px 14px',
+      'font-size:15px',
+      'border-radius:12px',
+      'background:transparent',
+      'border:none',
       'outline:none',
-      'box-shadow: inset 0 1px 2px rgba(0,0,0,0.04)'
+      'color:#1a1a2e',
+      'caret-color:#7c5cfc',
+      'font-weight:500',
+      'letter-spacing:0.2px'
     ].join(';');
+    this.$input.addEventListener('focus', () => {
+      $container.style.borderColor = 'rgba(124,92,252,0.4)';
+      $container.style.boxShadow = '0 0 0 1px rgba(0,0,0,0.04), 0 12px 40px rgba(0,0,0,0.12), 0 0 0 3px rgba(124,92,252,0.12)';
+    });
+    this.$input.addEventListener('blur', () => {
+      $container.style.borderColor = 'rgba(255,255,255,0.5)';
+      $container.style.boxShadow = '0 0 0 1px rgba(0,0,0,0.04), 0 12px 40px rgba(0,0,0,0.12), 0 0 80px rgba(130,100,255,0.06)';
+    });
 
 
     $row.appendChild($icon);
@@ -68,7 +81,7 @@ export default class SearchBar {
 
   this.$results = document.createElement('div');
   this.$results.className = 'bookmark-search-results';
-  this.$results.style.cssText = 'display:none;max-height:50vh;overflow:auto;border-radius:8px;border:1px solid rgba(0,0,0,0.06)';
+  this.$results.style.cssText = 'display:none;max-height:50vh;overflow:auto;border-radius:12px;border-top:1px solid rgba(0,0,0,0.06)';
 
     $container.appendChild($row);
     $container.appendChild(this.$results);
@@ -117,31 +130,46 @@ export default class SearchBar {
     if (!nodes || nodes.length === 0) {
       const empty = document.createElement('div');
       empty.textContent = '결과가 없습니다.';
-      empty.style.cssText = 'padding:10px 12px;color:#6b7280;font-size:13px';
+      empty.style.cssText = 'padding:12px 14px;color:rgba(0,0,0,0.35);font-size:13px';
       this.$results.appendChild(empty);
       return;
     }
     for (const n of nodes) {
       const $item = document.createElement('div');
       $item.className = 'search-item';
-      $item.style.cssText = 'display:flex;gap:8px;align-items:center;padding:8px 12px;cursor:pointer;border-bottom:1px solid rgba(0,0,0,0.04)';
+      $item.style.cssText = 'display:flex;gap:8px;align-items:center;padding:9px 14px;cursor:pointer;border-radius:10px;margin:2px 4px;transition:background 0.1s';
       const isFolder = !n.url;
       const icon = document.createElement('span');
       icon.textContent = isFolder ? '📁' : '🔗';
+
+      const $info = document.createElement('div');
+      $info.style.cssText = 'flex:1;min-width:0;display:flex;flex-direction:column;gap:2px';
+
       const title = document.createElement('div');
-      title.style.cssText = 'flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:14px;color:#111827';
+      title.style.cssText = 'white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:14px;color:#1a1a2e;font-weight:500';
       title.textContent = n.title || (isFolder ? '(폴더)' : n.url);
+
+      const $path = document.createElement('div');
+      $path.style.cssText = 'font-size:11px;color:rgba(0,0,0,0.35);white-space:nowrap;overflow:hidden;text-overflow:ellipsis';
+      $path.textContent = '...';
+      this._getBookmarkPath(n.parentId).then(path => { $path.textContent = path; });
+
+      $info.appendChild(title);
+      $info.appendChild($path);
+
       const meta = document.createElement('div');
-      meta.style.cssText = 'font-size:12px;color:#6b7280;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:45%';
+      meta.style.cssText = 'font-size:11px;color:rgba(0,0,0,0.25);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:35%';
       meta.textContent = isFolder ? 'Folder' : (n.url || '');
 
-      $item.appendChild(icon); $item.appendChild(title); $item.appendChild(meta);
+      $item.appendChild(icon); $item.appendChild($info); $item.appendChild(meta);
 
       if (!isFolder) {
         const $locBtn = document.createElement('button');
         $locBtn.textContent = '위치 열기';
         $locBtn.title = '이 북마크가 있는 위치 열기';
-        $locBtn.style.cssText = 'margin-left:8px;padding:6px 8px;border:1px solid #d0d7de;border-radius:6px;background:#fff;color:#0b82ff;font-size:12px;cursor:pointer;flex:0 0 auto';
+        $locBtn.style.cssText = 'margin-left:4px;padding:5px 10px;border:1px solid rgba(0,0,0,0.08);border-radius:8px;background:rgba(124,92,252,0.06);color:#7c5cfc;font-size:11px;cursor:pointer;flex:0 0 auto;transition:background 0.1s;font-weight:500';
+        $locBtn.addEventListener('mouseenter', () => { $locBtn.style.background = 'rgba(124,92,252,0.12)'; });
+        $locBtn.addEventListener('mouseleave', () => { $locBtn.style.background = 'rgba(124,92,252,0.06)'; });
         $locBtn.addEventListener('click', (e) => {
           e.preventDefault();
           e.stopPropagation();
@@ -168,14 +196,14 @@ export default class SearchBar {
     this.$results.querySelectorAll('.search-item').forEach(x => { x.classList.remove('active'); x.style.background = ''; });
     if (el) {
       el.classList.add('active');
-      el.style.background = 'rgba(0,123,255,0.08)';
+      el.style.background = 'rgba(124,92,252,0.08)';
     }
   }
 
   _openFolderManager(folderId) {
     const initPos = { left: Math.max(20, window.innerWidth/2 - 220), top: 80 };
     const fm = document.createElement('folder-manager');
-    fm.Init({ id: folderId, initPos, onDestroy: () => {} });
+    fm.initWithHistory({ id: folderId, initPos, onDestroy: () => {} });
     return fm;
   }
 
@@ -289,5 +317,19 @@ export default class SearchBar {
       this.$results.style.display = 'none';
       this.$results.innerHTML = '';
     }
+  }
+
+  async _getBookmarkPath(parentId) {
+    const parts = [];
+    let currentId = parentId;
+    try {
+      while (currentId && currentId !== '0') {
+        const node = await bookmarkManager.getNode(currentId);
+        if (!node) break;
+        if (node.title) parts.unshift(node.title);
+        currentId = node.parentId;
+      }
+    } catch (e) { /* ignore */ }
+    return parts.length ? parts.join(' / ') : '/';
   }
 }

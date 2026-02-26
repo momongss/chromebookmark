@@ -24,8 +24,10 @@ export default class DropHandlerApp {
         // 드래그 시작 시 드래그된 객체 정보를 저장
         const draggedElement = e.target.closest('item-node, file-node, folder-node');
         if (draggedElement) {
-            // 단일 드래그인 경우 (TempDragger가 활성화되지 않은 경우) 이전 멀티 선택 상태 완전 초기화
-            if (!window.isTempDragActive) {
+            // 멀티 선택된 노드를 드래그하는 경우 선택 초기화하지 않음
+            const isMultiSelected = draggedElement.classList.contains('multi');
+            // 단일 드래그인 경우 (TempDragger가 활성화되지 않고, 멀티 선택 노드도 아닌 경우) 이전 멀티 선택 상태 완전 초기화
+            if (!window.isTempDragActive && !isMultiSelected) {
                 
                 // 모든 노드의 선택 상태 제거
                 const allNodes = document.querySelectorAll('file-node, folder-node, item-node');

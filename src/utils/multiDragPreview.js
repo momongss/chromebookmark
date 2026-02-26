@@ -32,10 +32,13 @@ function makeTileForElement(el, options) {
     `height:${tileH}px`,
     'box-sizing:border-box',
     'pointer-events:none',
-    'overflow:visible'
+    'overflow:visible',
+    'background:rgba(255, 255, 255, 0.42)',
+    'border-radius:10px',
+    'border:1px solid rgba(255,255,255,0.15)'
   ].join(';');
   // 모든 타일 동일 불투명도 (기본 1, UA 드래그 피드백 투명도와 중첩 방지)
-  tile.style.opacity = String(opacity ?? 1);
+  tile.style.opacity = 1; //String(opacity ?? 1);
 
   if (useDomClone) {
     // Try to clone the inner visual node to match original UI
@@ -148,7 +151,9 @@ export function applyMultiDragImage(e, selectedElements, anchorElement, opts = {
     'pointer-events:none',
     // 드래그 스냅샷의 기본 반투명도와 겹치지 않도록 컨테이너도 불투명 처리
     'opacity:1',
-    // `background:${options.bg}`
+    'background:rgba(255, 255, 255, 0)',
+    'border-radius:12px',
+    'padding:4px'
   ].join(';');
 
   // Create tiles

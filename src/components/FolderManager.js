@@ -22,6 +22,17 @@ export default class FolderManager extends HTMLElement {
       FolderManagerData.$prevManager = this;
     });
 
+    // Esc 키로 닫기
+    this._onKeyDown = (e) => {
+      if (e.key === 'Escape' && FolderManagerData.$prevManager === this) {
+        document.removeEventListener('keydown', this._onKeyDown);
+        this.remove();
+        this.history = [];
+        this.onDestroy();
+      }
+    };
+    document.addEventListener('keydown', this._onKeyDown);
+
     document.body.appendChild(this);
 
     this.$app = App.$dom;
@@ -46,6 +57,18 @@ export default class FolderManager extends HTMLElement {
 
     // 포인터 이벤트가 바탕화면으로 전파되어 선택/드래그가 시작되는 문제 방지
     this._installStopPropagation();
+  }
+
+  // 검색 등에서 경로 히스토리를 미리 채운 상태로 열기
+  async initWithHistory({ id, initPos, onDestroy }) {
+    const path = await bookmarkManager.getAncestorPath(id);
+    this.Init({ id, initPos, onDestroy });
+    // Init에서 render가 history에 현재 id를 이미 push하므로, 그 앞에 조상을 삽입
+    if (path.length > 1) {
+      // path의 마지막은 현재 폴더(이미 history에 있음), 그 앞의 것들을 앞에 삽입
+      const ancestors = path.slice(0, -1);
+      this.history.unshift(...ancestors.map(a => ({ id: a.id })));
+    }
   }
 
   addItem(node) {
@@ -97,6 +120,8 @@ export default class FolderManager extends HTMLElement {
     $header.addEventListener("pointerdown", (e) => {
       // 닫기 버튼(내부 img 포함)을 클릭한 경우 드래그 시작 방지
       if (e.target.closest('.folder-close')) return;
+      // breadcrumb 항목 클릭 시 드래그 방지
+      if (e.target.closest('.breadcrumb-item:not(.breadcrumb-current)')) return;
       dragged = true;
       initX = e.clientX;
       initY = e.clientY;
@@ -180,8 +205,13 @@ export default class FolderManager extends HTMLElement {
 
     const $title = document.createElement("div");
     $title.className = "folder-title";
-    $title.textContent = title;
     $header.appendChild($title);
+
+    // Breadcrumb 렌더링: history + 현재 폴더
+    const breadcrumbIds = [...this.history.map(h => h.id)];
+    // 아직 현재 id가 history에 없는 시점이면 추가
+    if (!breadcrumbIds.includes(id)) breadcrumbIds.push(id);
+    this._renderBreadcrumb($title, breadcrumbIds, id);
 
     const $closeBtn = document.createElement("div");
     $closeBtn.className = "folder-close";
@@ -261,6 +291,7 @@ export default class FolderManager extends HTMLElement {
     // 닫기 버튼 클릭(이미지 클릭 포함) 시 닫기, 드래그 방지
     const handleClose = (e) => {
       e.stopPropagation();
+      if (this._onKeyDown) document.removeEventListener('keydown', this._onKeyDown);
       this.remove();
       this.history = [];
       this.onDestroy();
@@ -316,6 +347,50 @@ export default class FolderManager extends HTMLElement {
     ['pointerdown', 'mousedown', 'touchstart', 'dragstart'].forEach((type) => {
       target.addEventListener(type, stop, { capture: false });
     });
+  }
+
+  // Breadcrumb 렌더링: 경로의 각 폴더를 클릭 가능한 링크로 표시
+  async _renderBreadcrumb($container, folderIds, currentId) {
+    $container.innerHTML = '';
+    const names = [];
+    for (const fid of folderIds) {
+      try {
+        const sub = await Bookmark.getSubTree(fid);
+        names.push({ id: fid, title: sub[0].title || '(untitled)' });
+      } catch {
+        names.push({ id: fid, title: fid });
+      }
+    }
+    for (let i = 0; i < names.length; i++) {
+      const { id: fid, title } = names[i];
+      const isCurrent = (fid === currentId);
+
+      if (i > 0) {
+        const sep = document.createElement('span');
+        sep.className = 'breadcrumb-sep';
+        sep.textContent = ' › ';
+        $container.appendChild(sep);
+      }
+
+      const $crumb = document.createElement('span');
+      $crumb.className = 'breadcrumb-item' + (isCurrent ? ' breadcrumb-current' : '');
+      $crumb.textContent = title;
+      $crumb.dataset.id = fid;
+
+      if (!isCurrent) {
+        $crumb.addEventListener('click', (e) => {
+          e.stopPropagation();
+          // history를 해당 폴더까지 잘라내기
+          const idx = this.history.findIndex(h => h.id === fid);
+          if (idx >= 0) {
+            this.history = this.history.slice(0, idx + 1);
+          }
+          this.render({ id: fid, mode: 'back' });
+        });
+      }
+
+      $container.appendChild($crumb);
+    }
   }
 
   addFolder($folderManager, bookMark) {

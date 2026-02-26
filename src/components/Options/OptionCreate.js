@@ -8,15 +8,15 @@ export default class OptionCreate {
     $createOptions.className = "options create";
     $createOptions.innerHTML = `
           <div class="button create-folder"><img src="chrome-extension://${chrome.runtime.id}/assets/add.svg" /></div>
-          <div class="button create-postit">📝</div>
+          <div class="button create-postit"><img src="chrome-extension://${chrome.runtime.id}/assets/postit-icon.svg" /></div>
         `;
 
     this.$createOptions = $createOptions;
-    this.$createOptions.style.display = "block";
+    this.$createOptions.style.display = "flex";
     this.$createOptions.style.top = `${y}px`;
     this.$createOptions.style.left = `${x}px`;
 
-    $target.appendChild($createOptions);
+    document.body.appendChild($createOptions);
 
     // 새폴더 생성 버튼
     const createFolderBtn = $createOptions.querySelector('.create-folder');

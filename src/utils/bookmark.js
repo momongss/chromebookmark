@@ -72,6 +72,20 @@ class BookmarkManager {
     }
     return false;
   }
+  // 루트(0)부터 해당 폴더까지의 조상 경로를 배열로 반환 [{id, title}, ...]
+  async getAncestorPath(folderId) {
+    const path = [];
+    let currentId = folderId;
+    while (currentId && currentId !== '0') {
+      try {
+        const node = await this.getNode(currentId);
+        if (!node) break;
+        path.unshift({ id: node.id, title: node.title });
+        currentId = node.parentId;
+      } catch { break; }
+    }
+    return path;
+  }
 }
 
 const bookmarkManager = new BookmarkManager();

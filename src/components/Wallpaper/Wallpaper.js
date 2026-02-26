@@ -8,16 +8,13 @@ export default class Wallpaper {
     this.menuBtnElement = null;
     this.defaultWallpapers = [
       {
-        name: "하늘",
-        src: `chrome-extension://${chrome.runtime.id}/assets/wallpaper/sky6.png`
+        src: `chrome-extension://${chrome.runtime.id}/assets/wallpaper/sky1.png`
       },
       {
-        name: "자연",
-        src: `chrome-extension://${chrome.runtime.id}/assets/wallpaper/nature.jpg`
+        src: `chrome-extension://${chrome.runtime.id}/assets/wallpaper/sky2.png`
       },
       {
-        name: "도시",
-        src: `chrome-extension://${chrome.runtime.id}/assets/wallpaper/city.jpg`
+        src: `chrome-extension://${chrome.runtime.id}/assets/wallpaper/sky4.png`
       }
     ];
     this._constructor();
@@ -89,7 +86,6 @@ export default class Wallpaper {
               ${this.defaultWallpapers.map((wallpaper, index) => `
                 <div class="wallpaper-item" data-wallpaper-index="${index}" role="button" tabindex="0">
                   <img src="${wallpaper.src}" alt="${wallpaper.name}" loading="lazy">
-                  <span class="wallpaper-name">${wallpaper.name}</span>
                 </div>
               `).join('')}
             </div>

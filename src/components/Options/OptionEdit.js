@@ -13,12 +13,13 @@ export default class OptionEdit {
     this.$nodeOptions = $nodeOptions;
     this.$nodeOptions.style.top = `${y}px`;
     this.$nodeOptions.style.left = `${x}px`;
-    this.$nodeOptions.style.display = "block";
+    this.$nodeOptions.style.display = "flex";
 
     this.$edit = $nodeOptions.querySelector(".edit");
     this.$delete = $nodeOptions.querySelector(".delete");
+    this.$target = $target;
 
-    $target.appendChild($nodeOptions);
+    document.body.appendChild($nodeOptions);
 
     this.eventListers();
   }
@@ -41,7 +42,7 @@ export default class OptionEdit {
     this.$edit.addEventListener("click", async (e) => {
       e.preventDefault();
       e.stopPropagation();
-      const $editTarget = this.findMyNode(e.target);
+      const $editTarget = this.$target;
 
       console.log("Editing folder with ID:", $editTarget.dataset.id);
 
@@ -74,7 +75,7 @@ export default class OptionEdit {
     this.$delete.addEventListener("click", async (e) => {
       e.preventDefault();
       e.stopPropagation();
-      const $folder = this.$nodeOptions.parentElement;
+      const $folder = this.$target;
       if ($folder && $folder.classList.contains("node")) {
         // 삭제 전에 커스텀 엘리먼트와 FolderManager 참조를 미리 획득
         const $customElement = $folder.parentElement;
