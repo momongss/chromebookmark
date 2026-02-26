@@ -271,7 +271,6 @@ export default class ImageManager {
 
     function dragStart(e) {
       if (e.target === interactionContainer) {
-        console.log("ImageManager dragStart");
         e.preventDefault();
         e.stopPropagation();
         isDragging = true;

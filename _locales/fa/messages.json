@@ -3,7 +3,6 @@
     "message": "تصویر زمینه نشانک",
     "description": ""
   },
-
   "appDesc": {
     "message": "از برگه جدید به عنوان تصویر زمینه دسک تاپ خود استفاده کنید.",
     "description": ""
@@ -11,5 +10,33 @@
   "remove": {
     "message": "آیا مطمئن هستید که می خواهید این پوشه را حذف کنید؟",
     "description": "_"
+  },
+  "TEXT_SEARCH": {
+    "message": "جستجو",
+    "description": "برچسب برای عملکرد جستجو."
+  },
+  "POSTIT_TEXT": {
+    "message": "ایجاد",
+    "description": "برچسب برای ایجاد یادداشت."
+  },
+  "WALLPAPER_TEXT": {
+    "message": "تصویر زمینه",
+    "description": "برچسب برای عملکرد تصویر زمینه."
+  },
+  "EXPORT_TEXT": {
+    "message": "ذخیره",
+    "description": "برچسب برای صادرات داده‌ها."
+  },
+  "IMPORT_TEXT": {
+    "message": "بارگذاری",
+    "description": "برچسب برای وارد کردن داده‌ها."
+  },
+  "BOOKMARK_SEARCH_PLACEHOLDER": {
+    "message": "جستجوی نشانک‌ها (Ctrl+F: باز کردن، Esc: بستن)",
+    "description": ""
+  },
+  "OPEN_LOCATION": {
+    "message": "باز کردن مکان",
+    "description": ""
   }
 }

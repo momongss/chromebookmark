@@ -264,9 +264,10 @@ image.png {
 .folder-manager {
   height: 25rem;
   display: grid;
-  grid-template-columns: repeat(5, var(--grid-item-width));
-  grid-template-rows: repeat(8, var(--grid-item-height));
-  grid-gap: 0px;
+
+  grid-template-columns: repeat(5, calc(var(--grid-item-width)));
+  grid-template-rows: repeat(8, calc(var(--grid-item-height)));
+  grid-gap: 4px;
   background: transparent;
   overflow-y: scroll;
   position: relative;

@@ -3,7 +3,6 @@
     "message": "บุ๊คมาร์ควอลล์เปเปอร์",
     "description": ""
   },
-
   "appDesc": {
     "message": "ใช้แท็บใหม่เป็นวอลเปเปอร์เดสก์ท็อปของคุณ",
     "description": ""
@@ -11,5 +10,33 @@
   "remove": {
     "message": "คุณแน่ใจหรือไม่ว่าต้องการลบโฟลเดอร์นี้",
     "description": "_"
+  },
+  "TEXT_SEARCH": {
+    "message": "ค้นหา",
+    "description": "ป้ายกำกับสำหรับฟังก์ชันการค้นหา."
+  },
+  "POSTIT_TEXT": {
+    "message": "สร้าง",
+    "description": "ป้ายกำกับสำหรับการสร้างบันทึก."
+  },
+  "WALLPAPER_TEXT": {
+    "message": "วอลเปเปอร์",
+    "description": "ป้ายกำกับสำหรับฟังก์ชันวอลเปเปอร์."
+  },
+  "EXPORT_TEXT": {
+    "message": "บันทึก",
+    "description": "ป้ายกำกับสำหรับการส่งออกข้อมูล."
+  },
+  "IMPORT_TEXT": {
+    "message": "โหลด",
+    "description": "ป้ายกำกับสำหรับการนำเข้าข้อมูล."
+  },
+  "BOOKMARK_SEARCH_PLACEHOLDER": {
+    "message": "ค้นหาบุ๊กมาร์ก (Ctrl+F: เปิด, Esc: ปิด)",
+    "description": ""
+  },
+  "OPEN_LOCATION": {
+    "message": "เปิดสถานที่",
+    "description": ""
   }
 }

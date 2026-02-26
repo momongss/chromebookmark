@@ -3,7 +3,6 @@
     "message": "טפט סימניות",
     "description": ""
   },
-
   "appDesc": {
     "message": "השתמש בכרטיסייה החדשה כטפט שולחן העבודה שלך.",
     "description": ""
@@ -11,5 +10,33 @@
   "remove": {
     "message": "האם אתה בטוח שברצונך למחוק תיקיה זו?",
     "description": "_"
+  },
+  "TEXT_SEARCH": {
+    "message": "חפש",
+    "description": "תווית לפונקציית החיפוש."
+  },
+  "POSTIT_TEXT": {
+    "message": "צור",
+    "description": "תווית ליצירת פתק."
+  },
+  "WALLPAPER_TEXT": {
+    "message": "רקע",
+    "description": "תווית לפונקציית הרקע."
+  },
+  "EXPORT_TEXT": {
+    "message": "שמור",
+    "description": "תווית לייצוא נתונים."
+  },
+  "IMPORT_TEXT": {
+    "message": "טען",
+    "description": "תווית לייבוא נתונים."
+  },
+  "BOOKMARK_SEARCH_PLACEHOLDER": {
+    "message": "חיפוש סימניות (Ctrl+F: פתיחה, Esc: סגור)",
+    "description": ""
+  },
+  "OPEN_LOCATION": {
+    "message": "מיקום פתוח",
+    "description": ""
   }
 }

@@ -3,7 +3,6 @@
     "message": "fons de pantalla de marcadors",
     "description": ""
   },
-
   "appDesc": {
     "message": "Utilitzeu la nova pestanya com a fons de pantalla de l’escriptori.",
     "description": ""
@@ -11,5 +10,33 @@
   "remove": {
     "message": "Esteu segur que voleu suprimir aquesta carpeta?",
     "description": "_"
+  },
+  "TEXT_SEARCH": {
+    "message": "Cerca",
+    "description": "Etiqueta per a la funcionalitat de cerca."
+  },
+  "POSTIT_TEXT": {
+    "message": "Crear",
+    "description": "Etiqueta per crear una nota."
+  },
+  "WALLPAPER_TEXT": {
+    "message": "Fons de pantalla",
+    "description": "Etiqueta per a la funcionalitat de fons de pantalla."
+  },
+  "EXPORT_TEXT": {
+    "message": "Desa",
+    "description": "Etiqueta per exportar dades."
+  },
+  "IMPORT_TEXT": {
+    "message": "Carrega",
+    "description": "Etiqueta per importar dades."
+  },
+  "BOOKMARK_SEARCH_PLACEHOLDER": {
+    "message": "Cerca a les adreces d'interès (Ctrl+F: obrir, Esc: tancar)",
+    "description": ""
+  },
+  "OPEN_LOCATION": {
+    "message": "Localització oberta",
+    "description": ""
   }
 }

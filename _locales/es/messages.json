@@ -3,7 +3,6 @@
     "message": "fondo de pantalla de marcador",
     "description": ""
   },
-
   "appDesc": {
     "message": "Utilice la nueva pestaña como fondo de escritorio.",
     "description": ""
@@ -11,5 +10,33 @@
   "remove": {
     "message": "¿Está seguro de que desea eliminar esta carpeta?",
     "description": "_"
+  },
+  "TEXT_SEARCH": {
+    "message": "Buscar",
+    "description": "Etiqueta para la funcionalidad de búsqueda."
+  },
+  "POSTIT_TEXT": {
+    "message": "Crear",
+    "description": "Etiqueta para crear una nota."
+  },
+  "WALLPAPER_TEXT": {
+    "message": "Fondo de pantalla",
+    "description": "Etiqueta para la funcionalidad de fondo de pantalla."
+  },
+  "EXPORT_TEXT": {
+    "message": "Guardar",
+    "description": "Etiqueta para exportar datos."
+  },
+  "IMPORT_TEXT": {
+    "message": "Cargar",
+    "description": "Etiqueta para importar datos."
+  },
+  "BOOKMARK_SEARCH_PLACEHOLDER": {
+    "message": "Buscar marcadores (Ctrl+F: abrir, Esc: cerrar)",
+    "description": ""
+  },
+  "OPEN_LOCATION": {
+    "message": "Ubicación abierta",
+    "description": ""
   }
 }

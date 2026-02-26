@@ -3,7 +3,6 @@
     "message": "Karatasi ya Alamisho",
     "description": ""
   },
-
   "appDesc": {
     "message": "Tumia kichupo kipya kama Ukuta wa eneo-kazi.",
     "description": ""
@@ -11,5 +10,33 @@
   "remove": {
     "message": "Je! Una uhakika unataka kufuta folda hii?",
     "description": "_"
+  },
+  "TEXT_SEARCH": {
+    "message": "Tafuta",
+    "description": "Lebo kwa kazi ya utafutaji."
+  },
+  "POSTIT_TEXT": {
+    "message": "Unda",
+    "description": "Lebo kwa kuunda noti."
+  },
+  "WALLPAPER_TEXT": {
+    "message": "Ukuta",
+    "description": "Lebo kwa kazi ya ukuta."
+  },
+  "EXPORT_TEXT": {
+    "message": "Hifadhi",
+    "description": "Lebo kwa kusafirisha data."
+  },
+  "IMPORT_TEXT": {
+    "message": "Pakia",
+    "description": "Lebo kwa kuingiza data."
+  },
+  "BOOKMARK_SEARCH_PLACEHOLDER": {
+    "message": "Tafuta alamisho (Ctrl+F: fungua, Esc: funga)",
+    "description": ""
+  },
+  "OPEN_LOCATION": {
+    "message": "Fungua eneo",
+    "description": ""
   }
 }

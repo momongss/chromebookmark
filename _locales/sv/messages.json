@@ -3,7 +3,6 @@
     "message": "Bokmärke Bakgrund",
     "description": ""
   },
-
   "appDesc": {
     "message": "Använd den nya fliken som skrivbordsunderlägg.",
     "description": ""
@@ -11,5 +10,33 @@
   "remove": {
     "message": "Är du säker på att du vill ta bort den här mappen?",
     "description": "_"
+  },
+  "TEXT_SEARCH": {
+    "message": "Sök",
+    "description": "Etikett för sökfunktionen."
+  },
+  "POSTIT_TEXT": {
+    "message": "Skapa",
+    "description": "Etikett för att skapa en anteckning."
+  },
+  "WALLPAPER_TEXT": {
+    "message": "Bakgrund",
+    "description": "Etikett för bakgrundsfunktionen."
+  },
+  "EXPORT_TEXT": {
+    "message": "Spara",
+    "description": "Etikett för att exportera data."
+  },
+  "IMPORT_TEXT": {
+    "message": "Ladda",
+    "description": "Etikett för att importera data."
+  },
+  "BOOKMARK_SEARCH_PLACEHOLDER": {
+    "message": "Sök efter bokmärken (Ctrl+F: öppna, Esc: stäng)",
+    "description": ""
+  },
+  "OPEN_LOCATION": {
+    "message": "Öppen plats",
+    "description": ""
   }
 }

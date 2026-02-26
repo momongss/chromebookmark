@@ -3,7 +3,6 @@
     "message": "বুকমার্ক ওয়ালপেপার",
     "description": ""
   },
-
   "appDesc": {
     "message": "আপনার ডেস্কটপ ওয়ালপেপার হিসাবে নতুন ট্যাব ব্যবহার করুন।",
     "description": ""
@@ -11,5 +10,33 @@
   "remove": {
     "message": "আপনি কি নিশ্চিত যে আপনি এই ফোল্ডারটি মুছতে চান?",
     "description": "_"
+  },
+  "TEXT_SEARCH": {
+    "message": "অনুসন্ধান",
+    "description": "অনুসন্ধান কার্যকারিতার জন্য লেবেল।"
+  },
+  "POSTIT_TEXT": {
+    "message": "তৈরি করুন",
+    "description": "একটি নোট তৈরি করার জন্য লেবেল।"
+  },
+  "WALLPAPER_TEXT": {
+    "message": "ওয়ালপেপার",
+    "description": "ওয়ালপেপার কার্যকারিতার জন্য লেবেল।"
+  },
+  "EXPORT_TEXT": {
+    "message": "সংরক্ষণ করুন",
+    "description": "ডেটা রপ্তানির জন্য লেবেল।"
+  },
+  "IMPORT_TEXT": {
+    "message": "লোড করুন",
+    "description": "ডেটা আমদানির জন্য লেবেল।"
+  },
+  "BOOKMARK_SEARCH_PLACEHOLDER": {
+    "message": "বুকমার্ক খুঁজুন (Ctrl+F: খোলা, Esc: বন্ধ)",
+    "description": ""
+  },
+  "OPEN_LOCATION": {
+    "message": "লোকেশন খুলুন",
+    "description": ""
   }
 }

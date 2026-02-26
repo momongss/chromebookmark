@@ -101,14 +101,6 @@ export default class DropHandlerApp {
         const folderNode = targetElement.closest('folder-node');
         const folderManager = targetElement.closest('folder-manager');
 
-        // 드래그 중인 요소들이 자기 자신에게 호버되는 것 방지
-        if (isMultiDrag && window.currentDragNodes) {
-            const isDraggingSelf = window.currentDragNodes.some(node => 
-                targetElement === node || node.contains(targetElement)
-            );
-            if (isDraggingSelf) return;
-        }
-
         // node-wrapper 확인 (드래그오버용)
         let hoverNodeWrapper = null;
         if (targetElement.className && targetElement.className.includes("node-wrapper")) {
@@ -330,15 +322,43 @@ export default class DropHandlerApp {
                 
                 // 1) 앵커(시작 노드) 먼저 배치
                 const anchorPlan = plans.find(p => p.element === dragStartNode) || plans[0];
-                const anchorWrapper = this.$parent.querySelector(`.node-wrapper-${anchorPlan.targetX}-${anchorPlan.targetY}`);
+                let anchorWrapper = this.$parent.querySelector(`.node-wrapper-${anchorPlan.targetX}-${anchorPlan.targetY}`);
+                if (!anchorWrapper) {
+                    anchorWrapper = findNearbyEmptyWrapperAround(this.$parent, anchorPlan.targetX, anchorPlan.targetY);
+                }
                 if (!anchorWrapper) {
                     draggedElements.forEach(el => el.originalParent && el.ReInit({ $parent: el.originalParent }));
                     return;
                 }
-                const anchorOk = this.placeElementWithCollisionHandling(anchorPlan.element, anchorWrapper, anchorPlan.targetX, anchorPlan.targetY);
+                let anchorOk = this.placeElementWithCollisionHandling(anchorPlan.element, anchorWrapper, anchorPlan.targetX, anchorPlan.targetY);
+                let actualAnchorX = anchorPlan.targetX;
+                let actualAnchorY = anchorPlan.targetY;
                 if (!anchorOk) {
-                    draggedElements.forEach(el => el.originalParent && el.ReInit({ $parent: el.originalParent }));
-                    return;
+                    // 충돌 시 가까운 빈 자리를 찾아 배치
+                    const nearbyWrapper = findNearbyEmptyWrapperAround(this.$parent, anchorPlan.targetX, anchorPlan.targetY);
+                    if (nearbyWrapper) {
+                        const { x: nearX, y: nearY } = this.parseWrapperCoords(nearbyWrapper);
+                        anchorOk = this.placeElementWithCollisionHandling(anchorPlan.element, nearbyWrapper, nearX, nearY);
+                        if (anchorOk) {
+                            actualAnchorX = nearX;
+                            actualAnchorY = nearY;
+                        }
+                    }
+                    if (!anchorOk) {
+                        draggedElements.forEach(el => el.originalParent && el.ReInit({ $parent: el.originalParent }));
+                        return;
+                    }
+                }
+                
+                // 앵커가 원래 목표와 다른 위치에 배치된 경우, 나머지 plans를 재계산
+                if (actualAnchorX !== anchorPlan.targetX || actualAnchorY !== anchorPlan.targetY) {
+                    const offsetX = actualAnchorX - anchorPlan.targetX;
+                    const offsetY = actualAnchorY - anchorPlan.targetY;
+                    for (const plan of plans) {
+                        if (plan.element === anchorPlan.element) continue;
+                        plan.targetX += offsetX;
+                        plan.targetY += offsetY;
+                    }
                 }
                 
                 // 2) 나머지 요소 배치
@@ -374,6 +394,17 @@ export default class DropHandlerApp {
                 
                 const success = this.placeElementWithCollisionHandling(element, nodeWrapper, targetX, targetY);
                 if (!success) {
+                    // 충돌 시 가까운 빈 자리를 찾아 배치
+                    const nearbyWrapper = findNearbyEmptyWrapperAround(this.$parent, targetX, targetY);
+                    if (nearbyWrapper) {
+                        const { x: nearX, y: nearY } = this.parseWrapperCoords(nearbyWrapper);
+                        const retrySuccess = this.placeElementWithCollisionHandling(element, nearbyWrapper, nearX, nearY);
+                        if (!retrySuccess && element.originalParent) {
+                            element.ReInit({ $parent: element.originalParent });
+                        }
+                    } else if (element.originalParent) {
+                        element.ReInit({ $parent: element.originalParent });
+                    }
                 } else {
                 }
             }
@@ -449,7 +480,6 @@ export default class DropHandlerApp {
                 window.currentDragNodes.includes(child) && child !== element
             );
             if (selectedChildren.length > 0) {
-                console.log(`타겟 위치가 선택된 노드로 점유됨 — 임시 분리 후 배치 계속`);
                 selectedChildren.forEach(ch => ch.remove());
             }
         }

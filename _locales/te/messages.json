@@ -3,7 +3,6 @@
     "message": "బుక్‌మార్క్ వాల్‌పేపర్",
     "description": ""
   },
-
   "appDesc": {
     "message": "క్రొత్త టాబ్‌ను మీ డెస్క్‌టాప్ వాల్‌పేపర్‌గా ఉపయోగించండి.",
     "description": ""
@@ -11,5 +10,33 @@
   "remove": {
     "message": "మీరు ఖచ్చితంగా ఈ ఫోల్డర్‌ను తొలగించాలనుకుంటున్నారా?",
     "description": "_"
+  },
+  "TEXT_SEARCH": {
+    "message": "వెతకండి",
+    "description": "శోధన ఫంక్షన్ కోసం లేబుల్."
+  },
+  "POSTIT_TEXT": {
+    "message": "సృష్టించండి",
+    "description": "గమనికను సృష్టించడానికి లేబుల్."
+  },
+  "WALLPAPER_TEXT": {
+    "message": "వాల్‌పేపర్",
+    "description": "వాల్‌పేపర్ ఫంక్షన్ కోసం లేబుల్."
+  },
+  "EXPORT_TEXT": {
+    "message": "సేవ్ చేయండి",
+    "description": "డేటాను ఎగుమతి చేయడానికి లేబుల్."
+  },
+  "IMPORT_TEXT": {
+    "message": "లోడ్ చేయండి",
+    "description": "డేటాను దిగుమతి చేయడానికి లేబుల్."
+  },
+  "BOOKMARK_SEARCH_PLACEHOLDER": {
+    "message": "బుక్‌మార్క్‌లను శోధించండి (Ctrl+F: తెరవండి, Esc: మూసివేయండి)",
+    "description": ""
+  },
+  "OPEN_LOCATION": {
+    "message": "స్థానాన్ని తెరవండి",
+    "description": ""
   }
 }

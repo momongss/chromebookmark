@@ -3,7 +3,6 @@
     "message": "kirjanmerkkien taustakuva",
     "description": ""
   },
-
   "appDesc": {
     "message": "Käytä uutta välilehteä työpöydän taustakuvana.",
     "description": ""
@@ -11,5 +10,33 @@
   "remove": {
     "message": "Haluatko varmasti poistaa tämän kansion?",
     "description": "_"
+  },
+  "TEXT_SEARCH": {
+    "message": "Hae",
+    "description": "Tunniste hakutoiminnolle."
+  },
+  "POSTIT_TEXT": {
+    "message": "Luo",
+    "description": "Tunniste muistiinpanon luomiseen."
+  },
+  "WALLPAPER_TEXT": {
+    "message": "Taustakuva",
+    "description": "Tunniste taustakuvatoiminnolle."
+  },
+  "EXPORT_TEXT": {
+    "message": "Tallenna",
+    "description": "Tunniste tietojen viemiseen."
+  },
+  "IMPORT_TEXT": {
+    "message": "Lataa",
+    "description": "Tunniste tietojen tuomiseen."
+  },
+  "BOOKMARK_SEARCH_PLACEHOLDER": {
+    "message": "Hae kirjanmerkkejä (Ctrl+F: avaa, Esc: sulje)",
+    "description": ""
+  },
+  "OPEN_LOCATION": {
+    "message": "Avaa sijainti",
+    "description": ""
   }
 }

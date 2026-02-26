@@ -3,7 +3,6 @@
     "message": "тапет за отметки",
     "description": ""
   },
-
   "appDesc": {
     "message": "Използвайте новия раздел като тапет на работния плот.",
     "description": ""
@@ -11,5 +10,33 @@
   "remove": {
     "message": "Наистина ли искате да изтриете тази папка?",
     "description": "_"
+  },
+  "TEXT_SEARCH": {
+    "message": "Търсене",
+    "description": "Етикет за функцията за търсене."
+  },
+  "POSTIT_TEXT": {
+    "message": "Създаване",
+    "description": "Етикет за създаване на бележка."
+  },
+  "WALLPAPER_TEXT": {
+    "message": "Фон",
+    "description": "Етикет за функцията за фон."
+  },
+  "EXPORT_TEXT": {
+    "message": "Запазване",
+    "description": "Етикет за експортиране на данни."
+  },
+  "IMPORT_TEXT": {
+    "message": "Зареждане",
+    "description": "Етикет за импортиране на данни."
+  },
+  "BOOKMARK_SEARCH_PLACEHOLDER": {
+    "message": "Търсене в отметки (Ctrl+F: отваряне, Esc: затваряне)",
+    "description": ""
+  },
+  "OPEN_LOCATION": {
+    "message": "Отворено местоположение",
+    "description": ""
   }
 }

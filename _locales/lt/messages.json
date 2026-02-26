@@ -3,7 +3,6 @@
     "message": "Žymių fonas",
     "description": ""
   },
-
   "appDesc": {
     "message": "Naudokite naują skirtuką kaip darbalaukio foną.",
     "description": ""
@@ -11,5 +10,33 @@
   "remove": {
     "message": "Ar tikrai norite ištrinti šį aplanką?",
     "description": "_"
+  },
+  "TEXT_SEARCH": {
+    "message": "Ieškoti",
+    "description": "Etiketė paieškos funkcijai."
+  },
+  "POSTIT_TEXT": {
+    "message": "Kurti",
+    "description": "Etiketė užrašų kūrimui."
+  },
+  "WALLPAPER_TEXT": {
+    "message": "Fonas",
+    "description": "Etiketė fono funkcijai."
+  },
+  "EXPORT_TEXT": {
+    "message": "Išsaugoti",
+    "description": "Etiketė duomenų eksportavimui."
+  },
+  "IMPORT_TEXT": {
+    "message": "Įkelti",
+    "description": "Etiketė duomenų importavimui."
+  },
+  "BOOKMARK_SEARCH_PLACEHOLDER": {
+    "message": "Ieškoti žymių (Ctrl+F: atidaryti, Esc: uždaryti)",
+    "description": ""
+  },
+  "OPEN_LOCATION": {
+    "message": "Atidaryti vietą",
+    "description": ""
   }
 }

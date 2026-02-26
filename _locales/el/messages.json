@@ -3,7 +3,6 @@
     "message": "ταπετσαρία σελιδοδείκτη",
     "description": ""
   },
-
   "appDesc": {
     "message": "Χρησιμοποιήστε τη νέα καρτέλα ως ταπετσαρία της επιφάνειας εργασίας σας.",
     "description": ""
@@ -11,5 +10,33 @@
   "remove": {
     "message": "Είστε βέβαιοι ότι θέλετε να διαγράψετε αυτόν το φάκελο;",
     "description": "_"
+  },
+  "TEXT_SEARCH": {
+    "message": "Αναζήτηση",
+    "description": "Ετικέτα για τη λειτουργία αναζήτησης."
+  },
+  "POSTIT_TEXT": {
+    "message": "Δημιουργία",
+    "description": "Ετικέτα για τη δημιουργία σημείωσης."
+  },
+  "WALLPAPER_TEXT": {
+    "message": "Ταπετσαρία",
+    "description": "Ετικέτα για τη λειτουργία ταπετσαρίας."
+  },
+  "EXPORT_TEXT": {
+    "message": "Αποθήκευση",
+    "description": "Ετικέτα για την εξαγωγή δεδομένων."
+  },
+  "IMPORT_TEXT": {
+    "message": "Φόρτωση",
+    "description": "Ετικέτα για την εισαγωγή δεδομένων."
+  },
+  "BOOKMARK_SEARCH_PLACEHOLDER": {
+    "message": "Αναζήτηση σελιδοδεικτών (Ctrl+F: άνοιγμα, Esc: κλείσιμο)",
+    "description": ""
+  },
+  "OPEN_LOCATION": {
+    "message": "Ανοιχτή τοποθεσία",
+    "description": ""
   }
 }

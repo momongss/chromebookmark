@@ -5,6 +5,8 @@
   --menu-btn-bottom: 10px;
   --menu-btn-left: 10px;
   --menu-btn-width: 110px;
+
+  --menu-border-accent: #ffffff;
 }
 
 .background-img {
@@ -30,7 +32,7 @@
   left: 0;
   right: 0;
   background-color: rgba(0, 0, 0, 0.5);
-  z-index: 3000;
+  z-index: 50000;
 }
 
 .menu-wrapper.show {
@@ -103,7 +105,7 @@
 
 .wallpaper-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  grid-template-columns: repeat(auto-fit, 170px);
   gap: 15px;
   margin-bottom: 25px;
 }
@@ -121,15 +123,15 @@
 }
 
 .wallpaper-item:hover {
-  border-color: #007bff;
+  border-color: var(--menu-border-accent);
   background-color: #e3f2fd;
   transform: translateY(-2px);
 }
 
 .wallpaper-item:focus {
   outline: none;
-  border-color: #007bff;
-  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+  border-color: var(--menu-border-accent);
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.25);
 }
 
 .wallpaper-item img {
@@ -178,7 +180,7 @@
 }
 
 .upload-btn:hover {
-  border-color: #007bff;
+  border-color: var(--menu-border-accent);
   background-color: #e3f2fd;
 }
 
@@ -216,7 +218,7 @@
   border-radius: 25px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   transition: all 0.2s ease;
-  z-index: 3000;
+  z-index: 50000;
   border: 1px solid rgba(255, 255, 255, 0.3);
 
   -moz-user-select: none;
@@ -245,7 +247,7 @@
 
 .menu-btn:focus-visible {
   outline: none;
-  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.25);
   background-color: rgba(255, 255, 255, 0.6);
 }
 
@@ -333,7 +335,7 @@
 }
 
 #wallpaper-search:focus {
-  border-color: #007bff;
+  border-color: var(--menu-border-accent);
   box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
 }
 
@@ -388,13 +390,13 @@
 
 .category-tab:hover {
   background-color: #e3f2fd;
-  border-color: #007bff;
+  border-color: var(--menu-border-accent);
   color: #007bff;
 }
 
 .category-tab.active {
   background-color: #007bff;
-  border-color: #007bff;
+  border-color: var(--menu-border-accent);
   color: white;
 }
 
@@ -428,7 +430,7 @@
 }
 
 .canva-link-input input:focus {
-  border-color: #007bff;
+  border-color: var(--menu-border-accent);
   box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
 }
 
@@ -482,7 +484,7 @@
 }
 
 .template-item:hover {
-  border-color: #007bff;
+  border-color: var(--menu-border-accent);
   background-color: #e3f2fd;
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(0, 123, 255, 0.15);
@@ -490,7 +492,7 @@
 
 .template-item:focus {
   outline: none;
-  border-color: #007bff;
+  border-color: var(--menu-border-accent);
   box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
 }
 

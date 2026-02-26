@@ -3,7 +3,6 @@
     "message": "Закладка Обои",
     "description": ""
   },
-
   "appDesc": {
     "message": "Используйте новую вкладку в качестве обоев рабочего стола.",
     "description": ""
@@ -11,5 +10,33 @@
   "remove": {
     "message": "Вы уверены, что хотите удалить эту папку?",
     "description": "_"
+  },
+  "TEXT_SEARCH": {
+    "message": "Поиск",
+    "description": "Метка для функции поиска."
+  },
+  "POSTIT_TEXT": {
+    "message": "Создать",
+    "description": "Метка для создания заметки."
+  },
+  "WALLPAPER_TEXT": {
+    "message": "Обои",
+    "description": "Метка для функции обоев."
+  },
+  "EXPORT_TEXT": {
+    "message": "Сохранить",
+    "description": "Метка для экспорта данных."
+  },
+  "IMPORT_TEXT": {
+    "message": "Загрузить",
+    "description": "Метка для импорта данных."
+  },
+  "BOOKMARK_SEARCH_PLACEHOLDER": {
+    "message": "Поиск по закладкам (Ctrl+F: открыть, Esc: закрыть)",
+    "description": ""
+  },
+  "OPEN_LOCATION": {
+    "message": "Открытая локация",
+    "description": ""
   }
 }

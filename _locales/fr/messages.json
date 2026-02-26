@@ -3,7 +3,6 @@
     "message": "marque-page fond d'écran",
     "description": ""
   },
-
   "appDesc": {
     "message": "Utilisez le nouvel onglet comme fond d'écran.",
     "description": ""
@@ -11,5 +10,33 @@
   "remove": {
     "message": "Êtes-vous sûr de vouloir supprimer ce dossier ?",
     "description": "_"
+  },
+  "TEXT_SEARCH": {
+    "message": "Rechercher",
+    "description": "Étiquette pour la fonctionnalité de recherche."
+  },
+  "POSTIT_TEXT": {
+    "message": "Créer",
+    "description": "Étiquette pour créer une note."
+  },
+  "WALLPAPER_TEXT": {
+    "message": "Fond d'écran",
+    "description": "Étiquette pour la fonctionnalité de fond d'écran."
+  },
+  "EXPORT_TEXT": {
+    "message": "Enregistrer",
+    "description": "Étiquette pour exporter des données."
+  },
+  "IMPORT_TEXT": {
+    "message": "Charger",
+    "description": "Étiquette pour importer des données."
+  },
+  "BOOKMARK_SEARCH_PLACEHOLDER": {
+    "message": "Rechercher des favoris (Ctrl+F : ouvrir, Échap : fermer)",
+    "description": ""
+  },
+  "OPEN_LOCATION": {
+    "message": "Emplacement ouvert",
+    "description": ""
   }
 }

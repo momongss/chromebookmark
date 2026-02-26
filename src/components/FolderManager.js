@@ -295,7 +295,6 @@ export default class FolderManager extends HTMLElement {
       this.remove();
       this.history = [];
       this.onDestroy();
-      console.log("close");
     };
     $closeBtn.addEventListener("click", handleClose);
     const $closeImg = $closeBtn.querySelector('img');
@@ -309,8 +308,6 @@ export default class FolderManager extends HTMLElement {
         handleClose(e);
       }
     });
-
-    console.log(this.history);
 
     if (mode !== "back") {
       this.history.push({
@@ -326,7 +323,6 @@ export default class FolderManager extends HTMLElement {
       });
       $backBtn.addEventListener("click", (e) => {
         e.stopPropagation();
-        console.log("back");
         if (this.history.length > 1) {
           this.history.pop();
           const prev = this.history[this.history.length - 1];

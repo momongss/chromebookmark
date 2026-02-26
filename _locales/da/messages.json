@@ -3,7 +3,6 @@
     "message": "bogmærke tapet",
     "description": ""
   },
-
   "appDesc": {
     "message": "Brug den nye fane som skrivebordsbaggrund.",
     "description": ""
@@ -11,5 +10,33 @@
   "remove": {
     "message": "Er du sikker på, at du vil slette denne mappe?",
     "description": "_"
+  },
+  "TEXT_SEARCH": {
+    "message": "Søg",
+    "description": "Etiket til søgefunktionen."
+  },
+  "POSTIT_TEXT": {
+    "message": "Opret",
+    "description": "Etiket til at oprette en note."
+  },
+  "WALLPAPER_TEXT": {
+    "message": "Baggrund",
+    "description": "Etiket til baggrundsfunktionen."
+  },
+  "EXPORT_TEXT": {
+    "message": "Gem",
+    "description": "Etiket til eksport af data."
+  },
+  "IMPORT_TEXT": {
+    "message": "Indlæs",
+    "description": "Etiket til import af data."
+  },
+  "BOOKMARK_SEARCH_PLACEHOLDER": {
+    "message": "Søg efter bogmærker (Ctrl+F: åben, Esc: luk)",
+    "description": ""
+  },
+  "OPEN_LOCATION": {
+    "message": "Åben placering",
+    "description": ""
   }
 }

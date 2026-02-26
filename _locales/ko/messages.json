@@ -3,7 +3,6 @@
     "message": "북마크 바탕 화면",
     "description": ""
   },
-
   "appDesc": {
     "message": "새 탭을 데스크탑 바탕화면처럼 사용하세요.",
     "description": ""
@@ -11,5 +10,33 @@
   "remove": {
     "message": "정말 이 폴더를 지울 건가요??",
     "description": "삭제"
+  },
+  "TEXT_SEARCH": {
+    "message": "검색",
+    "description": "검색 기능에 대한 레이블."
+  },
+  "POSTIT_TEXT": {
+    "message": "생성",
+    "description": "포스트잇 노트를 생성하는 레이블."
+  },
+  "WALLPAPER_TEXT": {
+    "message": "배경화면",
+    "description": "배경화면 기능에 대한 레이블."
+  },
+  "EXPORT_TEXT": {
+    "message": "저장",
+    "description": "데이터를 내보내는 레이블."
+  },
+  "IMPORT_TEXT": {
+    "message": "불러오기",
+    "description": "데이터를 가져오는 레이블."
+  },
+  "BOOKMARK_SEARCH_PLACEHOLDER": {
+    "message": "북마크 검색 (Ctrl+F: 열기, Esc: 닫기)",
+    "description": ""
+  },
+  "OPEN_LOCATION": {
+    "message": "위치 열기",
+    "description": ""
   }
 }

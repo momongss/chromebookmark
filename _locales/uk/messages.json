@@ -3,7 +3,6 @@
     "message": "Закладка шпалер",
     "description": ""
   },
-
   "appDesc": {
     "message": "Використовуйте нову вкладку як шпалери робочого столу.",
     "description": ""
@@ -11,5 +10,33 @@
   "remove": {
     "message": "Ви впевнені, що хочете видалити цю папку?",
     "description": "_"
+  },
+  "TEXT_SEARCH": {
+    "message": "Пошук",
+    "description": "Мітка для функції пошуку."
+  },
+  "POSTIT_TEXT": {
+    "message": "Створити",
+    "description": "Мітка для створення нотатки."
+  },
+  "WALLPAPER_TEXT": {
+    "message": "Шпалери",
+    "description": "Мітка для функції шпалер."
+  },
+  "EXPORT_TEXT": {
+    "message": "Зберегти",
+    "description": "Мітка для експорту даних."
+  },
+  "IMPORT_TEXT": {
+    "message": "Завантажити",
+    "description": "Мітка для імпорту даних."
+  },
+  "BOOKMARK_SEARCH_PLACEHOLDER": {
+    "message": "Пошук закладок (Ctrl+F: відкрити, Esc: закрити)",
+    "description": ""
+  },
+  "OPEN_LOCATION": {
+    "message": "Відкрита локація",
+    "description": ""
   }
 }

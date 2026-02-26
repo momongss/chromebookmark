@@ -9,7 +9,7 @@ import OptionCreate from "./Options/OptionCreate.js";
 
 import Storage from "../utils/storage.js";
 
-import { constDatas } from "../utils/const.js";
+import { constDatas, ConstText } from "../utils/const.js";
 import { findNearbyEmptyWrapperAround, isWrapperOccupied, parseWrapperCoords } from "../utils/utils.js";
 import DropHandlerApp from "../utils/dropHandlerApp.js";
 
@@ -145,7 +145,23 @@ export default class App {
       return btn;
     };
 
-    const $searchBtn = mkBtn('🔎', '검색 열기/닫기 (Ctrl+F)');
+    const $searchBtn = mkBtn('', '검색 열기/닫기 (Ctrl+F)');
+    $searchBtn.innerHTML = `<span style="font-size:16px;pointer-events:none;">🔎</span><span class="toolbar-btn-label" style="pointer-events:none;font-size:12px;color:rgba(255,255,255,0.9);overflow:hidden;max-width:0;opacity:0;transition:max-width 0.2s ease,opacity 0.15s ease,margin 0.2s ease;white-space:nowrap;margin-left:0;">
+    ${ConstText.TEXT_SEARCH}</span>`;
+    $searchBtn.style.transition = 'transform 0.1s ease, box-shadow 0.2s ease, background 0.2s ease, border-color 0.2s ease, width 0.2s ease, padding 0.2s ease';
+    const $searchLabel = $searchBtn.querySelector('.toolbar-btn-label');
+    $searchBtn.addEventListener('mouseenter', () => {
+      $searchBtn.style.width = 'auto';
+      $searchBtn.style.padding = '0 12px';
+      $searchBtn.style.gap = '4px';
+      if ($searchLabel) { $searchLabel.style.maxWidth = '40px'; $searchLabel.style.opacity = '1'; $searchLabel.style.marginLeft = '4px'; }
+    });
+    $searchBtn.addEventListener('mouseleave', () => {
+      $searchBtn.style.width = '36px';
+      $searchBtn.style.padding = '';
+      $searchBtn.style.gap = '';
+      if ($searchLabel) { $searchLabel.style.maxWidth = '0'; $searchLabel.style.opacity = '0'; $searchLabel.style.marginLeft = '0'; }
+    });
     $searchBtn.addEventListener('click', (e) => {
       e.stopPropagation();
       if (!this.searchBar) return;
@@ -153,9 +169,57 @@ export default class App {
       else this.searchBar.show();
     });
 
-    const $noteBtn = mkBtn('', '포스트잇 생성');
-    // 아이콘: assets/postiit-icon.svg
-    $noteBtn.innerHTML = '<img src="assets/postit-icon.svg" alt="포스트잇 생성" style="width:18px;height:18px;display:block;pointer-events:none;" />';
+    // 텍스트 라벨이 포함된 pill 버튼 생성 헬퍼
+    const mkLabelBtn = (iconHtml, text) => {
+      const btn = document.createElement('button');
+      btn.style.cssText = [
+        'height:32px',
+        'border-radius:999px',
+        'border:1px solid rgba(255,255,255,0.28)',
+        'background:rgba(255,255,255,0.12)',
+        '-webkit-backdrop-filter:blur(8px) saturate(140%)',
+        'backdrop-filter:blur(8px) saturate(140%)',
+        'box-shadow:0 6px 16px rgba(0,0,0,0.12), inset 0 1px 0 rgba(255,255,255,0.25)',
+        'cursor:pointer',
+        'font-size:12px',
+        'display:flex','align-items:center','justify-content:center','gap:4px',
+        'padding:0 10px',
+        'white-space:nowrap',
+        'color:rgba(255,255,255,0.9)',
+        'transition:transform 0.1s ease, box-shadow 0.2s ease, background 0.2s ease, border-color 0.2s ease'
+      ].join(';');
+      btn.innerHTML = iconHtml + `<span style="pointer-events:none;">${text}</span>`;
+      btn.addEventListener('mouseenter', () => {
+        btn.style.boxShadow = '0 10px 22px rgba(0,0,0,0.18), inset 0 1px 0 rgba(255,255,255,0.35)';
+        btn.style.background = 'rgba(255,255,255,0.18)';
+        btn.style.borderColor = 'rgba(255,255,255,0.38)';
+      });
+      btn.addEventListener('mouseleave', () => {
+        btn.style.boxShadow = '0 6px 16px rgba(0,0,0,0.12), inset 0 1px 0 rgba(255,255,255,0.25)';
+        btn.style.background = 'rgba(255,255,255,0.12)';
+        btn.style.borderColor = 'rgba(255,255,255,0.28)';
+      });
+      btn.addEventListener('mousedown', () => {
+        btn.style.transform = 'scale(0.96)';
+        btn.style.boxShadow = '0 4px 12px rgba(0,0,0,0.16), inset 0 1px 0 rgba(255,255,255,0.2)';
+        btn.style.background = 'rgba(255,255,255,0.16)';
+      });
+      btn.addEventListener('mouseup', () => {
+        btn.style.transform = 'scale(1)';
+        btn.style.boxShadow = '0 10px 22px rgba(0,0,0,0.18), inset 0 1px 0 rgba(255,255,255,0.35)';
+        btn.style.background = 'rgba(255,255,255,0.18)';
+      });
+      return btn;
+    };
+
+    
+
+    const $noteBtn = mkBtn('', ConstText.POSTIT_TEXT);
+    // 아이콘 + 텍스트 라벨 (텍스트는 호버 시에만 표시)
+    $noteBtn.innerHTML = `<img src="assets/postit-icon.svg" alt="" style="width:18px;height:18px;display:block;pointer-events:none;" /><span class="note-btn-label" style="pointer-events:none;font-size:12px;color:rgba(255,255,255,0.9);overflow:hidden;max-width:0;opacity:0;transition:max-width 0.2s ease,opacity 0.15s ease,margin 0.2s ease;white-space:nowrap;margin-left:0;">
+    ${ConstText.POSTIT_TEXT}
+    </span>`;
+    $noteBtn.style.transition = 'transform 0.1s ease, box-shadow 0.2s ease, background 0.2s ease, border-color 0.2s ease, width 0.2s ease, padding 0.2s ease';
     $noteBtn.addEventListener('click', (e) => {
       e.stopPropagation();
       // 버튼 아래, 오른쪽 벽에서 약간 떨어진 위치에 생성
@@ -166,12 +230,94 @@ export default class App {
       }
     });
 
+    // 포스트잇 버튼 호버 시 서브 버튼(내보내기/불러오기) 표시를 위한 래퍼
+    const $noteGroup = document.createElement('div');
+    $noteGroup.style.cssText = 'position:relative;display:flex;flex-direction:row-reverse;align-items:center;';
+
+    const $subBtns = document.createElement('div');
+    $subBtns.style.cssText = [
+      'display:flex',
+      'flex-direction:row',
+      'gap:4px',
+      'overflow:hidden',
+      'max-width:0',
+      'opacity:0',
+      'transition:max-width 0.2s ease, opacity 0.15s ease',
+      'margin-right:4px'
+    ].join(';');
+
+    const $exportBtn = mkLabelBtn('💾', ConstText.EXPORT_TEXT);
+    $exportBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (window.postItManager?.exportPostIts) {
+        window.postItManager.exportPostIts();
+      }
+    });
+
+    const $importBtn = mkLabelBtn('📂', ConstText.IMPORT_TEXT);
+    $importBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (window.postItManager?.importPostIts) {
+        window.postItManager.importPostIts();
+      }
+    });
+
+    $subBtns.appendChild($exportBtn);
+    $subBtns.appendChild($importBtn);
+
+    $noteGroup.appendChild($noteBtn);
+    $noteGroup.appendChild($subBtns);
+
+    // 호버 시 서브 버튼 왼쪽으로 표시 + 메인 버튼 텍스트 표시
+    const $noteBtnLabel = $noteBtn.querySelector('.note-btn-label');
+    $noteGroup.addEventListener('mouseenter', () => {
+      $subBtns.style.maxWidth = '200px';
+      $subBtns.style.opacity = '1';
+      // 메인 버튼: 아이콘+텍스트 pill로 확장
+      $noteBtn.style.width = 'auto';
+      $noteBtn.style.padding = '0 12px';
+      $noteBtn.style.gap = '4px';
+      if ($noteBtnLabel) {
+        $noteBtnLabel.style.maxWidth = '40px';
+        $noteBtnLabel.style.opacity = '1';
+        $noteBtnLabel.style.marginLeft = '4px';
+      }
+    });
+    $noteGroup.addEventListener('mouseleave', () => {
+      $subBtns.style.maxWidth = '0';
+      $subBtns.style.opacity = '0';
+      // 메인 버튼: 원래 원형으로 복귀
+      $noteBtn.style.width = '36px';
+      $noteBtn.style.padding = '';
+      $noteBtn.style.gap = '';
+      if ($noteBtnLabel) {
+        $noteBtnLabel.style.maxWidth = '0';
+        $noteBtnLabel.style.opacity = '0';
+        $noteBtnLabel.style.marginLeft = '0';
+      }
+    });
+
     $bar.appendChild($searchBtn);
-    $bar.appendChild($noteBtn);
+    $bar.appendChild($noteGroup);
 
     // 배경화면 설정 버튼 (임베드 모드)
-    const $wallpaperBtn = mkBtn('', '배경화면 설정');
-    $wallpaperBtn.innerHTML = '<img src="assets/wallpaper-icon.svg" alt="배경화면" style="width:18px;height:18px;display:block;pointer-events:none;" />';
+    const $wallpaperBtn = mkBtn('', ConstText.WALLPAPER_TEXT);
+    $wallpaperBtn.innerHTML = `<img src="assets/wallpaper-icon.svg" alt="" style="width:18px;height:18px;display:block;pointer-events:none;" /><span class="toolbar-btn-label" style="pointer-events:none;font-size:12px;color:rgba(255,255,255,0.9);overflow:hidden;max-width:0;opacity:0;transition:max-width 0.2s ease,opacity 0.15s ease,margin 0.2s ease;white-space:nowrap;margin-left:0;">
+    ${ConstText.WALLPAPER_TEXT}</span>`;
+    $wallpaperBtn.style.transition = 'transform 0.1s ease, box-shadow 0.2s ease, background 0.2s ease, border-color 0.2s ease, width 0.2s ease, padding 0.2s ease';
+    const $wallpaperLabel = $wallpaperBtn.querySelector('.toolbar-btn-label');
+    $wallpaperBtn.addEventListener('mouseenter', () => {
+      $wallpaperBtn.style.width = 'auto';
+      $wallpaperBtn.style.padding = '0 12px';
+      $wallpaperBtn.style.gap = '4px';
+      if ($wallpaperLabel) { $wallpaperLabel.style.maxWidth = '60px'; $wallpaperLabel.style.opacity = '1'; $wallpaperLabel.style.marginLeft = '4px'; }
+    });
+    $wallpaperBtn.addEventListener('mouseleave', () => {
+      $wallpaperBtn.style.width = '36px';
+      $wallpaperBtn.style.padding = '';
+      $wallpaperBtn.style.gap = '';
+      if ($wallpaperLabel) { $wallpaperLabel.style.maxWidth = '0'; $wallpaperLabel.style.opacity = '0'; $wallpaperLabel.style.marginLeft = '0'; }
+    });
     $wallpaperBtn.addEventListener('click', (e) => {
       e.stopPropagation();
       if (this.$wallpaper) this.$wallpaper.toggleMenu();
@@ -530,8 +676,6 @@ export default class App {
       if (e.key === 'Escape') {
         const hasMultiSelection = document.querySelectorAll('.multi').length > 0;
         if (hasMultiSelection) {
-          console.log('Escape 키 - 멀티 선택 상태 해제');
-
           const rectDragger = document.querySelector('rect-dragger');
           rectDragger.clearAllSelections();
         }
@@ -560,3 +704,4 @@ function findEmpty($app) {
     }
   }
 }
+

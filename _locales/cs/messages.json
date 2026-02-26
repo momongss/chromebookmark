@@ -3,7 +3,6 @@
     "message": "záložka tapety",
     "description": ""
   },
-
   "appDesc": {
     "message": "Použijte novou kartu jako tapetu plochy.",
     "description": ""
@@ -11,5 +10,33 @@
   "remove": {
     "message": "Er du sikker på, at du vil slette denne mappe?",
     "description": "_"
+  },
+  "TEXT_SEARCH": {
+    "message": "Hledat",
+    "description": "Štítek pro funkci hledání."
+  },
+  "POSTIT_TEXT": {
+    "message": "Vytvořit",
+    "description": "Štítek pro vytvoření poznámky."
+  },
+  "WALLPAPER_TEXT": {
+    "message": "Tapeta",
+    "description": "Štítek pro funkci tapety."
+  },
+  "EXPORT_TEXT": {
+    "message": "Uložit",
+    "description": "Štítek pro export dat."
+  },
+  "IMPORT_TEXT": {
+    "message": "Načíst",
+    "description": "Štítek pro import dat."
+  },
+  "BOOKMARK_SEARCH_PLACEHOLDER": {
+    "message": "Hledat v záložkách (Ctrl+F: otevřít, Esc: zavřít)",
+    "description": ""
+  },
+  "OPEN_LOCATION": {
+    "message": "Otevřené umístění",
+    "description": ""
   }
 }

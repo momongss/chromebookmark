@@ -3,7 +3,6 @@
     "message": "ಬುಕ್ಮಾರ್ಕ್ ವಾಲ್ಪೇಪರ್",
     "description": ""
   },
-
   "appDesc": {
     "message": "ನಿಮ್ಮ ಡೆಸ್ಕ್‌ಟಾಪ್ ವಾಲ್‌ಪೇಪರ್‌ನಂತೆ ಹೊಸ ಟ್ಯಾಬ್ ಬಳಸಿ.",
     "description": ""
@@ -11,5 +10,33 @@
   "remove": {
     "message": "ಈ ಫೋಲ್ಡರ್ ಅನ್ನು ಅಳಿಸಲು ನೀವು ಖಚಿತವಾಗಿ ಬಯಸುವಿರಾ?",
     "description": "_"
+  },
+  "TEXT_SEARCH": {
+    "message": "ಹುಡುಕಿ",
+    "description": "ಹುಡುಕಾಟ ಕಾರ್ಯಕ್ಷಮತೆಗೆ ಲೇಬಲ್."
+  },
+  "POSTIT_TEXT": {
+    "message": "ರಚಿಸಿ",
+    "description": "ಟಿಪ್ಪಣಿಯನ್ನು ರಚಿಸಲು ಲೇಬಲ್."
+  },
+  "WALLPAPER_TEXT": {
+    "message": "ವಾಲ್‌ಪೇಪರ್",
+    "description": "ವಾಲ್‌ಪೇಪರ್ ಕಾರ್ಯಕ್ಷಮತೆಗೆ ಲೇಬಲ್."
+  },
+  "EXPORT_TEXT": {
+    "message": "ಉಳಿಸಿ",
+    "description": "ಡೇಟಾವನ್ನು ರಫ್ತು ಮಾಡಲು ಲೇಬಲ್."
+  },
+  "IMPORT_TEXT": {
+    "message": "ಲೋಡ್ ಮಾಡಿ",
+    "description": "ಡೇಟಾವನ್ನು ಆಮದು ಮಾಡಲು ಲೇಬಲ್."
+  },
+  "BOOKMARK_SEARCH_PLACEHOLDER": {
+    "message": "ಬುಕ್‌ಮಾರ್ಕ್‌ಗಳನ್ನು ಹುಡುಕಿ (Ctrl+F: ತೆರೆಯಿರಿ, Esc: ಮುಚ್ಚಿ)",
+    "description": ""
+  },
+  "OPEN_LOCATION": {
+    "message": "ಸ್ಥಳವನ್ನು ತೆರೆಯಿರಿ",
+    "description": ""
   }
 }

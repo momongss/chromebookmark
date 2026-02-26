@@ -3,14 +3,40 @@
     "message": "المرجعية خلفية",
     "description": ""
   },
-
   "appDesc": {
     "message": "استخدم علامة التبويب الجديدة كخلفية لسطح المكتب.",
     "description": ""
   },
-
   "remove": {
     "message": "እርግጠኛ ነዎት ይህን አቃፊ መሰረዝ ይፈልጋሉ?",
     "description": "_"
+  },
+  "TEXT_SEARCH": {
+    "message": "ፈልግ",
+    "description": "ፈልግ ተግባር ላይ ምልክት."
+  },
+  "POSTIT_TEXT": {
+    "message": "ፍጠር",
+    "description": "ፖስት ኖት ለመፍጠር ምልክት."
+  },
+  "WALLPAPER_TEXT": {
+    "message": "ግድግዳ ስዕል",
+    "description": "ግድግዳ ስዕል ተግባር ላይ ምልክት."
+  },
+  "EXPORT_TEXT": {
+    "message": "አስቀምጥ",
+    "description": "ውጤት ለማስቀመጥ ምልክት."
+  },
+  "IMPORT_TEXT": {
+    "message": "አስገባ",
+    "description": "ውጤት ለማስገባት ምልክት."
+  },
+  "BOOKMARK_SEARCH_PLACEHOLDER": {
+    "message": "ዕልባቶችን ፈልግ (Ctrl+F: ክፍት፣ Esc: ዝጋ)",
+    "description": ""
+  },
+  "OPEN_LOCATION": {
+    "message": "ቦታን ይክፈቱ",
+    "description": ""
   }
 }

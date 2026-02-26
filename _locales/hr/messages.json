@@ -3,7 +3,6 @@
     "message": "označi pozadinu",
     "description": ""
   },
-
   "appDesc": {
     "message": "Upotrijebite novu karticu kao pozadinu radne površine.",
     "description": ""
@@ -11,5 +10,33 @@
   "remove": {
     "message": "Jeste li sigurni da želite izbrisati ovu mapu?",
     "description": "_"
+  },
+  "TEXT_SEARCH": {
+    "message": "Traži",
+    "description": "Oznaka za funkcionalnost pretraživanja."
+  },
+  "POSTIT_TEXT": {
+    "message": "Stvori",
+    "description": "Oznaka za stvaranje bilješke."
+  },
+  "WALLPAPER_TEXT": {
+    "message": "Pozadina",
+    "description": "Oznaka za funkcionalnost pozadine."
+  },
+  "EXPORT_TEXT": {
+    "message": "Spremi",
+    "description": "Oznaka za izvoz podataka."
+  },
+  "IMPORT_TEXT": {
+    "message": "Učitaj",
+    "description": "Oznaka za uvoz podataka."
+  },
+  "BOOKMARK_SEARCH_PLACEHOLDER": {
+    "message": "Pretraži oznake (Ctrl+F: otvori, Esc: zatvori)",
+    "description": ""
+  },
+  "OPEN_LOCATION": {
+    "message": "Otvorena lokacija",
+    "description": ""
   }
 }

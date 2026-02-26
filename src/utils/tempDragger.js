@@ -181,20 +181,17 @@ class TempDragger extends HTMLElement {
   onDragStart = (e) => {
     // TempDragger가 비활성화되었거나 선택된 요소가 없으면 아무것도 하지 않음
     if (!this.isEnabled || !this.selectedElements || this.selectedElements.length === 0) {
-      console.log('TempDragger 비활성화 상태 - 멀티 드래그 차단, 원래 드래그 허용');
       return; // preventDefault 호출하지 않아서 노드의 원래 드래그가 작동하도록 함
     }
     
     // 드래그 이벤트가 TempDragger에 의해 관리되는 요소에서 발생했는지 확인
     const draggedElement = getNodeAtPoint(e.clientX, e.clientY);
     if (draggedElement && !draggedElement._isTempDragElement) {
-      console.log('TempDragger 관리 대상이 아닌 요소에서 드래그 - 원래 드래그 허용');
       return;
     }
     
     const draggedFromTempDragger = e.target === this || e.target.closest('temp-dragger') === this;
     if (!draggedFromTempDragger && (!draggedElement || !this.selectedElements?.includes(draggedElement))) {
-      console.log('멀티 선택된 노드가 아닌 곳에서 드래그 시도 - 원래 드래그 허용');
       return; // preventDefault 호출하지 않아서 노드의 원래 드래그가 작동하도록 함
     }
 
@@ -213,7 +210,6 @@ class TempDragger extends HTMLElement {
   // 드래그 종료
   onDragEnd = (e) => {
     if (!this.isEnabled || !this.selectedElements || this.selectedElements.length === 0) {
-      console.log('TempDragger 비활성화 상태 - 멀티 드래그 종료 차단');
       return;
     }
 
@@ -326,17 +322,49 @@ class TempDragger extends HTMLElement {
   markDropSuccessful() {
     this.dragSuccessful = true;
     
-    // 모든 선택 상태 완전히 초기화 (시각적 상태)
-  this.clearAllSelections();
+    // 드롭 성공 시: 임시 스타일만 정리하고 선택 상태(multi 클래스)는 **유지**
+    const preservedElements = this.selectedElements ? [...this.selectedElements] : null;
+
+    if (this.selectedElements) {
+      this.selectedElements.forEach(element => {
+        element.style.position = '';
+        element.style.left = '';
+        element.style.top = '';
+        element.style.zIndex = '';
+        element.style.opacity = '';
+        element.style.transform = '';
+        element.style.filter = '';
+        element.style.boxShadow = '';
+        element.style.transition = '';
+      });
+    }
+
+    // 드래그 미리보기 제거
+    if (this.dragPreview) {
+      this.dragPreview.remove();
+      this.dragPreview = null;
+    }
     
-  // 전역 멀티 드래그 상태를 즉시 해제 (drop 이후 dragend 전에 해제 필요)
-  window.isTempDragActive = false;
-  window.currentDragNodes = null;
+    // 전역 멀티 드래그 상태를 즉시 해제 (drop 이후 dragend 전에 해제 필요)
+    window.isTempDragActive = false;
+    window.currentDragNodes = null;
     this.dragStartNode = null;
     window.dragStartNode = null;
     
-    // 즉시 정리 (애니메이션/지연 제거)
+    // TempDragger 비활성화 후 선택된 요소들로 재활성화
     this.disable();
+    if (preservedElements && preservedElements.length > 0) {
+      setTimeout(() => {
+        this.addElements(preservedElements);
+        // ReInit이 제거한 multi/selected 클래스 복원
+        preservedElements.forEach(el => {
+          el.classList.add('multi');
+          if (el.firstElementChild) {
+            el.firstElementChild.classList.add('selected');
+          }
+        });
+      }, 50);
+    }
   }
 
   // 모든 선택 상태 초기화

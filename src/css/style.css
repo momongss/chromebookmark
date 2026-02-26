@@ -125,13 +125,6 @@ button:active {
   border-radius: 12%;
 }
 
-.app > div.hover {
-  background-color: rgba(255, 255, 255, 0.226);
-  outline: 1px solid rgba(255, 255, 255, 0.6);
-  outline-offset: -2px;
-  box-shadow: 0 0 1px rgba(255, 255, 255, 0.342);
-}
-
 .node {
   width: var(--grid-item-width);
   /* height: var(--grid-item-height); */
@@ -211,13 +204,6 @@ button:active {
   width: 1.5rem;
 }
 
-folder-node.hover .folder {
-  background-color: rgba(201, 201, 201, 0.253);
-  outline: 1px solid rgba(255, 255, 255, 0.6);
-  outline-offset: -2px;
-  box-shadow: 0 0 1px rgba(255, 255, 255, 0.342);
-}
-
 .folder {
   display: flex;
   flex-direction: column;
@@ -247,93 +233,33 @@ rect-dragger {
 }
 
 /* 드래그 오버 시 기본 호버 효과 (일반 요소에는 테두리 제거) */
-.hover {
-  background-color: rgba(0, 123, 255, 0.08) !important;
-  border: none !important; /* 파란 점선 제거 */
-  border-radius: 8px;
-  transition: all 0.12s ease;
-}
 
-.node-wrapper.hover {
-  background-color: rgba(0, 123, 255, 0.15) !important;
-  border: 2px dashed rgba(0, 123, 255, 0.4) !important;
+[class*="node-wrapper"].hover {
+  background-color: rgba(255, 255, 255, 0.15) !important;
+  border: 2px rgba(255, 255, 255, 0.4) !important;
   border-radius: 12px;
-}
-
-.node-wrapper.hover-occupied {
-  background-color: rgba(220, 53, 69, 0.2) !important;
-  border: 2px dashed rgba(220, 53, 69, 0.6) !important;
-  border-radius: 12px;
-  position: relative;
-}
-
-.node-wrapper.hover-occupied::after {
-  content: "❌";
-  position: absolute;
-  top: -5px;
-  right: -5px;
-  background: rgba(220, 53, 69, 0.9);
-  color: white;
-  border-radius: 50%;
-  width: 20px;
-  height: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 12px;
-  z-index: 1000;
 }
 
 /* 멀티 드래그: 각 노드의 예상 드롭 위치 표시 */
-.node-wrapper.multi-target {
-  /* 단일 드래그의 .node-wrapper.hover 스타일을 그대로 반영 */
-  background-color: rgba(0, 123, 255, 0.15) !important;
-  border: 2px dashed rgba(0, 123, 255, 0.4) !important;
+[class*="node-wrapper"].multi-target {
+  /* 단일 드래그의 hover 스타일을 그대로 반영 */
+  background-color: rgba(255, 255, 255, 0.15) !important;
+  border: 2px rgba(255, 255, 255, 0.4) !important;
   border-radius: 12px;
 }
 
-.node-wrapper.multi-target-occupied {
-  /* 단일 드래그의 .node-wrapper.hover-occupied 스타일을 그대로 반영 */
-  background-color: rgba(220, 53, 69, 0.2) !important;
-  border: 2px dashed rgba(220, 53, 69, 0.6) !important;
-  border-radius: 12px;
-  position: relative;
-}
+folder-node.hover .folder {
+  background-color: rgba(255, 255, 255, 0.089);
+  /* outline: 1px solid rgba(255, 255, 255, 0.6);
+  outline-offset: -2px; */
 
-.node-wrapper.multi-target-anchor {
-  box-shadow: inset 0 0 0 3px rgba(0, 123, 255, 0.6);
-}
-
-/* 단일 드래그의 X 배지와 동일한 표시 */
-.node-wrapper.multi-target-occupied::after {
-  content: "❌";
-  position: absolute;
-  top: -5px;
-  right: -5px;
-  background: rgba(220, 53, 69, 0.9);
-  color: white;
-  border-radius: 50%;
-  width: 20px;
-  height: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 12px;
-  z-index: 1000;
-}
-
-folder-node.hover,
-file-node.hover {
-  /* 폴더/파일은 외곽선 대신 살짝 확대 + 그림자만 */
-  border: none !important;       /* 파란 점선 제거 보강 */
-  background: transparent !important;
-  transform: scale(1.05);
-  box-shadow: 0 6px 14px rgba(0, 123, 255, 0.25);
+  border: 2px solid rgba(255, 255, 255, 0.247) !important;
+  /* box-shadow: 0 0 1px rgba(255, 255, 255, 0.342); */
 }
 
 folder-manager.hover {
-  border: 3px solid rgba(0, 123, 255, 0.6) !important;
-  box-shadow: 0 0 15px rgba(0, 123, 255, 0.4) !important;
+  border: 3px solid rgba(255, 255, 255, 0.6) !important;
+  /* box-shadow: 0 0 15px rgba(255, 255, 255, 0.4) !important; */
 }
 
 /* TempDragger 스타일 */

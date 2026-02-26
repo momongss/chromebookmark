@@ -3,7 +3,6 @@
     "message": "書籤壁紙",
     "description": ""
   },
-
   "appDesc": {
     "message": "使用新標籤作為桌面牆紙。",
     "description": ""
@@ -11,5 +10,33 @@
   "remove": {
     "message": "您確定要刪除此文件夾嗎？",
     "description": "_"
+  },
+  "TEXT_SEARCH": {
+    "message": "搜尋",
+    "description": "搜尋功能的標籤。"
+  },
+  "POSTIT_TEXT": {
+    "message": "建立",
+    "description": "建立便條的標籤。"
+  },
+  "WALLPAPER_TEXT": {
+    "message": "牆紙",
+    "description": "牆紙功能的標籤。"
+  },
+  "EXPORT_TEXT": {
+    "message": "儲存",
+    "description": "匯出資料的標籤。"
+  },
+  "IMPORT_TEXT": {
+    "message": "載入",
+    "description": "匯入資料的標籤。"
+  },
+  "BOOKMARK_SEARCH_PLACEHOLDER": {
+    "message": "搜尋書籤（Ctrl+F：打開，Esc：關閉）",
+    "description": ""
+  },
+  "OPEN_LOCATION": {
+    "message": "開放地點",
+    "description": ""
   }
 }

@@ -3,7 +3,6 @@
     "message": "bookmark wallpaper",
     "description": ""
   },
-
   "appDesc": {
     "message": "Gamitin ang bagong tab bilang iyong desktop wallpaper.",
     "description": ""
@@ -11,5 +10,33 @@
   "remove": {
     "message": "Sigurado ka bang nais mong tanggalin ang folder na ito?",
     "description": "_"
+  },
+  "TEXT_SEARCH": {
+    "message": "Maghanap",
+    "description": "Label para sa functionality ng paghahanap."
+  },
+  "POSTIT_TEXT": {
+    "message": "Lumikha",
+    "description": "Label para sa paglikha ng tala."
+  },
+  "WALLPAPER_TEXT": {
+    "message": "Wallpaper",
+    "description": "Label para sa functionality ng wallpaper."
+  },
+  "EXPORT_TEXT": {
+    "message": "I-save",
+    "description": "Label para sa pag-export ng data."
+  },
+  "IMPORT_TEXT": {
+    "message": "I-load",
+    "description": "Label para sa pag-import ng data."
+  },
+  "BOOKMARK_SEARCH_PLACEHOLDER": {
+    "message": "Maghanap ng mga bookmark (Ctrl+F: open, Esc: close)",
+    "description": ""
+  },
+  "OPEN_LOCATION": {
+    "message": "Buksan ang lokasyon",
+    "description": ""
   }
 }

@@ -3,7 +3,6 @@
     "message": "Kertas dinding penanda buku",
     "description": ""
   },
-
   "appDesc": {
     "message": "Gunakan tab baru sebagai kertas dinding desktop anda.",
     "description": ""
@@ -11,5 +10,33 @@
   "remove": {
     "message": "Adakah anda pasti mahu memadamkan folder ini?",
     "description": "_"
+  },
+  "TEXT_SEARCH": {
+    "message": "Cari",
+    "description": "Label untuk fungsi carian."
+  },
+  "POSTIT_TEXT": {
+    "message": "Buat",
+    "description": "Label untuk membuat nota."
+  },
+  "WALLPAPER_TEXT": {
+    "message": "Kertas dinding",
+    "description": "Label untuk fungsi kertas dinding."
+  },
+  "EXPORT_TEXT": {
+    "message": "Simpan",
+    "description": "Label untuk mengeksport data."
+  },
+  "IMPORT_TEXT": {
+    "message": "Muatkan",
+    "description": "Label untuk mengimport data."
+  },
+  "BOOKMARK_SEARCH_PLACEHOLDER": {
+    "message": "Cari penanda halaman (Ctrl+F: buka, Esc: tutup)",
+    "description": ""
+  },
+  "OPEN_LOCATION": {
+    "message": "Buka lokasi",
+    "description": ""
   }
 }

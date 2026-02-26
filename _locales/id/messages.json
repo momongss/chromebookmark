@@ -3,7 +3,6 @@
     "message": "tandai wallpaper",
     "description": ""
   },
-
   "appDesc": {
     "message": "Gunakan tab baru sebagai wallpaper desktop Anda.",
     "description": ""
@@ -11,5 +10,33 @@
   "remove": {
     "message": "Anda yakin ingin menghapus folder ini?",
     "description": "_"
+  },
+  "TEXT_SEARCH": {
+    "message": "Cari",
+    "description": "Label untuk fungsi pencarian."
+  },
+  "POSTIT_TEXT": {
+    "message": "Buat",
+    "description": "Label untuk membuat catatan."
+  },
+  "WALLPAPER_TEXT": {
+    "message": "Wallpaper",
+    "description": "Label untuk fungsi wallpaper."
+  },
+  "EXPORT_TEXT": {
+    "message": "Simpan",
+    "description": "Label untuk mengekspor data."
+  },
+  "IMPORT_TEXT": {
+    "message": "Muat",
+    "description": "Label untuk mengimpor data."
+  },
+  "BOOKMARK_SEARCH_PLACEHOLDER": {
+    "message": "Cari bookmark (Ctrl+F: buka, Esc: tutup)",
+    "description": ""
+  },
+  "OPEN_LOCATION": {
+    "message": "Lokasi terbuka",
+    "description": ""
   }
 }

@@ -3,7 +3,6 @@
     "message": "Dấu trang hình nền",
     "description": ""
   },
-
   "appDesc": {
     "message": "Sử dụng tab mới làm hình nền máy tính của bạn.",
     "description": ""
@@ -11,5 +10,33 @@
   "remove": {
     "message": "Bạn có chắc chắn muốn xóa thư mục này không?",
     "description": "_"
+  },
+  "TEXT_SEARCH": {
+    "message": "Tìm kiếm",
+    "description": "Nhãn cho chức năng tìm kiếm."
+  },
+  "POSTIT_TEXT": {
+    "message": "Tạo",
+    "description": "Nhãn để tạo ghi chú."
+  },
+  "WALLPAPER_TEXT": {
+    "message": "Hình nền",
+    "description": "Nhãn cho chức năng hình nền."
+  },
+  "EXPORT_TEXT": {
+    "message": "Lưu",
+    "description": "Nhãn để xuất dữ liệu."
+  },
+  "IMPORT_TEXT": {
+    "message": "Tải",
+    "description": "Nhãn để nhập dữ liệu."
+  },
+  "BOOKMARK_SEARCH_PLACEHOLDER": {
+    "message": "Tìm kiếm dấu trang (Ctrl+F: mở, Esc: đóng)",
+    "description": ""
+  },
+  "OPEN_LOCATION": {
+    "message": "Mở vị trí",
+    "description": ""
   }
 }

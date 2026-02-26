@@ -3,7 +3,6 @@
     "message": "Merk bakgrunnsbilde",
     "description": ""
   },
-
   "appDesc": {
     "message": "Bruk den nye fanen som skrivebordsbakgrunn.",
     "description": ""
@@ -11,5 +10,33 @@
   "remove": {
     "message": "Er du sikker på at du vil slette denne mappen?",
     "description": "_"
+  },
+  "TEXT_SEARCH": {
+    "message": "Søk",
+    "description": "Etikett for søkefunksjonen."
+  },
+  "POSTIT_TEXT": {
+    "message": "Opprett",
+    "description": "Etikett for å opprette en notat."
+  },
+  "WALLPAPER_TEXT": {
+    "message": "Bakgrunn",
+    "description": "Etikett for bakgrunnsfunksjonen."
+  },
+  "EXPORT_TEXT": {
+    "message": "Lagre",
+    "description": "Etikett for å eksportere data."
+  },
+  "IMPORT_TEXT": {
+    "message": "Last inn",
+    "description": "Etikett for å importere data."
+  },
+  "BOOKMARK_SEARCH_PLACEHOLDER": {
+    "message": "Søk i bokmerker (Ctrl+F: åpen, Esc: lukk)",
+    "description": ""
+  },
+  "OPEN_LOCATION": {
+    "message": "Åpen plassering",
+    "description": ""
   }
 }

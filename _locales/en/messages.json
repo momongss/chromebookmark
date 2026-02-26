@@ -3,7 +3,6 @@
     "message": "bookmark wallpaper",
     "description": ""
   },
-
   "appDesc": {
     "message": "Use the new tab as your desktop wallpaper.",
     "description": ""
@@ -11,5 +10,33 @@
   "remove": {
     "message": "Are you sure you want to delete this folder?",
     "description": "_"
+  },
+  "TEXT_SEARCH": {
+    "message": "Search",
+    "description": "Label for search functionality."
+  },
+  "POSTIT_TEXT": {
+    "message": "Create",
+    "description": "Label for creating a post-it note."
+  },
+  "WALLPAPER_TEXT": {
+    "message": "Wallpaper",
+    "description": "Label for wallpaper functionality."
+  },
+  "EXPORT_TEXT": {
+    "message": "Save",
+    "description": "Label for exporting data."
+  },
+  "IMPORT_TEXT": {
+    "message": "Load",
+    "description": "Label for importing data."
+  },
+  "BOOKMARK_SEARCH_PLACEHOLDER": {
+    "message": "Search bookmarks (Ctrl+F: open, Esc: close)",
+    "description": ""
+  },
+  "OPEN_LOCATION": {
+    "message": "Open location",
+    "description": ""
   }
 }

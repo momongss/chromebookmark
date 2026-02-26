@@ -3,7 +3,6 @@
     "message": "Duvar Kağıdı",
     "description": ""
   },
-
   "appDesc": {
     "message": "Yeni sekmeyi masaüstü duvar kağıdınız olarak kullanın.",
     "description": ""
@@ -11,5 +10,33 @@
   "remove": {
     "message": "Bu klasörü silmek istediğinizden emin misiniz?",
     "description": "_"
+  },
+  "TEXT_SEARCH": {
+    "message": "Ara",
+    "description": "Arama işlevi için etiket."
+  },
+  "POSTIT_TEXT": {
+    "message": "Oluştur",
+    "description": "Not oluşturmak için etiket."
+  },
+  "WALLPAPER_TEXT": {
+    "message": "Duvar Kağıdı",
+    "description": "Duvar kağıdı işlevi için etiket."
+  },
+  "EXPORT_TEXT": {
+    "message": "Kaydet",
+    "description": "Verileri dışa aktarmak için etiket."
+  },
+  "IMPORT_TEXT": {
+    "message": "Yükle",
+    "description": "Verileri içe aktarmak için etiket."
+  },
+  "BOOKMARK_SEARCH_PLACEHOLDER": {
+    "message": "Yer işaretlerini arayın (Ctrl+F: aç, Esc: kapat)",
+    "description": ""
+  },
+  "OPEN_LOCATION": {
+    "message": "Konumu aç",
+    "description": ""
   }
 }

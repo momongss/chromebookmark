@@ -3,7 +3,6 @@
     "message": "புக்மார்க்கு வால்பேப்பர்",
     "description": ""
   },
-
   "appDesc": {
     "message": "உங்கள் டெஸ்க்டாப் வால்பேப்பராக புதிய தாவலைப் பயன்படுத்தவும்.",
     "description": ""
@@ -11,5 +10,33 @@
   "remove": {
     "message": "இந்த கோப்புறையை நீக்க விரும்புகிறீர்களா?",
     "description": "_"
+  },
+  "TEXT_SEARCH": {
+    "message": "தேடல்",
+    "description": "தேடல் செயல்பாட்டிற்கான லேபிள்."
+  },
+  "POSTIT_TEXT": {
+    "message": "உருவாக்கு",
+    "description": "குறிப்பை உருவாக்குவதற்கான லேபிள்."
+  },
+  "WALLPAPER_TEXT": {
+    "message": "வால்பேப்பர்",
+    "description": "வால்பேப்பர் செயல்பாட்டிற்கான லேபிள்."
+  },
+  "EXPORT_TEXT": {
+    "message": "சேமிக்கவும்",
+    "description": "தரவை ஏற்றுமதி செய்ய லேபிள்."
+  },
+  "IMPORT_TEXT": {
+    "message": "ஏற்றவும்",
+    "description": "தரவை இறக்குமதி செய்ய லேபிள்."
+  },
+  "BOOKMARK_SEARCH_PLACEHOLDER": {
+    "message": "புக்மார்க்குகளைத் தேடுங்கள் (Ctrl+F: திற, Esc: மூடு)",
+    "description": ""
+  },
+  "OPEN_LOCATION": {
+    "message": "திறந்த இடம்",
+    "description": ""
   }
 }

@@ -3,7 +3,6 @@
     "message": "Ozadje za zaznamke",
     "description": ""
   },
-
   "appDesc": {
     "message": "Nov zavihek uporabite kot ozadje namizja.",
     "description": ""
@@ -11,5 +10,33 @@
   "remove": {
     "message": "Ali ste prepričani, da želite izbrisati to mapo?",
     "description": "_"
+  },
+  "TEXT_SEARCH": {
+    "message": "Iskanje",
+    "description": "Oznaka za funkcijo iskanja."
+  },
+  "POSTIT_TEXT": {
+    "message": "Ustvari",
+    "description": "Oznaka za ustvarjanje zapiskov."
+  },
+  "WALLPAPER_TEXT": {
+    "message": "Ozadje",
+    "description": "Oznaka za funkcijo ozadja."
+  },
+  "EXPORT_TEXT": {
+    "message": "Shrani",
+    "description": "Oznaka za izvoz podatkov."
+  },
+  "IMPORT_TEXT": {
+    "message": "Naloži",
+    "description": "Oznaka za uvoz podatkov."
+  },
+  "BOOKMARK_SEARCH_PLACEHOLDER": {
+    "message": "Iskanje po zaznamkih (Ctrl+F: odpri, Esc: zapri)",
+    "description": ""
+  },
+  "OPEN_LOCATION": {
+    "message": "Odprta lokacija",
+    "description": ""
   }
 }

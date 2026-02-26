@@ -3,7 +3,6 @@
     "message": "Marcare tapet",
     "description": ""
   },
-
   "appDesc": {
     "message": "Folosiți noua filă ca fundal pentru desktop.",
     "description": ""
@@ -11,5 +10,33 @@
   "remove": {
     "message": "Sigur doriți să ștergeți acest folder?",
     "description": "_"
+  },
+  "TEXT_SEARCH": {
+    "message": "Căutare",
+    "description": "Etichetă pentru funcția de căutare."
+  },
+  "POSTIT_TEXT": {
+    "message": "Creează",
+    "description": "Etichetă pentru crearea unei note."
+  },
+  "WALLPAPER_TEXT": {
+    "message": "Fundal",
+    "description": "Etichetă pentru funcția de fundal."
+  },
+  "EXPORT_TEXT": {
+    "message": "Salvează",
+    "description": "Etichetă pentru exportarea datelor."
+  },
+  "IMPORT_TEXT": {
+    "message": "Încarcă",
+    "description": "Etichetă pentru importarea datelor."
+  },
+  "BOOKMARK_SEARCH_PLACEHOLDER": {
+    "message": "Căutați marcaje (Ctrl+F: deschidere, Esc: închidere)",
+    "description": ""
+  },
+  "OPEN_LOCATION": {
+    "message": "Deschide locația",
+    "description": ""
   }
 }

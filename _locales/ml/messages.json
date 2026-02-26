@@ -3,7 +3,6 @@
     "message": "വാൾ‌പേപ്പർ ബുക്ക്‌മാർക്ക് ചെയ്യുക",
     "description": ""
   },
-
   "appDesc": {
     "message": "നിങ്ങളുടെ ഡെസ്ക്ടോപ്പ് വാൾപേപ്പറായി പുതിയ ടാബ് ഉപയോഗിക്കുക.",
     "description": ""
@@ -11,5 +10,33 @@
   "remove": {
     "message": "ഈ ഫോൾഡർ ഇല്ലാതാക്കാൻ നിങ്ങൾ ആഗ്രഹിക്കുന്നുണ്ടോ?",
     "description": "_"
+  },
+  "TEXT_SEARCH": {
+    "message": "തിരയുക",
+    "description": "തിരയൽ ഫംഗ്ഷനിനുള്ള ലേബൽ."
+  },
+  "POSTIT_TEXT": {
+    "message": "സൃഷ്ടിക്കുക",
+    "description": "കുറിപ്പുകൾ സൃഷ്ടിക്കുന്നതിനുള്ള ലേബൽ."
+  },
+  "WALLPAPER_TEXT": {
+    "message": "വാൾപേപ്പർ",
+    "description": "വാൾപേപ്പർ ഫംഗ്ഷനിനുള്ള ലേബൽ."
+  },
+  "EXPORT_TEXT": {
+    "message": "സംരക്ഷിക്കുക",
+    "description": "ഡാറ്റ എക്സ്പോർട്ട് ചെയ്യുന്നതിനുള്ള ലേബൽ."
+  },
+  "IMPORT_TEXT": {
+    "message": "ലോഡ് ചെയ്യുക",
+    "description": "ഡാറ്റ ഇമ്പോർട്ട് ചെയ്യുന്നതിനുള്ള ലേബൽ."
+  },
+  "BOOKMARK_SEARCH_PLACEHOLDER": {
+    "message": "ബുക്ക്‌മാർക്കുകൾ തിരയുക (Ctrl+F: തുറക്കുക, Esc: അടയ്ക്കുക)",
+    "description": ""
+  },
+  "OPEN_LOCATION": {
+    "message": "ലൊക്കേഷൻ തുറക്കുക",
+    "description": ""
   }
 }

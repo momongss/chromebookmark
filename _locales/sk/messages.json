@@ -3,7 +3,6 @@
     "message": "Tapeta záložiek",
     "description": ""
   },
-
   "appDesc": {
     "message": "Použite novú kartu ako tapetu na plochu.",
     "description": ""
@@ -11,5 +10,33 @@
   "remove": {
     "message": "Naozaj chcete odstrániť tento priečinok?",
     "description": "_"
+  },
+  "TEXT_SEARCH": {
+    "message": "Hľadať",
+    "description": "Štítok pre funkciu vyhľadávania."
+  },
+  "POSTIT_TEXT": {
+    "message": "Vytvoriť",
+    "description": "Štítok pre vytváranie poznámok."
+  },
+  "WALLPAPER_TEXT": {
+    "message": "Tapeta",
+    "description": "Štítok pre funkciu tapety."
+  },
+  "EXPORT_TEXT": {
+    "message": "Uložiť",
+    "description": "Štítok pre exportovanie údajov."
+  },
+  "IMPORT_TEXT": {
+    "message": "Načítať",
+    "description": "Štítok pre importovanie údajov."
+  },
+  "BOOKMARK_SEARCH_PLACEHOLDER": {
+    "message": "Hľadať v záložkách (Ctrl+F: otvoriť, Esc: zatvoriť)",
+    "description": ""
+  },
+  "OPEN_LOCATION": {
+    "message": "Otvoriť umiestnenie",
+    "description": ""
   }
 }

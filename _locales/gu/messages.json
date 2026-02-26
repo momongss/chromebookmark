@@ -3,7 +3,6 @@
     "message": "બુકમાર્ક વ wallpલપેપર",
     "description": ""
   },
-
   "appDesc": {
     "message": "તમારા ડેસ્કટ .પ વ wallpલપેપર તરીકે નવા ટ tabબનો ઉપયોગ કરો.",
     "description": ""
@@ -11,5 +10,33 @@
   "remove": {
     "message": "શું તમે ખરેખર આ ફોલ્ડરને કા deleteી નાખવા માંગો છો?",
     "description": "_"
+  },
+  "TEXT_SEARCH": {
+    "message": "શોધો",
+    "description": "શોધ કાર્યક્ષમતા માટેનું લેબલ."
+  },
+  "POSTIT_TEXT": {
+    "message": "બનાવો",
+    "description": "નોંધ બનાવવા માટેનું લેબલ."
+  },
+  "WALLPAPER_TEXT": {
+    "message": "વોલપેપર",
+    "description": "વોલપેપર કાર્યક્ષમતા માટેનું લેબલ."
+  },
+  "EXPORT_TEXT": {
+    "message": "સાચવો",
+    "description": "ડેટા નિકાસ માટેનું લેબલ."
+  },
+  "IMPORT_TEXT": {
+    "message": "લોડ કરો",
+    "description": "ડેટા આયાત માટેનું લેબલ."
+  },
+  "BOOKMARK_SEARCH_PLACEHOLDER": {
+    "message": "બુકમાર્ક્સ શોધો (Ctrl+F: ઓપન, Esc: બંધ)",
+    "description": ""
+  },
+  "OPEN_LOCATION": {
+    "message": "સ્થાન ખોલો",
+    "description": ""
   }
 }

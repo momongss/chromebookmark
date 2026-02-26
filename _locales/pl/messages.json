@@ -3,7 +3,6 @@
     "message": "Tapeta z zakładkami",
     "description": ""
   },
-
   "appDesc": {
     "message": "Użyj nowej karty jako tapety pulpitu.",
     "description": ""
@@ -11,5 +10,33 @@
   "remove": {
     "message": "Czy na pewno chcesz usunąć ten folder?",
     "description": "_"
+  },
+  "TEXT_SEARCH": {
+    "message": "Szukaj",
+    "description": "Etykieta dla funkcji wyszukiwania."
+  },
+  "POSTIT_TEXT": {
+    "message": "Utwórz",
+    "description": "Etykieta dla tworzenia notatki."
+  },
+  "WALLPAPER_TEXT": {
+    "message": "Tapeta",
+    "description": "Etykieta dla funkcji tapety."
+  },
+  "EXPORT_TEXT": {
+    "message": "Zapisz",
+    "description": "Etykieta dla eksportowania danych."
+  },
+  "IMPORT_TEXT": {
+    "message": "Wczytaj",
+    "description": "Etykieta dla importowania danych."
+  },
+  "BOOKMARK_SEARCH_PLACEHOLDER": {
+    "message": "Wyszukaj zakładki (Ctrl+F: otwórz, Esc: zamknij)",
+    "description": ""
+  },
+  "OPEN_LOCATION": {
+    "message": "Otwarta lokalizacja",
+    "description": ""
   }
 }

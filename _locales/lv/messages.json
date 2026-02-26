@@ -3,7 +3,6 @@
     "message": "Grāmatzīmes tapetes",
     "description": ""
   },
-
   "appDesc": {
     "message": "Izmantojiet jauno cilni kā darbvirsmas fonu.",
     "description": ""
@@ -11,5 +10,33 @@
   "remove": {
     "message": "Vai tiešām vēlaties dzēst šo mapi?",
     "description": "_"
+  },
+  "TEXT_SEARCH": {
+    "message": "Meklēt",
+    "description": "Etiķete meklēšanas funkcijai."
+  },
+  "POSTIT_TEXT": {
+    "message": "Izveidot",
+    "description": "Etiķete piezīmju izveidei."
+  },
+  "WALLPAPER_TEXT": {
+    "message": "Tapetes",
+    "description": "Etiķete tapetes funkcijai."
+  },
+  "EXPORT_TEXT": {
+    "message": "Saglabāt",
+    "description": "Etiķete datu eksportēšanai."
+  },
+  "IMPORT_TEXT": {
+    "message": "Ielādēt",
+    "description": "Etiķete datu importēšanai."
+  },
+  "BOOKMARK_SEARCH_PLACEHOLDER": {
+    "message": "Meklēt grāmatzīmes (Ctrl+F: atvērt, Esc: aizvērt)",
+    "description": ""
+  },
+  "OPEN_LOCATION": {
+    "message": "Atvērt atrašanās vietu",
+    "description": ""
   }
 }

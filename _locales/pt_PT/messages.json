@@ -3,7 +3,6 @@
     "message": "Papel de parede favorito",
     "description": ""
   },
-
   "appDesc": {
     "message": "Use a nova guia como papel de parede da área de trabalho.",
     "description": ""
@@ -11,5 +10,33 @@
   "remove": {
     "message": "Tem certeza de que deseja excluir esta pasta?",
     "description": "_"
+  },
+  "TEXT_SEARCH": {
+    "message": "Pesquisar",
+    "description": "Etiqueta para a função de pesquisa."
+  },
+  "POSTIT_TEXT": {
+    "message": "Criar",
+    "description": "Etiqueta para criar uma nota."
+  },
+  "WALLPAPER_TEXT": {
+    "message": "Papel de parede",
+    "description": "Etiqueta para a função de papel de parede."
+  },
+  "EXPORT_TEXT": {
+    "message": "Guardar",
+    "description": "Etiqueta para exportar dados."
+  },
+  "IMPORT_TEXT": {
+    "message": "Carregar",
+    "description": "Etiqueta para importar dados."
+  },
+  "BOOKMARK_SEARCH_PLACEHOLDER": {
+    "message": "Pesquisar favoritos (Ctrl+F: abrir, Esc: fechar)",
+    "description": ""
+  },
+  "OPEN_LOCATION": {
+    "message": "Abrir local",
+    "description": ""
   }
 }

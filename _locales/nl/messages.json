@@ -3,7 +3,6 @@
     "message": "Bladwijzer Achtergrond",
     "description": ""
   },
-
   "appDesc": {
     "message": "Gebruik het nieuwe tabblad als bureaubladachtergrond.",
     "description": ""
@@ -11,5 +10,33 @@
   "remove": {
     "message": "Weet u zeker dat u deze map wilt verwijderen?",
     "description": "_"
+  },
+  "TEXT_SEARCH": {
+    "message": "Zoeken",
+    "description": "Label voor de zoekfunctie."
+  },
+  "POSTIT_TEXT": {
+    "message": "Maken",
+    "description": "Label voor het maken van een notitie."
+  },
+  "WALLPAPER_TEXT": {
+    "message": "Achtergrond",
+    "description": "Label voor de achtergrondfunctie."
+  },
+  "EXPORT_TEXT": {
+    "message": "Opslaan",
+    "description": "Label voor het exporteren van gegevens."
+  },
+  "IMPORT_TEXT": {
+    "message": "Laden",
+    "description": "Label voor het importeren van gegevens."
+  },
+  "BOOKMARK_SEARCH_PLACEHOLDER": {
+    "message": "Zoek naar bladwijzers (Ctrl+F: openen, Esc: sluiten)",
+    "description": ""
+  },
+  "OPEN_LOCATION": {
+    "message": "Open locatie",
+    "description": ""
   }
 }

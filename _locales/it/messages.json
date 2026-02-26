@@ -3,7 +3,6 @@
     "message": "segnalibro sfondo",
     "description": ""
   },
-
   "appDesc": {
     "message": "Usa la nuova scheda come sfondo del desktop.",
     "description": ""
@@ -11,5 +10,33 @@
   "remove": {
     "message": "Sei sicuro di voler eliminare questa cartella?",
     "description": "_"
+  },
+  "TEXT_SEARCH": {
+    "message": "Cerca",
+    "description": "Etichetta per la funzione di ricerca."
+  },
+  "POSTIT_TEXT": {
+    "message": "Crea",
+    "description": "Etichetta per creare una nota."
+  },
+  "WALLPAPER_TEXT": {
+    "message": "Sfondo",
+    "description": "Etichetta per la funzione sfondo."
+  },
+  "EXPORT_TEXT": {
+    "message": "Salva",
+    "description": "Etichetta per esportare i dati."
+  },
+  "IMPORT_TEXT": {
+    "message": "Carica",
+    "description": "Etichetta per importare i dati."
+  },
+  "BOOKMARK_SEARCH_PLACEHOLDER": {
+    "message": "Cerca segnalibri (Ctrl+F: apri, Esc: chiudi)",
+    "description": ""
+  },
+  "OPEN_LOCATION": {
+    "message": "Posizione aperta",
+    "description": ""
   }
 }

@@ -3,7 +3,6 @@
     "message": "Lesezeichen Tapete",
     "description": ""
   },
-
   "appDesc": {
     "message": "Verwenden Sie die neue Registerkarte als Desktop-Hintergrund.",
     "description": ""
@@ -11,5 +10,33 @@
   "remove": {
     "message": "Möchten Sie diesen Ordner wirklich löschen?",
     "description": "_"
+  },
+  "TEXT_SEARCH": {
+    "message": "Suchen",
+    "description": "Beschriftung für die Suchfunktion."
+  },
+  "POSTIT_TEXT": {
+    "message": "Erstellen",
+    "description": "Beschriftung zum Erstellen einer Notiz."
+  },
+  "WALLPAPER_TEXT": {
+    "message": "Hintergrund",
+    "description": "Beschriftung für die Hintergrundfunktion."
+  },
+  "EXPORT_TEXT": {
+    "message": "Speichern",
+    "description": "Beschriftung zum Exportieren von Daten."
+  },
+  "IMPORT_TEXT": {
+    "message": "Laden",
+    "description": "Beschriftung zum Importieren von Daten."
+  },
+  "BOOKMARK_SEARCH_PLACEHOLDER": {
+    "message": "Lesezeichen durchsuchen (Strg+F: öffnen, Esc: schließen)",
+    "description": ""
+  },
+  "OPEN_LOCATION": {
+    "message": "Standort öffnen",
+    "description": ""
   }
 }

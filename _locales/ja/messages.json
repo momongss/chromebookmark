@@ -3,7 +3,6 @@
     "message": "ブックマークデスクトップ",
     "description": ""
   },
-
   "appDesc": {
     "message": "新しいタブをデスクトップの壁紙のように使用します。",
     "description": ""
@@ -11,5 +10,33 @@
   "remove": {
     "message": "このフォルダを削除しますか？",
     "description": "_"
+  },
+  "TEXT_SEARCH": {
+    "message": "検索",
+    "description": "検索機能のラベル。"
+  },
+  "POSTIT_TEXT": {
+    "message": "作成",
+    "description": "メモを作成するためのラベル。"
+  },
+  "WALLPAPER_TEXT": {
+    "message": "壁紙",
+    "description": "壁紙機能のラベル。"
+  },
+  "EXPORT_TEXT": {
+    "message": "保存",
+    "description": "データをエクスポートするためのラベル。"
+  },
+  "IMPORT_TEXT": {
+    "message": "読み込み",
+    "description": "データをインポートするためのラベル。"
+  },
+  "BOOKMARK_SEARCH_PLACEHOLDER": {
+    "message": "ブックマーク検索（Ctrl + F：開く、Esc：閉じる）",
+    "description": ""
+  },
+  "OPEN_LOCATION": {
+    "message": "場所を開く",
+    "description": ""
   }
 }

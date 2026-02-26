@@ -3,7 +3,6 @@
     "message": "könyvjelző háttérkép",
     "description": ""
   },
-
   "appDesc": {
     "message": "Használja az új lapot asztali háttérképként.",
     "description": ""
@@ -11,5 +10,33 @@
   "remove": {
     "message": "Biztosan törli ezt a mappát?",
     "description": "_"
+  },
+  "TEXT_SEARCH": {
+    "message": "Keresés",
+    "description": "Címke a keresési funkcióhoz."
+  },
+  "POSTIT_TEXT": {
+    "message": "Létrehozás",
+    "description": "Címke egy jegyzet létrehozásához."
+  },
+  "WALLPAPER_TEXT": {
+    "message": "Háttérkép",
+    "description": "Címke a háttérkép funkcióhoz."
+  },
+  "EXPORT_TEXT": {
+    "message": "Mentés",
+    "description": "Címke az adatok exportálásához."
+  },
+  "IMPORT_TEXT": {
+    "message": "Betöltés",
+    "description": "Címke az adatok importálásához."
+  },
+  "BOOKMARK_SEARCH_PLACEHOLDER": {
+    "message": "Keresés a könyvjelzők között (Ctrl+F: megnyitás, Esc: bezárás)",
+    "description": ""
+  },
+  "OPEN_LOCATION": {
+    "message": "Nyissa meg a helyet",
+    "description": ""
   }
 }

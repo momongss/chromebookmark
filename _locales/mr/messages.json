@@ -3,7 +3,6 @@
     "message": "बुकमार्क वॉलपेपर",
     "description": ""
   },
-
   "appDesc": {
     "message": "आपला डेस्कटॉप वॉलपेपर म्हणून नवीन टॅब वापरा.",
     "description": ""
@@ -11,5 +10,33 @@
   "remove": {
     "message": "आपली खात्री आहे की आपण हे फोल्डर हटवू इच्छिता?",
     "description": "_"
+  },
+  "TEXT_SEARCH": {
+    "message": "शोधा",
+    "description": "शोध कार्यासाठी लेबल."
+  },
+  "POSTIT_TEXT": {
+    "message": "तयार करा",
+    "description": "टीप तयार करण्यासाठी लेबल."
+  },
+  "WALLPAPER_TEXT": {
+    "message": "वॉलपेपर",
+    "description": "वॉलपेपर कार्यासाठी लेबल."
+  },
+  "EXPORT_TEXT": {
+    "message": "जतन करा",
+    "description": "डेटा निर्यात करण्यासाठी लेबल."
+  },
+  "IMPORT_TEXT": {
+    "message": "लोड करा",
+    "description": "डेटा आयात करण्यासाठी लेबल."
+  },
+  "BOOKMARK_SEARCH_PLACEHOLDER": {
+    "message": "बुकमार्क शोधा (Ctrl+F: उघडा, Esc: बंद)",
+    "description": ""
+  },
+  "OPEN_LOCATION": {
+    "message": "स्थान उघडा",
+    "description": ""
   }
 }

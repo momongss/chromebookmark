@@ -3,7 +3,6 @@
     "message": "järjehoidja taustpilt",
     "description": ""
   },
-
   "appDesc": {
     "message": "Kasutage uut vahekaarti töölaua taustpildina.",
     "description": ""
@@ -11,5 +10,33 @@
   "remove": {
     "message": "Kas soovite kindlasti selle kausta kustutada?",
     "description": "_"
+  },
+  "TEXT_SEARCH": {
+    "message": "Otsi",
+    "description": "Sildi otsingu funktsionaalsusele."
+  },
+  "POSTIT_TEXT": {
+    "message": "Loo",
+    "description": "Silt märkme loomiseks."
+  },
+  "WALLPAPER_TEXT": {
+    "message": "Taustapilt",
+    "description": "Silt taustapildi funktsioonile."
+  },
+  "EXPORT_TEXT": {
+    "message": "Salvesta",
+    "description": "Silt andmete eksportimiseks."
+  },
+  "IMPORT_TEXT": {
+    "message": "Laadi",
+    "description": "Silt andmete importimiseks."
+  },
+  "BOOKMARK_SEARCH_PLACEHOLDER": {
+    "message": "Otsi järjehoidjaid (Ctrl+F: ava, Esc: sulge)",
+    "description": ""
+  },
+  "OPEN_LOCATION": {
+    "message": "Ava asukoht",
+    "description": ""
   }
 }

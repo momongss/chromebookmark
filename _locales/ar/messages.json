@@ -3,7 +3,6 @@
     "message": "ዕልባት ልጣፍ",
     "description": ""
   },
-
   "appDesc": {
     "message": "አዲሱን ትር እንደ ዴስክቶፕ ልጣፍዎ ይጠቀሙበት ፡፡",
     "description": ""
@@ -11,5 +10,33 @@
   "remove": {
     "message": "هل أنت متأكد أنك تريد حذف هذا المجلد؟",
     "description": "_"
+  },
+  "TEXT_SEARCH": {
+    "message": "بحث",
+    "description": "تسمية لوظيفة البحث."
+  },
+  "POSTIT_TEXT": {
+    "message": "إنشاء",
+    "description": "تسمية لإنشاء ملاحظة."
+  },
+  "WALLPAPER_TEXT": {
+    "message": "خلفية",
+    "description": "تسمية لوظيفة الخلفية."
+  },
+  "EXPORT_TEXT": {
+    "message": "حفظ",
+    "description": "تسمية لتصدير البيانات."
+  },
+  "IMPORT_TEXT": {
+    "message": "تحميل",
+    "description": "تسمية لاستيراد البيانات."
+  },
+  "BOOKMARK_SEARCH_PLACEHOLDER": {
+    "message": "البحث في الإشارات المرجعية (Ctrl+F: فتح، Esc: إغلاق)",
+    "description": ""
+  },
+  "OPEN_LOCATION": {
+    "message": "فتح الموقع",
+    "description": ""
   }
 }

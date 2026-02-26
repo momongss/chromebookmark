@@ -1,4 +1,5 @@
 import bookmarkManager from "../../utils/bookmark.js";
+import { ConstText } from "../../utils/const.js";
 import Storage from "../../utils/storage.js";
 import FolderManager from "../FolderManager.js";
 
@@ -50,7 +51,7 @@ export default class SearchBar {
 
     this.$input = document.createElement('input');
     this.$input.type = 'text';
-    this.$input.placeholder = '북마크 검색 (Enter: 열기, ↑/↓: 이동, Esc: 닫기)';
+    this.$input.placeholder = ConstText.BOOKMARK_SEARCH_PLACEHOLDER || '북마크 검색...';
     this.$input.className = 'bookmark-search-input';
     this.$input.style.cssText = [
       'flex:1',
@@ -165,7 +166,7 @@ export default class SearchBar {
 
       if (!isFolder) {
         const $locBtn = document.createElement('button');
-        $locBtn.textContent = '위치 열기';
+        $locBtn.textContent = ConstText.OPEN_LOCATION // '위치 열기';
         $locBtn.title = '이 북마크가 있는 위치 열기';
         $locBtn.style.cssText = 'margin-left:4px;padding:5px 10px;border:1px solid rgba(0,0,0,0.08);border-radius:8px;background:rgba(124,92,252,0.06);color:#7c5cfc;font-size:11px;cursor:pointer;flex:0 0 auto;transition:background 0.1s;font-weight:500';
         $locBtn.addEventListener('mouseenter', () => { $locBtn.style.background = 'rgba(124,92,252,0.12)'; });

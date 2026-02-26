@@ -3,7 +3,6 @@
     "message": "书签壁纸",
     "description": ""
   },
-
   "appDesc": {
     "message": "使用新标签作为桌面墙纸。",
     "description": ""
@@ -11,5 +10,33 @@
   "remove": {
     "message": "您确定要删除此文件夹吗？",
     "description": "_"
+  },
+  "TEXT_SEARCH": {
+    "message": "搜索",
+    "description": "搜索功能的标签。"
+  },
+  "POSTIT_TEXT": {
+    "message": "创建",
+    "description": "创建便签的标签。"
+  },
+  "WALLPAPER_TEXT": {
+    "message": "墙纸",
+    "description": "墙纸功能的标签。"
+  },
+  "EXPORT_TEXT": {
+    "message": "保存",
+    "description": "导出数据的标签。"
+  },
+  "IMPORT_TEXT": {
+    "message": "加载",
+    "description": "导入数据的标签。"
+  },
+  "BOOKMARK_SEARCH_PLACEHOLDER": {
+    "message": "搜索书签（Ctrl+F：打开，Esc：关闭）",
+    "description": ""
+  },
+  "OPEN_LOCATION": {
+    "message": "开放地点",
+    "description": ""
   }
 }

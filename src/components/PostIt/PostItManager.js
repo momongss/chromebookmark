@@ -542,6 +542,54 @@ export default class PostItManager {
     }
   }
 
+  // 포스트잇 데이터를 JSON 파일로 내보내기
+  exportPostIts() {
+    if (this.postIts.length === 0) {
+      alert('내보낼 포스트잇이 없습니다.');
+      return;
+    }
+    const data = JSON.stringify(this.postIts, null, 2);
+    const blob = new Blob([data], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `postits-${new Date().toISOString().slice(0, 10)}.json`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+  }
+
+  // JSON 파일에서 포스트잇 데이터 불러오기 (기존 데이터에 추가)
+  importPostIts() {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = '.json';
+    input.addEventListener('change', async (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      try {
+        const text = await file.text();
+        const imported = JSON.parse(text);
+        if (!Array.isArray(imported)) {
+          alert('올바른 포스트잇 데이터 파일이 아닙니다.');
+          return;
+        }
+        for (const postIt of imported) {
+          postIt.id = Date.now().toString() + Math.random().toString(36).slice(2, 8);
+          postIt.z = ZIndexManager.getNextIndex();
+          this.postIts.push(postIt);
+          this.createPostItElement(postIt);
+        }
+        await Storage.setPostIts(this.postIts);
+      } catch (err) {
+        console.error('포스트잇 불러오기 실패:', err);
+        alert('파일을 읽는 데 실패했습니다.');
+      }
+    });
+    input.click();
+  }
+
   setupContextMenu() {
     // 기존 우클릭 메뉴에 포스트잇 옵션 추가
     document.addEventListener('contextmenu', (e) => {

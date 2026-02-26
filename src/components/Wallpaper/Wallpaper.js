@@ -8,14 +8,8 @@ export default class Wallpaper {
     this.menuBtnElement = null;
     this.defaultWallpapers = [
       {
-        src: `chrome-extension://${chrome.runtime.id}/assets/wallpaper/sky1.png`
+        src: `chrome-extension://${chrome.runtime.id}/assets/wallpaper/sky7.png`
       },
-      {
-        src: `chrome-extension://${chrome.runtime.id}/assets/wallpaper/sky2.png`
-      },
-      {
-        src: `chrome-extension://${chrome.runtime.id}/assets/wallpaper/sky4.png`
-      }
     ];
     this._constructor();
   }
@@ -76,7 +70,6 @@ export default class Wallpaper {
       <div class="menu">
         <div class="menu-header">
           <h3>배경화면 선택</h3>
-          <button class="close-btn" aria-label="메뉴 닫기">×</button>
         </div>
         
         <div class="wallpaper-options">
@@ -101,7 +94,7 @@ export default class Wallpaper {
               </label>
             </div>
             <div class="upload-info">
-              <small>지원 형식: JPG, PNG, GIF, WebP (최대 10MB)</small>
+              <small>지원 형식: JPG, PNG, GIF, WebP</small>
             </div>
           </div>
         </div>
@@ -131,8 +124,8 @@ export default class Wallpaper {
     });
 
     // 닫기 버튼
-    const closeBtn = this.menuElement.querySelector('.close-btn');
-    closeBtn.addEventListener('click', () => this.closeMenu());
+    // const closeBtn = this.menuElement.querySelector('.close-btn');
+    // closeBtn.addEventListener('click', () => this.closeMenu());
 
     // 기본 배경화면 선택
     const wallpaperItems = this.menuElement.querySelectorAll('.wallpaper-item');
