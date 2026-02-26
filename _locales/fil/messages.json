@@ -38,5 +38,9 @@
   "OPEN_LOCATION": {
     "message": "Buksan ang lokasyon",
     "description": ""
+  },
+  "NO_SEARCH_RESULT": {
+    "message": "Walang resulta ng paghahanap.",
+    "description": ""
   }
 }

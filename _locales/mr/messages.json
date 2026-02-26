@@ -38,5 +38,9 @@
   "OPEN_LOCATION": {
     "message": "स्थान उघडा",
     "description": ""
+  },
+  "NO_SEARCH_RESULT": {
+    "message": "शोध परिणाम नाहीत.",
+    "description": ""
   }
 }

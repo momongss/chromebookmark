@@ -11,6 +11,8 @@ class Text {
         this.BOOKMARK_SEARCH_PLACEHOLDER = chrome.i18n.getMessage("BOOKMARK_SEARCH_PLACEHOLDER");
         
         this.OPEN_LOCATION = chrome.i18n.getMessage("OPEN_LOCATION");
+
+        this.NO_SEARCH_RESULT = chrome.i18n.getMessage("NO_SEARCH_RESULT");
     }
 }
 

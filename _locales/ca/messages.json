@@ -38,5 +38,9 @@
   "OPEN_LOCATION": {
     "message": "Localització oberta",
     "description": ""
+  },
+  "NO_SEARCH_RESULT": {
+    "message": "No hi ha resultats de cerca.",
+    "description": ""
   }
 }

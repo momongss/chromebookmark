@@ -38,5 +38,9 @@
   "OPEN_LOCATION": {
     "message": "開放地點",
     "description": ""
+  },
+  "NO_SEARCH_RESULT": {
+    "message": "沒有搜尋結果。",
+    "description": ""
   }
 }

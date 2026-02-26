@@ -38,5 +38,9 @@
   "OPEN_LOCATION": {
     "message": "Fungua eneo",
     "description": ""
+  },
+  "NO_SEARCH_RESULT": {
+    "message": "Hakuna matokeo ya utafutaji.",
+    "description": ""
   }
 }

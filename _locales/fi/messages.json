@@ -38,5 +38,9 @@
   "OPEN_LOCATION": {
     "message": "Avaa sijainti",
     "description": ""
+  },
+  "NO_SEARCH_RESULT": {
+    "message": "Ei hakutuloksia.",
+    "description": ""
   }
 }

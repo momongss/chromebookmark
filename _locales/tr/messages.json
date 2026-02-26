@@ -38,5 +38,9 @@
   "OPEN_LOCATION": {
     "message": "Konumu aç",
     "description": ""
+  },
+  "NO_SEARCH_RESULT": {
+    "message": "Arama sonucu yok.",
+    "description": ""
   }
 }

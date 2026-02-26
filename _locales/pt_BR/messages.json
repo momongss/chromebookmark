@@ -38,5 +38,9 @@
   "OPEN_LOCATION": {
     "message": "Abrir local",
     "description": ""
+  },
+  "NO_SEARCH_RESULT": {
+    "message": "Nenhum resultado de pesquisa.",
+    "description": ""
   }
 }

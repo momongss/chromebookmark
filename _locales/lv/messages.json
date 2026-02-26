@@ -38,5 +38,9 @@
   "OPEN_LOCATION": {
     "message": "Atvērt atrašanās vietu",
     "description": ""
+  },
+  "NO_SEARCH_RESULT": {
+    "message": "Nav meklēšanas rezultātu.",
+    "description": ""
   }
 }

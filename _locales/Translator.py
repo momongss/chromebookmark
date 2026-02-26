@@ -20,14 +20,18 @@ def get_google_lang_code(folder_name):
     return folder_name.split('_')[0]
 
 def update_messages_json(key, ko_text, description=""):
+    success_count = 0
+    failure_count = 0
+    failed_folders = []
+
     for lang_code in os.listdir(LOCALES_DIR):
         folder_path = os.path.join(LOCALES_DIR, lang_code)
-        
+
         if not os.path.isdir(folder_path):
             continue
-            
+
         json_path = os.path.join(folder_path, 'messages.json')
-        
+
         # JSON 로드
         if os.path.exists(json_path):
             with open(json_path, 'r', encoding='utf-8') as f:
@@ -40,14 +44,17 @@ def update_messages_json(key, ko_text, description=""):
 
         # 번역 처리
         target_lang = get_google_lang_code(lang_code)
-        
+
         try:
             # 한국어(ko)에서 타겟 언어로 번역
             translated_text = GoogleTranslator(source='ko', target=target_lang).translate(ko_text)
             print(f"[{lang_code}] 번역 성공: {translated_text}")
+            success_count += 1
         except Exception as e:
             print(f"[{lang_code}] 번역 실패: {e}")
             translated_text = ko_text # 실패 시 원문 유지
+            failure_count += 1
+            failed_folders.append(lang_code)
 
         data[key] = {
             "message": translated_text,
@@ -58,11 +65,17 @@ def update_messages_json(key, ko_text, description=""):
         with open(json_path, 'w', encoding='utf-8') as f:
             json.dump(data, f, indent=2, ensure_ascii=False)
 
+    print("\n=== 번역 결과 ===")
+    print(f"성공: {success_count}개")
+    print(f"실패: {failure_count}개")
+    if failed_folders:
+        print("실패한 폴더:", ", ".join(failed_folders))
+
 if __name__ == "__main__":
     print("=== Chrome Extension I18n Fixer ===")
     
-    new_key = "OPEN_LOCATION" # input("추가할 KEY를 입력하세요 (예: TEXT_SEARCH): ").strip()
-    new_ko_text = "위치 열기" # input("한글 텍스트를 입력하세요: ").strip()
+    new_key = "NO_SEARCH_RESULT" # input("추가할 KEY를 입력하세요 (예: TEXT_SEARCH): ").strip()
+    new_ko_text = "검색 결과가 없습니다." # input("한글 텍스트를 입력하세요: ").strip()
     new_desc = ""; # input("설명(description)을 입력하세요 (생략 가능): ").strip()
 
     if new_key and new_ko_text:

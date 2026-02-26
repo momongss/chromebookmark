@@ -38,5 +38,9 @@
   "OPEN_LOCATION": {
     "message": "場所を開く",
     "description": ""
+  },
+  "NO_SEARCH_RESULT": {
+    "message": "検索結果がありません。",
+    "description": ""
   }
 }

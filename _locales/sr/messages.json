@@ -38,5 +38,9 @@
   "OPEN_LOCATION": {
     "message": "Отворена локација",
     "description": ""
+  },
+  "NO_SEARCH_RESULT": {
+    "message": "Нема резултата претраге.",
+    "description": ""
   }
 }

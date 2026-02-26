@@ -38,5 +38,9 @@
   "OPEN_LOCATION": {
     "message": "Відкрита локація",
     "description": ""
+  },
+  "NO_SEARCH_RESULT": {
+    "message": "Немає результатів пошуку.",
+    "description": ""
   }
 }

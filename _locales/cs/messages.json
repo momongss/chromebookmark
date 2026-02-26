@@ -38,5 +38,9 @@
   "OPEN_LOCATION": {
     "message": "Otevřené umístění",
     "description": ""
+  },
+  "NO_SEARCH_RESULT": {
+    "message": "Žádné výsledky vyhledávání.",
+    "description": ""
   }
 }

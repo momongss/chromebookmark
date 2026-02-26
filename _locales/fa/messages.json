@@ -38,5 +38,9 @@
   "OPEN_LOCATION": {
     "message": "باز کردن مکان",
     "description": ""
+  },
+  "NO_SEARCH_RESULT": {
+    "message": "نتایج جستجو وجود ندارد.",
+    "description": ""
   }
 }

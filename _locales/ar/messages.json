@@ -38,5 +38,9 @@
   "OPEN_LOCATION": {
     "message": "فتح الموقع",
     "description": ""
+  },
+  "NO_SEARCH_RESULT": {
+    "message": "لا توجد نتائج بحث.",
+    "description": ""
   }
 }

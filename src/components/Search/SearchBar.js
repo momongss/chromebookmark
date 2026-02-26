@@ -130,7 +130,7 @@ export default class SearchBar {
     this.$results.innerHTML = '';
     if (!nodes || nodes.length === 0) {
       const empty = document.createElement('div');
-      empty.textContent = '결과가 없습니다.';
+      empty.textContent = ConstText.NO_SEARCH_RESULT || '검색 결과가 없습니다.';
       empty.style.cssText = 'padding:12px 14px;color:rgba(0,0,0,0.35);font-size:13px';
       this.$results.appendChild(empty);
       return;

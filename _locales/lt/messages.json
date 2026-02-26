@@ -38,5 +38,9 @@
   "OPEN_LOCATION": {
     "message": "Atidaryti vietą",
     "description": ""
+  },
+  "NO_SEARCH_RESULT": {
+    "message": "Nėra paieškos rezultatų.",
+    "description": ""
   }
 }

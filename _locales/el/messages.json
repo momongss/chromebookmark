@@ -38,5 +38,9 @@
   "OPEN_LOCATION": {
     "message": "Ανοιχτή τοποθεσία",
     "description": ""
+  },
+  "NO_SEARCH_RESULT": {
+    "message": "Δεν υπάρχουν αποτελέσματα αναζήτησης.",
+    "description": ""
   }
 }

@@ -38,5 +38,9 @@
   "OPEN_LOCATION": {
     "message": "开放地点",
     "description": ""
+  },
+  "NO_SEARCH_RESULT": {
+    "message": "没有搜索结果。",
+    "description": ""
   }
 }

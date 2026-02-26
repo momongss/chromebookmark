@@ -38,5 +38,9 @@
   "OPEN_LOCATION": {
     "message": "திறந்த இடம்",
     "description": ""
+  },
+  "NO_SEARCH_RESULT": {
+    "message": "தேடல் முடிவுகள் இல்லை.",
+    "description": ""
   }
 }

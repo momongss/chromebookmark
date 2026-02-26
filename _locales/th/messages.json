@@ -38,5 +38,9 @@
   "OPEN_LOCATION": {
     "message": "เปิดสถานที่",
     "description": ""
+  },
+  "NO_SEARCH_RESULT": {
+    "message": "ไม่มีผลการค้นหา",
+    "description": ""
   }
 }

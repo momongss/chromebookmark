@@ -38,5 +38,9 @@
   "OPEN_LOCATION": {
     "message": "ቦታን ይክፈቱ",
     "description": ""
+  },
+  "NO_SEARCH_RESULT": {
+    "message": "ምንም የፍለጋ ውጤቶች የሉም።",
+    "description": ""
   }
 }

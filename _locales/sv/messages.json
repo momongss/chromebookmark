@@ -38,5 +38,9 @@
   "OPEN_LOCATION": {
     "message": "Öppen plats",
     "description": ""
+  },
+  "NO_SEARCH_RESULT": {
+    "message": "Inga sökresultat.",
+    "description": ""
   }
 }

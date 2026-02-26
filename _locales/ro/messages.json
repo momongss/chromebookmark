@@ -38,5 +38,9 @@
   "OPEN_LOCATION": {
     "message": "Deschide locația",
     "description": ""
+  },
+  "NO_SEARCH_RESULT": {
+    "message": "Niciun rezultat al căutării.",
+    "description": ""
   }
 }

@@ -38,5 +38,9 @@
   "OPEN_LOCATION": {
     "message": "위치 열기",
     "description": ""
+  },
+  "NO_SEARCH_RESULT": {
+    "message": "검색 결과가 없습니다.",
+    "description": ""
   }
 }

@@ -38,5 +38,9 @@
   "OPEN_LOCATION": {
     "message": "స్థానాన్ని తెరవండి",
     "description": ""
+  },
+  "NO_SEARCH_RESULT": {
+    "message": "శోధన ఫలితాలు లేవు.",
+    "description": ""
   }
 }
