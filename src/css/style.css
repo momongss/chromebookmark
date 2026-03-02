@@ -24,7 +24,12 @@ body {
   height: 100%;
   margin: 0;
   padding: 0;
-  overflow: hidden;
+  overflow: auto;
+  scrollbar-width: none; /* Firefox */
+}
+
+body::-webkit-scrollbar {
+  display: none; /* Chrome */
 }
 
 canvas {
@@ -390,7 +395,7 @@ temp-dragger.dragging .multi {
 
 /* 포스트잇 스타일 */
 .post-it {
-  position: absolute;
+  position: fixed;
   background: #ffe066;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0,0,0,0.1);
