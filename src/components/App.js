@@ -347,19 +347,35 @@ export default class App {
   }
 
   computeGridDims($app, settings) {
-    // Use viewport size to avoid 0-size before grid is populated
-    // const aw = Math.max(0, window.innerWidth || 0);
-    // const ah = Math.max(0, window.innerHeight || 0);
-    // const stepX = settings.tileW; // gap 제거
-    // const stepY = settings.tileH; // gap 제거
-    // const cols = Math.max(3, Math.floor(aw / stepX));
-    // const rows = Math.max(3, Math.floor(ah / stepY));
-
-    // Fixed grid size (20x9) as per user request to stop responsive changes
-    const cols = 20;
-    const rows = 9;
+    const { width, height } = this.getMaximizedDimensions();
+    const stepX = settings.tileW;
+    const stepY = settings.tileH;
+    const cols = Math.max(3, Math.floor(width / stepX));
+    const rows = Math.max(3, Math.floor(height / stepY));
 
     return { cols, rows };
+  }
+
+  getMaximizedDimensions() {
+    const isMaximized =
+      window.outerWidth >= screen.availWidth &&
+      window.outerHeight >= screen.availHeight;
+
+    if (isMaximized) {
+      return {
+        width: window.innerWidth,
+        height: window.innerHeight
+      };
+    } else {
+      // Not maximized: estimate maximized inner size from available screen area
+      // Subtract browser chrome (outer - inner difference) from available screen size
+      const chromeWidth = window.outerWidth - window.innerWidth;
+      const chromeHeight = window.outerHeight - window.innerHeight;
+      return {
+        width: Math.max(0, screen.availWidth - chromeWidth),
+        height: Math.max(0, screen.availHeight - chromeHeight)
+      };
+    }
   }
 
   onResize() {
@@ -502,10 +518,39 @@ export default class App {
         continue;
       }
       else {
-        let targetWrapper = this.ensureWrapperExists(pos.x, pos.y);
+        const px = parseInt(pos.x);
+        const py = parseInt(pos.y);
+        // If saved position is outside current grid, relocate into grid
+        if (px >= lenX || py >= lenY) {
+          const clampedX = Math.min(px, lenX - 1);
+          const clampedY = Math.min(py, lenY - 1);
+          const alt = findNearbyEmptyWrapperAround(this.$app, clampedX, clampedY, { maxCols: this.gridCols, maxRows: this.gridRows });
+          if (alt) {
+            const altPos = parseWrapperCoords(alt);
+            if (altPos) {
+              Storage.setPos(bookMark.id, { x: altPos.x, y: altPos.y });
+            }
+            if (bookMark.children == null) {
+              const fileNode = new FileNode();
+              fileNode.Init({ $parent: alt, bookMark });
+              const finalPos = parseWrapperCoords(alt) || pos;
+              fileNode.savedPos = { x: finalPos.x, y: finalPos.y };
+            } else {
+              const folderNode = new FolderNode();
+              folderNode.Init({ $parent: alt, bookMark });
+              const finalPos = parseWrapperCoords(alt) || pos;
+              folderNode.savedPos = { x: finalPos.x, y: finalPos.y };
+            }
+          } else {
+            posUndefineds.push(bookMark);
+          }
+          continue;
+        }
+
+        let targetWrapper = this.ensureWrapperExists(px, py);
         // Avoid double-placement: if occupied, use nearest empty wrapper
         if (isWrapperOccupied(targetWrapper)) {
-          const alt = findNearbyEmptyWrapperAround(this.$app, pos.x, pos.y, { maxCols: this.gridCols, maxRows: this.gridRows });
+          const alt = findNearbyEmptyWrapperAround(this.$app, px, py, { maxCols: this.gridCols, maxRows: this.gridRows });
           if (alt) {
             targetWrapper = alt;
             const altPos = parseWrapperCoords(alt);
